@@ -215,13 +215,24 @@ if(/^Sofa$|^Sofa-cum-bed|^Armchair|^Easy chair/.test(n)){const F=frameOf(f),hasB
 if(n==='Sofa back'){const F=frameOf(f,null),k=Math.max(1,Math.round(F.L/2.3)),cw=F.L/k,yb=BASE[f[0]];
  F.P(g,F.U0,F.U1,0,0.25,yb+0.95,yb+2.6,SOFD,0.08);
  for(let i=0;i<k;i++){const u=F.U0+i*cw;F.P(g,u+0.05,u+cw-0.05,0.15,F.D,yb+0.95,yb+2.7,SOF,0.16);}return true;}
+// folded chairs hanging flat on a wall rail
+if(/^Folded chairs on wall rack/.test(n)){const F=frameOf(f),k=3,tk=(F.D-0.05)/k,yb=BASE[f[0]];
+ F.P(g,F.U0-0.1,F.U1+0.1,0,0.12,yb+4.05,yb+4.2,CHR);
+ for(let i=0;i<k;i++){const v0=0.1+i*tk,v1=v0+tk-0.04,uo=(i-1)*0.06;
+  F.P(g,F.U0+0.12+uo,F.U1-0.12+uo,v0+0.02,v1-0.02,yb+1.0,yb+3.9,0x9b6b43);
+  [[F.U0+uo,F.U0+0.1+uo],[F.U1-0.1+uo,F.U1+uo]].forEach(q=>F.P(g,q[0],q[1],v0,v1,yb+0.85,yb+4.05,0x2b2b2b));
+  F.P(g,F.U0+uo,F.U1+uo,v0,v1,yb+2.35,yb+2.43,0x2b2b2b);}return true;}
 // chairs: seat, four legs, back on the side away from the table
-if(/^Chair$|^Desk chair$|^Office chair$/.test(n)){const t=tableNear(f),cx=(f[2]+f[3])/2,cz=(f[4]+f[5])/2;let bd=null;
+if(/^Chair$|^Folding chair$|^Desk chair$|^Office chair$/.test(n)){const fold=n==='Folding chair';const t=tableNear(f),cx=(f[2]+f[3])/2,cz=(f[4]+f[5])/2;let bd=null;
  if(t){const tx=(t[2]+t[3])/2,tz=(t[4]+t[5])/2,ddx=tx-cx,ddz=tz-cz;bd=Math.abs(ddx)>Math.abs(ddz)?{ax:'x',s:ddx>0?1:-1}:{ax:'z',s:ddz>0?1:-1};}
- const ff=f.slice(),c=f[8]==='wood'?0x9b6b43:SOF;
+ const ff=f.slice(),c=fold?0x9b6b43:(f[8]==='wood'?0x9b6b43:SOF);
  // dining chairs are stored as a thin strip; give them a real 1.4 ft seat that tucks under the table
  const F0=frameOf(ff,bd);if(F0.D<1.2&&bd){const ext=1.4-F0.D;if(bd.ax==='x'){if(bd.s>0)ff[3]+=ext;else ff[2]-=ext;}else{if(bd.s>0)ff[5]+=ext;else ff[4]-=ext;}}
  const F=frameOf(ff,bd),u0=F.U0+(F.L-Math.min(F.L,1.5))/2,u1=u0+Math.min(F.L,1.5),FF={U0:u0,U1:u1,D:F.D,P:F.P};
+ if(fold){// slim steel frame: back legs run up into the backrest, a cross bar shows the fold hinge
+  legs(FF,g,y,y+1.45,0.06,0.07,0x2b2b2b);[[u0+0.06,u0+0.13],[u1-0.13,u1-0.06]].forEach(q=>F.P(g,q[0],q[1],0.06,0.13,y+1.45,y+3.05,0x2b2b2b));
+  F.P(g,u0+0.06,u1-0.06,F.D-0.6,F.D-0.53,y+0.7,y+0.76,0x2b2b2b);F.P(g,u0+0.02,u1-0.02,0,F.D,y+1.45,y+1.53,c,0.03);
+  F.P(g,u0+0.13,u1-0.13,0.05,0.13,y+2.35,y+2.95,c,0.03);return true;}
  legs(FF,g,y,y+1.45,0.08,0.1,n==='Chair'?0x5a3d26:0x333333);
  F.P(g,u0,u1,0,F.D,y+1.45,y+1.65,c,0.06);F.P(g,u0,u1,0,0.14,y+1.65,y+3.1,c,0.06);return true;}
 // tables and desks: top + four legs (bedside tables stay cabinets)

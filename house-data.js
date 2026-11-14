@@ -59,7 +59,7 @@ const skylights=[['Bath 2',14.9,17.2,20.9,23],['Laundry',19.2,21.2,20.8,22.8],['
 const ventilators=[[1,'x',2.5,12.3,15.3],[2,'x',2.5,12,15]];
 
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
-const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Water feature',1,21.2,13.2,25.6,16.1,-1.6],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
+const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Water feature',1,21.2,13.2,25.6,16.1,-1.6],['Dining',1,33.4,16.9,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
 
 // ============================================================
 // FURNITURE AND FITTINGS
@@ -80,7 +80,10 @@ F_(1,'Armchair',24,26,1.5,3.5,0,2.6,'fabric');F_(1,'Armchair',24,26,4,6,0,2.6,'f
 F_(1,'Puja niche',33.2,34.8,0.3,2.2,0,4,'wood',1);
 // Dining: 9 x 7.5 ft, 6-seater, opens fully to the living room and to the courtyard
 F_(1,'Dining table (6-seater)',28.1,33.6,12.3,15.3,0,2.5,'wood',1);
-[29.1,31,32.9].forEach(x=>{F_(1,'Chair',x-0.5,x+0.5,11.9,12.25,0,1.6,'fabric');F_(1,'Chair',x-0.5,x+0.5,15.35,15.95,0,1.6,'fabric');});
+// Folding dining chairs: 3 open for everyday use; 3 more fold flat (3 inches each) and hang on a wall rack on the
+// solid stair-side wall, so the dining room stays open. All 6 come out for guests.
+[29.1,32.9].forEach(x=>F_(1,'Folding chair',x-0.5,x+0.5,11.9,12.25,0,1.6,'fabric'));F_(1,'Folding chair',30.5,31.5,15.35,15.95,0,1.6,'fabric');
+F_(1,'Folded chairs on wall rack (3)',34.05,34.85,13.2,14.8,0.8,3.4,'wood',1);
 F_(1,'Crockery sideboard',26.2,27.2,16.2,17.9,0,3,'wood',1);
 // Foyer: shoe bench and tall shoe tower
 F_(1,'Shoe bench',31.3,32.6,20.1,22.9,0,1.5,'wood',1);F_(1,'Shoe tower',31.3,32.6,23,24.3,0,7,'wood');
