@@ -153,7 +153,69 @@ const F=0xf2efe8,W2=0x9b6b43,SO=0x5b6b7a;
 const bed=(g,b,x0,x1,z0,z1)=>{box(g,x0,x1,b,b+1.8,z0,z1,F);box(g,x0,x1,b,b+3.6,z0,z0+0.4,W2);box(g,x0+0.5,x1-0.5,b+1.8,b+2.2,z0+0.6,z0+1.8,0xffffff);};
 const sofa=(g,b,x0,x1,z0)=>{box(g,x0,x1,b,b+1.5,z0,z0+3,SO);box(g,x0,x1,b,b+3,z0,z0+0.8,SO);};
 const FM={wood:0x9b6b43,fabric:0x5b6b7a,linen:0xf2efe8,steel:0xb8bcc0,white:0xfbfbf8,black:0x2b2b2b,counter:0x7a7c80,stone:C.stair,glass:C.glass,plant:C.leaf,concrete:0x9a958c};
-FURN.forEach(f=>{const b=BASE[f[0]];box(G[f[0]],f[2],f[3],b+f[6],b+f[6]+f[7],f[4],f[5],FM[f[8]]||0x999999,f[8]==='glass'?0.3:1);if(f[9])label(LB[f[0]],f[1],(f[2]+f[3])/2,b+f[6]+f[7]+1.6,(f[4]+f[5])/2,0.6);});
+FURN.forEach(f=>{const b=BASE[f[0]];box(G[f[0]],f[2],f[3],b+f[6],b+f[6]+f[7],f[4],f[5],f[1]==='Rug'?0x8c3a32:(FM[f[8]]||0x999999),f[8]==='glass'?0.3:1);if(f[9])label(LB[f[0]],f[1],(f[2]+f[3])/2,b+f[6]+f[7]+1.6,(f[4]+f[5])/2,0.6);});
+// ---------- Bedroom dressing: bedspreads, pillows, accent wall + painting, lamps, curtains, fans, wardrobe shutters ----------
+// Tall items go in TD[level], hidden when that floor is shown cut away (walls at 4 ft) or in x-ray.
+const TD=[0,1,2].map(l=>{const g=new T.Group();G[l].add(g);return g;});
+{
+const pat=(bg,fg,fg2)=>tex((g,n)=>{g.fillStyle=bg;g.fillRect(0,0,n,n);noise(g,n,0.05,null,3000);const s=n/8;for(let i=0;i<8;i++)for(let j=0;j<8;j++){const cx=i*s+s/2,cy=j*s+s/2;g.fillStyle=fg;g.beginPath();g.moveTo(cx,cy-s*0.32);g.lineTo(cx+s*0.32,cy);g.lineTo(cx,cy+s*0.32);g.lineTo(cx-s*0.32,cy);g.fill();g.fillStyle=fg2;g.beginPath();g.arc(cx,cy,s*0.1,0,7);g.fill();}});
+TX.bs1=pat('#a5513f','#e9d5b5','#5b2a20');TX.bs2=pat('#34536e','#e8e2d0','#c9a24a');TX.bs3=pat('#6c7a48','#efe6cc','#8a4b2c');
+TX.rug=tex((g,n)=>{g.fillStyle='#8c3a32';g.fillRect(0,0,n,n);const s=n/4;for(let i=0;i<4;i++)for(let j=0;j<4;j++){const cx=i*s+s/2,cy=j*s+s/2;[[0.42,'#e3cfa6'],[0.26,'#2f4a63'],[0.1,'#e3cfa6']].forEach(([k,c])=>{g.fillStyle=c;g.beginPath();g.moveTo(cx,cy-s*k);g.lineTo(cx+s*k,cy);g.lineTo(cx,cy+s*k);g.lineTo(cx-s*k,cy);g.fill();});}noise(g,n,0.12,null,9000);});
+TX.curtain=tex((g,n)=>{g.fillStyle='#ddd0b4';g.fillRect(0,0,n,n);for(let x=0;x<n;x+=32){const gr=g.createLinearGradient(x,0,x+32,0);gr.addColorStop(0,'rgba(0,0,0,0.13)');gr.addColorStop(0.5,'rgba(255,255,255,0.13)');gr.addColorStop(1,'rgba(0,0,0,0.13)');g.fillStyle=gr;g.fillRect(x,0,32,n);}});
+const art=cols=>tex((g,n)=>{g.fillStyle=cols[0];g.fillRect(0,0,n,n);g.globalAlpha=0.8;for(let i=0;i<7;i++){g.fillStyle=cols[1+i%3];g.beginPath();g.arc(rnd()*n,rnd()*n,n*(0.08+rnd()*0.2),0,7);g.fill();}g.globalAlpha=1;g.strokeStyle=cols[3];g.lineWidth=6;g.beginPath();g.moveTo(0,n*0.7);g.bezierCurveTo(n*0.3,n*0.45,n*0.6,n*0.95,n,n*0.6);g.stroke();},256);
+TX.art1=art(['#efe4cf','#c8643f','#e0a845','#2f5d6e']);TX.art2=art(['#e6ece6','#4d7f6a','#9fbfa8','#c9824f']);TX.art3=art(['#f2e8dc','#7d4f7a','#d48c6a','#34495e']);
+Object.assign(RL,{0xa5513f:['bs1',3,0.95],0x34536e:['bs2',3,0.95],0x6c7a48:['bs3',3,0.95],0x8c3a32:['rug',3,0.98],0xddd0b4:['curtain',2,0.95],0xefe4cf:['art1',4.5,0.7],0xe6ece6:['art2',4.5,0.7],0xf2e8dc:['art3',4.5,0.7]});
+const BS=[0xa5513f,0x34536e,0x6c7a48],ACC=[0x6f8467,0x5f7d96,0xa86e52,0x8d7aa3,0xb8924f,0x4f7f78],ART=[0xefe4cf,0xe6ece6,0xf2e8dc];
+const roomOf=(l,x,z)=>LV[l].find(r=>x>r[2]&&x<r[3]&&z>r[4]&&z<r[5]);
+const shade=new T.MeshStandardMaterial({color:0xfff3dc,emissive:0xffc070,emissiveIntensity:0.6,roughness:0.9});
+const cyl=(g,r0,r1,h,x,y,z,mat)=>{const m=new T.Mesh(new T.CylinderGeometry(r0,r1,h,18),mat);m.position.set(x,y,z);m.castShadow=true;g.add(m);return m;};
+const bz=(g,x0,x1,y0,y1,za,zb,c)=>box(g,x0,x1,y0,y1,Math.min(za,zb),Math.max(za,zb),c);
+let bi=0;
+FURN.forEach(f=>{const l=f[0],b=BASE[l];
+ if(f[8]==='linen'&&/bed/i.test(f[1])){
+  const hb=FURN.find(h=>h[0]===l&&h[1]==='Headboard'&&Math.abs(h[2]-f[2])<0.05&&Math.abs(h[3]-f[3])<0.05);if(!hb)return;
+  const head0=Math.abs(hb[5]-f[4])<0.05,x0=f[2],x1=f[3],z0=f[4],z1=f[5],W=x1-x0,L=z1-z0,dir=head0?1:-1;
+  const zz=(a,c)=>head0?[z0+a,z0+c]:[z1-c,z1-a];
+  const top=b+f[6]+f[7],c=BS[bi%3];
+  let q=zz(L*0.36,L+0.06);box(G[l],x0-0.06,x1+0.06,top,top+0.12,q[0],q[1],c);
+  box(G[l],x0-0.08,x0-0.02,top-1,top+0.1,q[0],q[1],c);box(G[l],x1+0.02,x1+0.08,top-1,top+0.1,q[0],q[1],c);
+  q=head0?[z1,z1+0.06]:[z0-0.06,z0];box(G[l],x0-0.06,x1+0.06,top-1,top+0.1,q[0],q[1],c);
+  q=zz(L-1.5,L-0.4);box(G[l],x0+0.1,x1-0.1,top+0.12,top+0.26,q[0],q[1],ACC[(bi+2)%6]);
+  const np=W>=4.8?2:1,pw=(W-0.6-(np-1)*0.2)/np;
+  for(let i=0;i<np;i++){const px=x0+0.3+i*(pw+0.2);q=zz(0.2,1.5);box(G[l],px,px+pw,top,top+0.45,q[0],q[1],0xfdfcf8);
+   q=zz(1.55,1.95);box(G[l],px+0.35,px+pw-0.35,top,top+0.95,q[0],q[1],ACC[bi%6]);}
+  const r=roomOf(l,(x0+x1)/2,(z0+z1)/2);
+  if(r){const ax0=Math.max(r[2]+0.2,x0-1.8),ax1=Math.min(r[3]-0.2,x1+1.8),wz=head0?r[4]+0.2:r[5]-0.2;
+   bz(TD[l],ax0,ax1,b,b+9.8,wz,wz+dir*0.03,ACC[bi%6]);
+   const fw=Math.min(4,W-0.4),fx=(x0+x1)/2,fz=wz+dir*0.03;
+   bz(TD[l],fx-fw/2-0.12,fx+fw/2+0.12,b+5,b+7.5,fz,fz+dir*0.1,0x3a2a1e);
+   bz(TD[l],fx-fw/2,fx+fw/2,b+5.12,b+7.38,fz+dir*0.1,fz+dir*0.12,ART[bi%3]);}
+  bi++;}
+ if(f[1]==='Bedside table'){const cx=(f[2]+f[3])/2,cz=(f[4]+f[5])/2,t=b+f[6]+f[7];
+  cyl(G[l],0.15,0.22,0.9,cx,t+0.45,cz,M(0x6b5a48));cyl(G[l],0.34,0.48,0.6,cx,t+1.2,cz,shade);}
+ if(/wardrobe/i.test(f[1])&&f[6]===0){const r=roomOf(l,(f[2]+f[3])/2,(f[4]+f[5])/2);if(!r)return;
+  const t0=b+f[6],t1=t0+f[7],alongZ=(f[3]-f[2])<(f[5]-f[4]);
+  const a0=alongZ?f[4]:f[2],a1=alongZ?f[5]:f[3],n=Math.max(2,Math.round((a1-a0)/1.7));
+  const fr=alongZ?((f[2]-r[2])>(r[3]-f[3])?f[2]:f[3]):((f[4]-r[4])>(r[5]-f[5])?f[4]:f[5]);
+  const piece=(u0,u1,y0,y1,c)=>alongZ?box(G[l],fr-0.03,fr+0.03,y0,y1,u0,u1,c):box(G[l],u0,u1,y0,y1,fr-0.03,fr+0.03,c);
+  for(let i=1;i<n;i++){const u=a0+(a1-a0)*i/n;piece(u-0.02,u+0.02,t0+0.1,t1-0.1,0x3b2a1c);piece(u-0.28,u-0.2,t0+3,t0+4.3,0xb8bcc0);piece(u+0.2,u+0.28,t0+3,t0+4.3,0xb8bcc0);}
+  piece(a0,a1,t0+5.6,t0+5.64,0x3b2a1c);}
+});
+// curtains on every bedroom glass wall, and a ceiling fan in each bedroom
+LV.forEach((lv,l)=>lv.forEach(r=>{if(r[1]!=='room'||!/bed/i.test(r[0])||/wardrobe/i.test(r[0]))return;const b=BASE[l];
+ const opens=lv.filter(o=>['open','air','void'].includes(o[1]));
+ [['x',r[2],r[4],r[5],1],['x',r[3],r[4],r[5],-1],['z',r[4],r[2],r[3],1],['z',r[5],r[2],r[3],-1]].forEach(([ax,p,a0,a1,d])=>opens.forEach(o=>{
+  const far=ax==='x'?(d>0?o[3]:o[2]):(d>0?o[5]:o[4]);if(Math.abs(far-p)>0.01)return;
+  const s0=Math.max(a0,ax==='x'?o[4]:o[2]),s1=Math.min(a1,ax==='x'?o[5]:o[3]);if(s1-s0<2)return;
+  const pc=(u0,u1,w0,w1,y0,y1,c)=>ax==='x'?box(TD[l],Math.min(w0,w1),Math.max(w0,w1),y0,y1,u0,u1,c):box(TD[l],u0,u1,y0,y1,Math.min(w0,w1),Math.max(w0,w1),c);
+  [[s0+0.2,s0+1.5],[s1-1.5,s1-0.2]].forEach(([c0,c1])=>{for(let k=0;k<4;k++)pc(c0+(c1-c0)*k/4,c0+(c1-c0)*(k+1)/4,p+d*0.25,p+d*(0.42+(k%2)*0.1),b+0.3,b+9.5,0xddd0b4);});
+  pc(s0+0.1,s1-0.1,p+d*0.35,p+d*0.4,b+9.55,b+9.65,0x3b2a1c);}));
+ if((r[3]-r[2])*(r[5]-r[4])<60)return;
+ const cx=(r[2]+r[3])/2,cz=(r[4]+r[5])/2,wm=M(0xfbfbf8);
+ cyl(TD[l],0.04,0.04,0.9,cx,b+9.55,cz,wm);cyl(TD[l],0.35,0.3,0.3,cx,b+9.0,cz,wm);
+ for(let k=0;k<3;k++){const a=k*2*Math.PI/3,bl=new T.Mesh(new T.BoxGeometry(1.9,0.04,0.42),M(0x9b6b43));bl.position.set(cx+Math.cos(a)*1.25,b+8.95,cz+Math.sin(a)*1.25);bl.rotation.y=-a;bl.castShadow=true;TD[l].add(bl);}
+}));
+}
 (typeof SHAFTS!=='undefined'?SHAFTS:[]).forEach(sh=>{[0,1,2].forEach(l=>{box(G[l],sh[1]+0.05,sh[2]-0.05,BASE[l]-0.5,BASE[l]+10,sh[3]+0.05,sh[4]-0.05,0x9a958c);});box(gT,sh[1]+0.05,sh[2]-0.05,31.5,34,sh[3]+0.05,sh[4]-0.05,0x9a958c);label(LB[1],sh[0],(sh[1]+sh[2])/2,BASE[1]+11.5,(sh[3]+sh[4])/2,0.6);label(LB[2],sh[0],(sh[1]+sh[2])/2,BASE[2]+11.5,(sh[3]+sh[4])/2,0.6);});
 box(G[0],36,58,0,7,0.4,2,0xd9d4c8);box(G[1],36,58,10.5,17.5,0.4,2,0xd9d4c8);
 box(G[0],3,20,0,5,1,6,0x9a8a70);box(G[0],3,15,0,4,10,15,0x9a8a70);
@@ -188,7 +250,7 @@ paths.forEach(p=>{const c=cum(p);for(let i=0;i<26;i++){const m=new T.Mesh(pg,pm)
 let plan=false,siteOn=false,raining=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
 let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
-function apply(){
+function apply(){TD.forEach((g,i)=>g.visible=!xr&&(mode==='all'||mode!==i));
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
 walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
@@ -240,7 +302,7 @@ document.getElementById('hrv').textContent=fmt(hour);
 const dir=D[Math.round(az/(Math.PI/8))%16];
 document.getElementById('sunr').textContent=alt>0?'Sun in the '+dir+', '+Math.round(alt*180/Math.PI)+'° above the horizon':'The sun is below the horizon';
 let h;
-if(hour<10)h=season===2?'Winter mornings: the sun rises in the south-east, behind the neighbour, so light reaches you mainly from above, through the courtyard cap and the skylights.':'Early sun lands on the road-facing deck, Bedroom 3 and the open sit-out, and comes through the hall’s glass wall into the family lounge.';
+if(hour<10)h=season===2?'Winter mornings: the sun rises in the south-east, behind the neighbour, so light reaches you mainly from above, through the courtyard cap and the skylights.':'Early sun lands on the road-facing deck, Bedroom 4 and the open sit-out, and comes through the hall’s glass wall into the family lounge.';
 else if(hour<14.5)h=season===2?'Winter noon: the sun is lower and from the south, so it lights the upper walls of the courtyard, which bounce light down. Keep those walls white.':'High sun drops straight down the courtyard onto the first-floor living and dining, and the glass blocks pass some to the godown below.';
 else h='Low western sun hits the back court. The terracotta jaali filters it into patterned light instead of heat.';
 if(raining){h=rainHint;document.getElementById('sunr').textContent='Overcast: monsoon rain, wind from the south-west';}

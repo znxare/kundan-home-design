@@ -6,12 +6,12 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 
 | Point | Ground | 1st floor | 2nd floor | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Switchboard | 5 | 23 | 29 | 57 |
-| Light point (ceiling) | 24 | 25 | 26 | 75 |
-| Ceiling fan | 0 | 4 | 7 | 11 |
+| Switchboard | 5 | 23 | 32 | 60 |
+| Light point (ceiling) | 24 | 25 | 27 | 76 |
+| Ceiling fan | 0 | 4 | 8 | 12 |
 | 6A socket (sockets come in pairs) | 8 | 24 | 27 | 59 |
 | 16A power socket | 3 | 10 | 1 | 14 |
-| AC point 16A + concealed copper pipe & drain | 2 | 5 | 5 | 12 |
+| AC point 16A + concealed copper pipe & drain | 2 | 5 | 6 | 13 |
 | Geyser 16A | 0 | 2 | 3 | 5 |
 | Exhaust fan | 1 | 2 | 4 | 7 |
 | Data / TV / Wi-Fi point | 2 | 3 | 2 | 7 |
@@ -47,24 +47,25 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 | First floor | Passage | 3× Light point, 2× 6A socket, 3× Switchboard |
 | First floor | Shop | 8× Light point, 2× 16A power socket, 4× 6A socket, 2× AC point 16A + concealed copper pipe & drain, 2× CCTV camera, 2× Data / TV / Wi-Fi point, 3× Switchboard |
 | Second floor | Bath 2 | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
-| Second floor | Bath 3 | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 2× 6A socket, 1× Switchboard |
+| Second floor | Bath 3 | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
 | Second floor | Bedroom 3 | 2× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 1× Switchboard, 2× 6A socket |
+| Second floor | Bedroom 3 wardrobe | 1× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 1× Switchboard |
 | Second floor | Bedroom 4 | 2× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 2× Switchboard, 2× 6A socket |
 | Second floor | Deck | 1× Light point |
 | Second floor | Dress | 1× Light point, 3× Switchboard |
 | Second floor | Family nook | 1× Light point, 1× Ceiling fan, 3× 6A socket, 1× Switchboard |
 | Second floor | Gallery | 2× Light point, 3× Switchboard |
-| Second floor | Hall | 1× Light point, 3× Switchboard |
+| Second floor | Hall | 2× Light point, 3× Switchboard |
 | Second floor | Laundry | 1× Light point, 1× Exhaust fan, 1× 6A socket, 1× Switchboard, 1× 16A power socket |
 | Second floor | Linen | 1× Light point |
 | Second floor | Lobby | 1× Light point, 1× 6A socket, 2× Switchboard |
-| Second floor | Lounge | 2× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 4× 6A socket, 1× Switchboard, 1× Data / TV / Wi-Fi point, 1× Distribution board |
+| Second floor | Lounge | 1× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 5× 6A socket, 2× Switchboard, 1× Data / TV / Wi-Fi point, 1× Distribution board |
 | Second floor | Master bath | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
 | Second floor | Master bed | 2× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 1× Switchboard, 2× 6A socket |
 | Second floor | Office | 1× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 4× 6A socket, 1× Switchboard, 1× Data / TV / Wi-Fi point |
 | Second floor | Sit-out | 2× Light point |
 | Second floor | Stair | 1× Light point, 1× 6A socket, 2× Switchboard |
-| Second floor | Study | 1× Light point, 1× Ceiling fan, 2× 6A socket, 2× Switchboard |
+| Second floor | Study | 1× Light point, 1× Ceiling fan, 2× 6A socket, 3× Switchboard |
 | Second floor | Upper lobby | 1× Light point, 1× 6A socket, 3× Switchboard, 1× CCTV camera |
 
 ## Rules behind the layout
