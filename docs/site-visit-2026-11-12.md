@@ -29,14 +29,14 @@ Key frames are kept locally in `docs/site-photos/`, which is not uploaded to Git
 - **One long side already has a neighbour:** a blue 2-storey house, built close to the boundary, with windows facing this plot.
 - **Across the road** are single-storey houses and small shops.
 
-## Where the model may not match what is built (to confirm)
-1. **Stair position.** In the video the stair from the ground floor seems to come up at the **back** of the 1st floor,
-   just behind the view over the back yard. The model puts the common stair in the middle of the plot (beside the front shops).
-2. **Courtyard.** No opening for the central courtyard was visible in the 1st-floor slab. If the slab is solid,
-   the model's courtyard (and the light and airflow plan built on it) has to change, or be cut in before the 2nd floor is cast.
-3. **1st-floor rooms.** The brick walls already fix the room sizes. The model's 1st-floor layout was drawn before these walls,
-   so it probably differs.
-4. **Front steps.** There is a flight of steps at the front, going down towards the road. Not in the model.
+## What this means for the model (owner, 14 Nov 2026)
+The **walls of the 1st-floor home have not been built yet**. The brick walls in the video are the shops,
+the corridor and the stair area at the front. So the home layout in the model is still a live proposal, not out of date.
 
-The 3D model has **not** been changed yet. Redrawing it needs, for the 1st floor, either a sketch of the walls as built
-(with rough sizes) or a slower video that pauses in each room.
+Still to check before the next stage:
+1. **Columns.** The columns already cast fix where the home's walls can go. Note their positions on the 1st floor.
+2. **Courtyard.** The courtyard in the model is open from the 1st floor up, so it needs an opening in the
+   **2nd-floor slab and the roof slab**, not in the slab that is already cast. Tell the builder **before the 2nd-floor slab is cast**.
+3. **Stair.** The stair in the video carries on up past the 1st floor. In the model the shop stair stops at the 1st floor
+   and the family uses its own stair at the back. Decide which stair goes to the 2nd floor before that flight is built.
+4. **Front steps.** There is a flight of steps at the front, going down towards the road. Not in the model yet.

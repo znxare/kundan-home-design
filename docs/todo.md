@@ -13,10 +13,10 @@
 - [ ] Separate electricity meters for the shops and the home
 - [x] Confirm whether the back (SW) will also have a neighbour: open land for now (site video)
 
-## Match the model to what is built (site video, 12 Nov 2026)
-- [ ] Where exactly does the stair from the ground floor arrive on the 1st floor (back, or middle)?
-- [ ] Is there an opening in the 1st-floor slab for the courtyard? If not, can one be cut before the 2nd floor is cast?
-- [ ] Sketch of the 1st-floor walls as built, with rough sizes, or a slow room-by-room video
+## Before the next stage of building (site video, 12 Nov 2026)
+- [ ] Tell the builder about the courtyard opening before the 2nd-floor slab is cast
+- [ ] Note the positions of the columns already cast on the 1st floor
+- [ ] Decide whether the stair being built goes on to the 2nd floor, or stops at the 1st floor (shop stair) as in the model
 - [ ] Steps at the front going down to the road: how many, and how wide
 
 ## Ideas to build in the model
