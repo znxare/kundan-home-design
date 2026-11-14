@@ -144,12 +144,52 @@ for(let i=0;i<48;i++){const a=i/48*Math.PI*2;g.fillStyle=i%2?'#c9a24a':'#3c3a37'
 const petals=(k,r0,r1,w,col,off)=>{for(let i=0;i<k;i++){const a=(i+(off||0))/k*Math.PI*2;g.save();g.translate(c,c);g.rotate(a);g.fillStyle=col;g.beginPath();g.moveTo(r0,0);g.quadraticCurveTo((r0+r1)/2,-w,r1,0);g.quadraticCurveTo((r0+r1)/2,w,r0,0);g.fill();g.restore();}};
 petals(16,c*0.42,c*0.82,c*0.13,'#b5603a',0.5);petals(16,c*0.4,c*0.74,c*0.09,'#f4ecdc');petals(8,c*0.2,c*0.5,c*0.12,'#c9a24a',0.5);petals(8,c*0.18,c*0.44,c*0.07,'#3c3a37');
 g.fillStyle='#e9e2d2';g.beginPath();g.arc(c,c,c*0.2,0,7);g.fill();ring(c*0.2,'#3c3a37',5);},1024);rt.wrapS=rt.wrapT=T.ClampToEdgeWrapping;
-const rg=new T.Mesh(new T.CircleGeometry(2.9,72),new T.MeshStandardMaterial({map:rt,roughness:0.55,envMapIntensity:0.6}));rg.rotation.x=-Math.PI/2;rg.position.set(21.25,10.53,14.25);rg.receiveShadow=true;G[1].add(rg);
+const rg=new T.Mesh(new T.CircleGeometry(2.2,72),new T.MeshStandardMaterial({map:rt,roughness:0.55,envMapIntensity:0.6}));rg.rotation.x=-Math.PI/2;rg.position.set(21.25,10.53,14.25);rg.receiveShadow=true;G[1].add(rg);
 box(G[1],23.5,24.9,10.5,10.7,15.2,16.6,C.stair);box(G[1],23.55,24.85,12.9,13.1,15.25,16.55,C.stair);
 const lit=new T.MeshStandardMaterial({color:0xffd9a0,emissive:0xff9a3c,emissiveIntensity:0.9});const dn=new T.Mesh(new T.BoxGeometry(0.06,0.5,0.45),lit);dn.position.set(24.2,11.4,15.27);dn.rotation.y=Math.PI/2;G[1].add(dn);
 [[0,0,0,0.26],[0.16,0.14,0.08,0.18],[-0.15,0.12,-0.08,0.17],[0,0.3,0,0.14]].forEach(q=>{const s=new T.Mesh(new T.SphereGeometry(q[3],12,10),M(C.leaf));s.position.set(24.2+q[0],13.25+q[1],15.9+q[2]);s.castShadow=true;G[1].add(s);});
 for(let x=18.6;x<24.4;x+=0.9){const s=new T.Mesh(new T.SphereGeometry(0.42+0.12*Math.sin(x*3),10,8),M(C.leaf));s.position.set(x,12.0,17.35);s.scale.y=1.3;s.castShadow=true;G[1].add(s);}
-label(LB[1],'Rangoli stone inlay',21.25,12.2,11.6,0.6);}
+label(LB[1],'Rangoli stone inlay',21.25,12.2,12.3,0.6);}
+// ---------- Tropical planting kit: leaf textures with cut-out shapes, palms, monstera, heliconia, trailing vines ----------
+const leafMat=draw=>{const t=tex((g,n)=>draw(g,n),256);t.wrapS=t.wrapT=T.ClampToEdgeWrapping;return new T.MeshStandardMaterial({map:t,alphaTest:0.45,side:T.DoubleSide,roughness:0.65,envMapIntensity:0.5});};
+const frondMat=leafMat((g,n)=>{const c=n/2;g.strokeStyle='#6b7f35';g.lineWidth=4;g.beginPath();g.moveTo(c,n);g.lineTo(c,2);g.stroke();
+ for(let i=0;i<24;i++){const y=n-(i+1)*n/25,w=n*0.46*Math.sin(Math.PI*(i+1)/25);[-1,1].forEach(sd=>{g.save();g.translate(c,y);g.rotate(sd*0.55);g.fillStyle=i%3?'#3f7a35':'#4f8c3d';g.beginPath();g.ellipse(sd*w/2,0,w/2,3.4,0,0,7);g.fill();g.restore();});}});
+const monMat=leafMat((g,n)=>{const c=n/2;g.fillStyle='#2c6a2b';g.beginPath();g.ellipse(c,n*0.54,n*0.46,n*0.44,0,0,7);g.fill();
+ g.globalCompositeOperation='destination-out';g.lineWidth=9;for(let i=0;i<5;i++){const y=n*(0.28+i*0.12);[-1,1].forEach(sd=>{g.beginPath();g.moveTo(c+sd*n*0.47,y-6);g.lineTo(c+sd*n*0.2,y+8);g.stroke();g.beginPath();g.ellipse(c+sd*n*0.13,y+18,5,8,0,0,7);g.fill();});}
+ g.globalCompositeOperation='source-over';g.strokeStyle='#6fa35a';g.lineWidth=3;g.beginPath();g.moveTo(c,n);g.lineTo(c,n*0.12);g.stroke();});
+const longMat=leafMat((g,n)=>{const c=n/2;g.fillStyle='#4a8a38';g.beginPath();g.ellipse(c,n/2,n*0.17,n*0.49,0,0,7);g.fill();g.strokeStyle='#8db85e';g.lineWidth=3;g.beginPath();g.moveTo(c,n);g.lineTo(c,4);g.stroke();
+ g.strokeStyle='rgba(30,70,25,0.35)';g.lineWidth=1;for(let y=12;y<n;y+=9){g.beginPath();g.moveTo(c,y);g.lineTo(c-n*0.15,y-10);g.moveTo(c,y);g.lineTo(c+n*0.15,y-10);g.stroke();}});
+const vineMat=leafMat((g,n)=>{const c=n/2;g.fillStyle='#4f9a3c';g.beginPath();g.moveTo(c,n*0.02);g.bezierCurveTo(n*0.98,n*0.2,n*0.9,n*0.85,c,n*0.98);g.bezierCurveTo(n*0.1,n*0.85,n*0.02,n*0.2,c,n*0.02);g.fill();
+ g.strokeStyle='rgba(235,240,170,0.55)';g.lineWidth=5;for(let i=0;i<5;i++){g.beginPath();g.moveTo(c,n*0.9);g.quadraticCurveTo(c+(i-2)*n*0.12,n*0.5,c+(i-2)*n*0.2,n*0.2);g.stroke();}});
+TX.groundcover=tex((g,n)=>{g.fillStyle='#2f5a24';g.fillRect(0,0,n,n);for(let i=0;i<2600;i++){g.fillStyle=`hsl(${95+rnd()*25},${40+rnd()*20}%,${22+rnd()*26}%)`;g.beginPath();g.ellipse(rnd()*n,rnd()*n,3+rnd()*5,2+rnd()*3,rnd()*3,0,7);g.fill();}});
+RL[0x4a6b35]=['groundcover',2.5,0.95];
+function pcyl(g,r0,r1,h,x,y,z,mat){const m=new T.Mesh(new T.CylinderGeometry(r0,r1,h,16),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;g.add(m);return m;}
+// a flat leaf: base at (x,y,z), spun by yaw around the vertical, tipped outwards by tilt (0 = upright, pi/2 = flat)
+function leaf(g,mat,x,y,z,w,l,yaw,tilt){const geo=new T.PlaneGeometry(w,l);geo.translate(0,l/2,0);const m=new T.Mesh(geo,mat);m.position.set(x,y,z);m.rotation.order='YXZ';m.rotation.y=yaw;m.rotation.x=tilt;m.castShadow=true;g.add(m);return m;}
+// an arching palm frond in two pieces: rising, then drooping
+function frond(g,x,y,z,len,w,yaw){const l1=len*0.45,t1=0.55+rnd()*0.25;leaf(g,frondMat,x,y,z,w,l1,yaw,t1);
+ leaf(g,frondMat,x+l1*Math.sin(t1)*Math.sin(yaw),y+l1*Math.cos(t1),z+l1*Math.sin(t1)*Math.cos(yaw),w*0.85,len-l1,yaw,1.6+rnd()*0.35);}
+function palm(g,x,z,y0){pcyl(g,0.5,0.4,1.4,x,y0+0.7,z,M(0xa85a3c));pcyl(g,0.46,0.46,0.04,x,y0+1.39,z,M(0x4a3a2a));
+ [[0,0,4.4],[0.2,0.12,3.6],[-0.16,-0.15,3.0]].forEach(([dx,dz,h],si)=>{const sx=x+dx,sz=z+dz;pcyl(g,0.05,0.08,h,sx,y0+1.4+h/2,sz,M(0x7d8a4a));
+  for(let k=0;k<7;k++)frond(g,sx,y0+1.4+h,sz,2.4+rnd()*0.6,0.95,k/7*Math.PI*2+si*0.45);});}
+function monstera(g,x,z,y0){pcyl(g,0.45,0.36,1.2,x,y0+0.6,z,M(0xd8d4cc));pcyl(g,0.42,0.42,0.04,x,y0+1.19,z,M(0x4a3a2a));
+ for(let k=0;k<9;k++){const yaw=k/9*Math.PI*2+rnd()*0.4,h=0.9+rnd()*1.5,r=0.3+rnd()*0.35,lx=x+Math.sin(yaw)*r,lz=z+Math.cos(yaw)*r;
+  pcyl(g,0.025,0.03,h,(x+lx)/2,y0+1.2+h/2,(z+lz)/2,M(0x5f7d3a));leaf(g,monMat,lx,y0+1.2+h,lz,1.25,1.35,yaw,1.05+rnd()*0.35);}}
+function heliconia(g,x,z,y0){for(let k=0;k<7;k++){const yaw=rnd()*Math.PI*2;leaf(g,longMat,x+Math.sin(yaw)*0.15,y0,z+Math.cos(yaw)*0.15,0.62,2.2+rnd()*0.9,yaw,0.15+rnd()*0.5);}}
+// ---------- Tropical courtyard: green ground cover with stepping stones, heliconia at the herb planter, vines from the 2nd floor ----------
+{const gy=BASE[1];
+box(G[1],16.55,25.95,gy,gy+0.015,10.55,17.95,0x4a6b35);
+[[17.3,14.3],[18.5,14.4],[23.3,11.9],[24.4,11.15],[16.9,12.6]].forEach(([x,z])=>{const p=box(G[1],x-0.72,x+0.72,gy,gy+0.05,z-0.5,z+0.5,0xd6d0c4);p.rotation.y=(rnd()-0.5)*0.4;});
+heliconia(G[1],18.7,17.35,gy+1.2);heliconia(G[1],24.1,17.35,gy+1.2);
+// trailing pothos / money plant from planter boxes hung inside the 2nd-floor opening, cascading down into the courtyard
+const top=BASE[2]-0.9;[[16.55,25.95,10.55,11.1],[16.55,25.95,17.35,17.95],[16.55,17.1,11.1,17.35],[25.4,25.95,11.1,17.35]].forEach(b=>box(G[2],b[0],b[1],top,top+0.75,b[2],b[3],0x8a8e90));
+const pts=[];const run=(x0,x1,z0,z1)=>{const L=Math.hypot(x1-x0,z1-z0),k=Math.round(L/0.45);for(let i=0;i<=k;i++){const t=i/k;pts.push([x0+(x1-x0)*t,z0+(z1-z0)*t]);}};
+run(16.8,25.7,10.85,10.85);run(16.8,25.7,17.65,17.65);run(16.85,16.85,11.3,17.2);run(25.7,25.7,11.3,17.2);
+const mats4=[];pts.forEach(([x,z])=>{let len=2.2+rnd()*3.8;if(x>24.6&&z>14.8)len=Math.min(len,4.2);const n=Math.round(len/0.28);
+ for(let j=0;j<n;j++){const d=new T.Object3D();d.position.set(x+(rnd()-0.5)*0.25,top+0.6-j*0.28,z+(rnd()-0.5)*0.25);d.rotation.order='YXZ';d.rotation.y=rnd()*Math.PI*2;d.rotation.x=0.9+rnd()*0.7;const sc=0.75+rnd()*0.5;d.scale.set(sc,sc,sc);d.updateMatrix();mats4.push(d.matrix.clone());}});
+if(T.InstancedMesh&&mats4.length){const vg=new T.PlaneGeometry(0.42,0.46);vg.translate(0,0.23,0);const im=new T.InstancedMesh(vg,vineMat,mats4.length);mats4.forEach((m,i)=>im.setMatrixAt(i,m));im.castShadow=true;im.instanceMatrix.needsUpdate=true;G[2].add(im);}
+label(LB[1],'Ground cover + stepping stones',20.5,gy+2.2,16.2,0.6);}
+
 [4,9,19].forEach(z=>{box(G[1],0.6,1.9,10.5,11.6,z-0.65,z+0.65,0x9a958c);const s=new T.Mesh(new T.SphereGeometry(0.6,12,10),M(C.leaf));s.position.set(1.25,12.0,z);s.castShadow=true;G[1].add(s);});
 box(G[1],59.8,60.2,10.5,14,21.2,24.5,C.wall);
 box(G[2],1.95,2.25,21.5,30,1,11,C.jaali,0.7);
@@ -193,6 +233,8 @@ const LEG=0x2f2620,SOF=0x8d8579,SOFD=0x7a7266;
 const legs=(F,g,y0,y1,inset,t,c)=>{[[F.U0+inset,F.D-inset-t],[F.U1-inset-t,F.D-inset-t],[F.U0+inset,inset],[F.U1-inset-t,inset]].forEach(p=>F.P(g,p[0],p[0]+t,p[1],p[1]+t,y0,y1,c||LEG));};
 const tableNear=f=>{let best=null,bd=4;FURN.forEach(t=>{if(t[0]!==f[0]||!/table|desk/i.test(t[1])||/bedside/i.test(t[1]))return;const cx=(t[2]+t[3])/2,cz=(t[4]+t[5])/2,d=Math.hypot(cx-(f[2]+f[3])/2,cz-(f[4]+f[5])/2);if(d<bd){bd=d;best=t;}});return best;};
 function detail(f){const g=G[f[0]],y=BASE[f[0]]+f[6],h=f[7],n=f[1];
+if(/^Areca palm/.test(n)){palm(g,(f[2]+f[3])/2,(f[4]+f[5])/2,y);return true;}
+if(/^Monstera/.test(n)){monstera(g,(f[2]+f[3])/2,(f[4]+f[5])/2,y);return true;}
 // stone water feature: granite basin, slate back panel, a moving sheet of water, brass spout, a warm light under the water
 if(/water feature/i.test(n)){const F=frameOf(f),um=(F.U0+F.U1)/2;
  const wt=tex((c,s)=>{c.fillStyle='#6f98ad';c.fillRect(0,0,s,s);for(let i=0;i<140;i++){c.fillStyle=`rgba(255,255,255,${0.06+rnd()*0.22})`;c.fillRect(rnd()*s,rnd()*s,1+rnd()*3,8+rnd()*40);}},256);wt.repeat.set(1,2);

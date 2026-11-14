@@ -125,6 +125,9 @@ F_(1,'Herb planter (curry leaf, mint, lemongrass)',18.2,24.6,16.8,17.9,0,1.2,'co
 // water sheet into a granite basin; covered sump + small pump, so no standing water for mosquitoes
 F_(1,'Stone water feature (recirculating)',24.95,25.95,15.2,16.95,0,4.2,'stone',1);
 F_(1,'Stone sitting ledge',17.8,21.8,10.6,11.3,0,1.5,'stone',1);
+// Tropical planting (floor kept open): areca palm in the west corner, monstera beside the ledge; the rest of the green is
+// ground cover in shallow trays, heliconia in the herb planter and trailing pothos from planters hung in the 2nd-floor opening
+F_(1,'Areca palm (pot)',16.7,17.8,16.7,17.8,0,6.5,'plant',1);F_(1,'Monstera (pot)',21.9,22.9,10.6,11.6,0,3.5,'plant',1);
 F_(1,'Floor drain 1 (100 mm)',16.8,17.5,10.8,11.5,0,0.03,'steel',1);F_(1,'Floor drain 2 (overflow)',25,25.7,17,17.7,0,0.03,'steel',1);
 // ---------- 2nd floor ----------
 // Master bedroom: 14 x 11.5 ft (the unnamed room x13.5-16.5 is its bay, open to it; grew into the old Bedroom 3 corner). King bed, bedside tables, wardrobe + easy chair in the bay
