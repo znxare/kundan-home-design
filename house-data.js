@@ -28,7 +28,7 @@ const BASE=[0,10.5,21];
 const gaps=[
 [0,'z',0,35,60], // owner, 14 Nov 2026: no wall of our own on the north-west side of the front shop (ground floor)
 [0,'x',35,21.5,23.5],[0,'z',19.5,36,40],[0,'z',16,24,27],[0,'x',60,3,9],[0,'x',60,14,19],
-[1,'x',35,19.6,21.4],[1,'z',19.5,36,40],[1,'z',18,31,35],[1,'z',10.5,13.5,16.5],[1,'z',10.5,26.5,35],[1,'z',10.5,23,25.8],[1,'z',18,26.3,30.9],[1,'x',26,12.5,15],
+[1,'x',35,19.6,21.4],[1,'z',19.5,36,40],[1,'z',18,31,35],[1,'z',10.5,13.5,16.5],[1,'z',10.5,26.5,35],[1,'z',10.5,23,25.8],[1,'z',18,26.3,30.9],
 [1,'x',2.5,5,7.5],[1,'x',13.5,7.8,10.3],[1,'z',11.5,4,6.5],[1,'x',13.5,13.6,16.4],[1,'z',16.5,9.5,13.5],[1,'z',18,13.8,16.2],
 [1,'z',21.2,48,52],[1,'z',11.5,45,49],
 [2,'z',18,26,35],[2,'x',35,20,24],[2,'z',19.5,36,40],[2,'x',44,20,23],[2,'x',35,7.3,10.3],[2,'z',10.5,31,33.8],[2,'x',31,7.5,10.2],[2,'x',31,4,6.5],[2,'x',13.5,0,10.5],[2,'z',7,39,42],[2,'x',44,8,11],[2,'z',11.5,41.4,43.9],[2,'x',56,4,7],
@@ -59,7 +59,7 @@ const skylights=[['Bath 2',14.9,17.2,20.9,23],['Laundry',19.2,21.2,20.8,22.8],['
 const ventilators=[[1,'x',2.5,12.3,15.3],[2,'x',2.5,12,15]];
 
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
-const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Water feature',1,21.2,13.2,25.6,16.1,-1.6],['Dining',1,33.4,16.9,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
+const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Water feature',1,21.2,13.2,25.6,16.1,-1.6],['Dining',1,33.4,16.9,20,12,0],['Kitchen',1,28.6,20.4,19,22.6,-0.4],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
 
 // ============================================================
 // FURNITURE AND FITTINGS
@@ -78,22 +78,26 @@ F_(1,'Sofa',16.7,22.7,7.1,10.1,0,1.5,'fabric',1);F_(1,'Sofa back',16.7,22.7,9.5,
 F_(1,'Coffee table',17.7,21.7,4,6,0,1.3,'wood');F_(1,'Rug',16.2,23.2,3,7,0,0.03,'linen');
 F_(1,'Armchair',24,26,1.5,3.5,0,2.6,'fabric');F_(1,'Armchair',24,26,4,6,0,2.6,'fabric');
 F_(1,'Puja niche',33.2,34.8,0.3,2.2,0,4,'wood',1);
-// Dining: 9 x 7.5 ft, 6-seater, opens fully to the living room and to the courtyard
-F_(1,'Dining table (6-seater)',28.1,33.6,12.3,15.3,0,2.5,'wood',1);
+// Dining: 9 x 7.5 ft, open to the living room; fixed glass to the courtyard (water feature in view).
+// Extendable table: 3.5 x 3 ft for 4 every day, opens to 5.5 x 3 ft for 6. It sits on the courtyard side so the
+// walk from the foyer to the living room keeps a clear 3.5 to 4 ft lane along the stair-side wall.
+F_(1,'Extendable dining table (4, opens to 6)',26.6,30.1,12.1,15.1,0,2.5,'wood',1);
 // Folding dining chairs: 3 open for everyday use; 3 more fold flat (3 inches each) and hang on a wall rack on the
 // solid stair-side wall, so the dining room stays open. All 6 come out for guests.
-[29.1,32.9].forEach(x=>F_(1,'Folding chair',x-0.5,x+0.5,11.9,12.25,0,1.6,'fabric'));F_(1,'Folding chair',30.5,31.5,15.35,15.95,0,1.6,'fabric');
-F_(1,'Folded chairs on wall rack (3)',34.05,34.85,13.2,14.8,0.8,3.4,'wood',1);
-F_(1,'Crockery sideboard',26.2,27.2,16.2,17.9,0,3,'wood',1);
+[27.7,29.1].forEach(x=>F_(1,'Folding chair',x-0.5,x+0.5,11.75,12.1,0,1.6,'fabric'));F_(1,'Folding chair',27.85,28.85,15.1,15.6,0,1.6,'fabric');
+F_(1,'Folded chairs on wall rack (3)',34.05,34.85,14.2,15.8,0.8,3.4,'wood',1);
+F_(1,'Wall-hung crockery unit',34,34.85,12.6,15.8,4.4,2.5,'wood',1);
 // Foyer: shoe bench and tall shoe tower
 F_(1,'Shoe bench',31.3,32.6,20.1,22.9,0,1.5,'wood',1);F_(1,'Shoe tower',31.3,32.6,23,24.3,0,7,'wood');
-// Kitchen (13.5 x 6.5 ft parallel): sink + dishwasher under the courtyard window, hob + chimney opposite,
-// fridge + tall pantry at the dining end, tall storage unit at the duct end
-F_(1,'Sink counter',18.2,25.8,18.2,19.8,0,3,'counter');F_(1,'Sink',20,21.6,18.4,19.5,3,0.1,'steel',1);F_(1,'Dishwasher slot',21.8,23.1,19.8,19.85,0,2.6,'steel',1);
-F_(1,'Hob counter',19.1,29.1,22.7,24.3,0,3,'counter');F_(1,'Hob',22,24.2,23,24,3,0.1,'black',1);
-F_(1,'Chimney',22,24.2,23.2,24.3,5.8,2,'steel',1);F_(1,'Chimney duct to Duct K',19.1,22,23.8,24.3,7.8,0.6,'steel');
-F_(1,'LPG cabinet (vented)',25.4,26.6,22.62,22.68,0,2.6,'wood',1);F_(1,'Microwave',26.3,27.9,23.2,24.2,3,1,'steel',1);F_(1,'RO purifier',28.2,29,23.9,24.3,3.9,1,'white',1);
-F_(1,'Wall cabinets',24.5,29.1,23.4,24.3,5,2.5,'white');F_(1,'Wall cabinets',19.1,21.8,23.4,24.3,5,2.5,'white');
+// Kitchen (13.5 x 6.5 ft), one-wall layout: hob + chimney by Duct K, 2.4 ft prep, sink, dishwasher, microwave corner,
+// all on one 10 ft counter (2 ft deep) along the back wall; a slim 7-inch shelf under the courtyard window.
+// That leaves a 3.6 ft working aisle. Fridge + tall pantry at the dining end, tall storage unit at the duct end.
+F_(1,'Kitchen counter',19.1,29.1,22.4,24.3,0,3,'counter');F_(1,'Hob',20.1,22.2,22.9,23.9,3,0.1,'black',1);F_(1,'Sink',24.6,26.2,22.7,23.9,3,0.1,'steel',1);
+F_(1,'Chimney',20.1,22.2,23.2,24.3,5.8,2,'steel',1);F_(1,'Chimney duct to Duct K',19.1,20.1,23.8,24.3,7.8,0.6,'steel');
+F_(1,'LPG cabinet (vented)',20.1,21.3,22.32,22.38,0,2.6,'wood',1);F_(1,'Dishwasher slot',26.4,27.7,22.32,22.38,0,2.6,'steel',1);
+F_(1,'Microwave',27.9,29,23.3,24.3,3,1,'steel',1);F_(1,'RO purifier',25,25.8,23.9,24.3,3.9,1,'white',1);
+F_(1,'Wall cabinets',22.4,29.1,23.4,24.3,5,2.5,'white');
+F_(1,'Window shelf (herbs, tea)',19.3,25.8,18.2,18.8,2.9,0.15,'counter',1);
 F_(1,'Fridge',29.3,30.9,22.4,24.4,0,6,'steel',1);F_(1,'Tall pantry',29.3,30.9,20.4,22.3,0,7,'wood',1);F_(1,'Tall storage unit',17.6,19,19.9,22.9,0,7,'wood',1);
 // Common bath: towel niche, basin, WC, shower
 F_(1,'Towel & linen niche',13.8,14.9,20.6,21.8,0,7,'wood');F_(1,'Basin',16.1,17.3,20.2,21.4,2.6,0.5,'white');

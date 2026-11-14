@@ -6,11 +6,11 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 
 | Point | Ground | 1st floor | 2nd floor | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Switchboard | 5 | 21 | 32 | 58 |
+| Switchboard | 5 | 20 | 32 | 57 |
 | Light point (ceiling) | 24 | 24 | 27 | 75 |
 | Ceiling fan | 0 | 4 | 8 | 12 |
 | 6A socket (sockets come in pairs) | 8 | 23 | 27 | 58 |
-| 16A power socket | 3 | 10 | 1 | 14 |
+| 16A power socket | 3 | 8 | 1 | 12 |
 | AC point 16A + concealed copper pipe & drain | 2 | 5 | 6 | 13 |
 | Geyser 16A | 0 | 2 | 3 | 5 |
 | Exhaust fan | 1 | 2 | 4 | 7 |
@@ -39,9 +39,9 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 | First floor | Bedroom 2 | 1× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 1× Switchboard, 1× 6A socket |
 | First floor | Common bath | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
 | First floor | Common stair | 1× Light point, 1× 6A socket, 2× Switchboard |
-| First floor | Dining | 1× Light point, 1× Ceiling fan, 2× 6A socket, 3× Switchboard, 1× Distribution board |
+| First floor | Dining | 1× Light point, 1× Ceiling fan, 2× 6A socket, 2× Switchboard, 1× Distribution board |
 | First floor | Foyer | 1× Light point, 1× 6A socket, 2× Switchboard, 1× Inverter / battery, 1× CCTV camera |
-| First floor | Kitchen | 1× Light point, 8× 16A power socket, 2× 6A socket |
+| First floor | Kitchen | 1× Light point, 6× 16A power socket, 2× 6A socket |
 | First floor | Landing | 1× CCTV camera, 1× Video doorbell |
 | First floor | Living | 4× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 5× 6A socket, 2× Switchboard, 1× Data / TV / Wi-Fi point |
 | First floor | Passage | 3× Light point, 2× 6A socket, 3× Switchboard |

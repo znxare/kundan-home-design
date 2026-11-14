@@ -251,7 +251,7 @@ if(/^WC$/.test(n)){const F=frameOf(f),um=(F.U0+F.U1)/2;
 if(/basin/i.test(n)){const F=frameOf(f),um=(F.U0+F.U1)/2;F.P(g,F.U0,F.U1,0,F.D,y,y+h,CER,0.12);
  F.P(g,um-0.04,um+0.04,0.06,0.16,y+h,y+h+0.45,CHR);F.P(g,um-0.04,um+0.04,0.06,0.5,y+h+0.4,y+h+0.47,CHR);return true;}
 // kitchen base units: shutters, handles, plinth, stone top
-if(/^Sink counter$|^Hob counter$|^Utility sink$/.test(n)){const F=frameOf(f),top=y+h;
+if(/^Sink counter$|^Hob counter$|^Kitchen counter$|^Utility sink$/.test(n)){const F=frameOf(f),top=y+h;
  F.P(g,F.U0,F.U1,0,F.D-0.12,y,y+0.3,0x3b3632);F.P(g,F.U0,F.U1,0,F.D-0.05,y+0.3,top-0.12,0xe4ded3);
  F.P(g,F.U0-0.03,F.U1+0.03,0,F.D+0.06,top-0.12,top,0x2f3133,0.02);
  const k=Math.max(1,Math.round(F.L/1.8));for(let i=0;i<=k;i++){const u=F.U0+F.L*i/k;F.P(g,u-0.015,u+0.015,F.D-0.06,F.D-0.03,y+0.35,top-0.15,0x8a8378);}
@@ -259,7 +259,7 @@ if(/^Sink counter$|^Hob counter$|^Utility sink$/.test(n)){const F=frameOf(f),top
 return false;}
 // small finishing touches on cabinets that stay as boxes
 function detailExtras(f){const g=G[f[0]],y=BASE[f[0]]+f[6],h=f[7],n=f[1];
-if(/^Bedside table$|^Crockery sideboard$|^Shoe bench$|^Wall cabinets$|^Tall pantry$|^Tall storage unit$|^Shoe tower$/.test(n)){const F=frameOf(f),k=Math.max(1,Math.round(F.L/1.6));
+if(/^Bedside table$|^Crockery sideboard$|^Wall-hung crockery unit$|^Shoe bench$|^Wall cabinets$|^Tall pantry$|^Tall storage unit$|^Shoe tower$/.test(n)){const F=frameOf(f),k=Math.max(1,Math.round(F.L/1.6));
  for(let i=1;i<k;i++){const u=F.U0+F.L*i/k;F.P(g,u-0.015,u+0.015,F.D,F.D+0.03,y+0.05,y+h-0.05,0x3b2a1c);}
  if(n==='Bedside table')F.P(g,F.U0+0.05,F.U1-0.05,F.D,F.D+0.03,y+h-0.45,y+h-0.42,0x3b2a1c);
  for(let i=0;i<k;i++){const u=F.U0+F.L*(i+0.5)/k;F.P(g,u-0.2,u+0.2,F.D,F.D+0.06,n==='Wall cabinets'?y+0.15:y+h-0.3,n==='Wall cabinets'?y+0.2:y+h-0.25,CHR);}}
@@ -346,6 +346,7 @@ gaps.forEach(([lv,ax,f,a0,a1])=>{const w=a1-a0;if(w>4.05||w<1.5)return;if(lv===0
  // the open leaf: hinged at a0, swung 90 degrees into the side with more room
  const s=(()=>{const r1=roomAt2(lv,ax==='x'?f+1:(a0+a1)/2,ax==='x'?(a0+a1)/2:f+1),r0=roomAt2(lv,ax==='x'?f-1:(a0+a1)/2,ax==='x'?(a0+a1)/2:f-1);
   const area=r=>r&&r[1]!=='open'?(r[3]-r[2])*(r[5]-r[4]):-1;return area(r1)>=area(r0)?1:-1;})();
+ if(w>3.5)return;// wider openings (3.6 to 4 ft) are open archways: frame only, no door leaf
  const lw=w-0.36,u=a0+0.18;
  if(ax==='x')box(TD[lv],Math.min(f,f+s*lw),Math.max(f,f+s*lw),b+0.05,b+7,u,u+0.12,LEAF);else box(TD[lv],u,u+0.12,b+0.05,b+7,Math.min(f,f+s*lw),Math.max(f,f+s*lw),LEAF);
  const hx=ax==='x'?f+s*(lw-0.35):u+0.06,hz=ax==='x'?u+0.06:f+s*(lw-0.35);box(TD[lv],hx-0.04,hx+0.04,b+3.3,b+3.4,hz-0.14,hz+0.14,0xb8bcc0);});
