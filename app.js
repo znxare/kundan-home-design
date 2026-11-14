@@ -22,7 +22,7 @@ const C={wall:0xf3f0e8,room:0xdcc6a2,wet:0xc9dde2,shop:0xbdbbb4,stair:0xa89c8e,p
 // ---------- procedural textures (no image files needed) ----------
 let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
 const maxAniso=R.capabilities.getMaxAnisotropy?R.capabilities.getMaxAnisotropy():1;
-function tex(draw,n){n=n||512;const c=document.createElement('canvas');c.width=c.height=n;const g=c.getContext('2d');draw(g,n);const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.encoding=T.sRGBEncoding;t.anisotropy=Math.min(8,maxAniso);return t;}
+function tex(draw,n){n=n||512;const c=document.createElement('canvas');c.width=c.height=n;const g=c.getContext('2d');draw(g,n);const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;t.encoding=T.sRGBEncoding;t.anisotropy=Math.min(16,maxAniso);return t;}
 const noise=(g,n,a,dark,cnt)=>{for(let i=0;i<(cnt||6000);i++){g.fillStyle=(rnd()<0.5?(dark||'rgba(0,0,0,'):'rgba(255,255,255,')+(a*rnd())+')';const s=1+rnd()*2;g.fillRect(rnd()*n,rnd()*n,s,s);}};
 const slabs=(g,n,k,base,vary,joint)=>{const s=n/k;for(let i=0;i<k;i++)for(let j=0;j<k;j++){const l=vary*(rnd()-0.5);g.fillStyle=base(l);g.fillRect(i*s,j*s,s,s);}noise(g,n,0.06);g.strokeStyle=joint;g.lineWidth=3;for(let i=0;i<=k;i++){g.beginPath();g.moveTo(i*s,0);g.lineTo(i*s,n);g.stroke();g.beginPath();g.moveTo(0,i*s);g.lineTo(n,i*s);g.stroke();}};
 const TX={
@@ -463,12 +463,15 @@ cam.position.set(ctgt.x+crad*Math.sin(cph)*Math.cos(cth),ctgt.y+crad*Math.cos(cp
 function size(){const w=fig.clientWidth,h=fig.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();if(typeof realSize==='function')realSize(w,h);}
 // ---------- Realistic render: screen-space ambient occlusion (soft shadows where surfaces meet) + FXAA smoothing ----------
 const canReal=!!(T.SSAOPass&&T.SSAOPass.OUTPUT&&T.EffectComposer&&T.ShaderPass&&T.FXAAShader);let comp=null,ssao=null,fxaa=null,realOn=false;
-function realSize(w,h){if(!comp)return;const pr=R.getPixelRatio();comp.setPixelRatio(pr);comp.setSize(w,h);fxaa.material.uniforms.resolution.value.set(1/(w*pr),1/(h*pr));}
+function realSize(w,h){if(!comp)return;const pr=R.getPixelRatio();comp.setPixelRatio(pr);comp.setSize(w,h);if(fxaa)fxaa.material.uniforms.resolution.value.set(1/(w*pr),1/(h*pr));}
 function makeReal(){if(comp||!canReal)return;comp=new T.EffectComposer(R);ssao=new T.SSAOPass(S,cam,fig.clientWidth,fig.clientHeight);
 ssao.kernelRadius=1.1;ssao.minDistance=0.0003;ssao.maxDistance=0.006;
+// Sharp edges without blur: render the picture into a 4x multisampled buffer (WebGL2) instead of smoothing it afterwards with FXAA
+const msaa=!!(R.capabilities.isWebGL2&&T.WebGLMultisampleRenderTarget);
+if(msaa){const o=ssao.beautyRenderTarget,rt=new T.WebGLMultisampleRenderTarget(o.width,o.height,{minFilter:T.LinearFilter,magFilter:T.LinearFilter,format:T.RGBAFormat});rt.samples=4;ssao.beautyRenderTarget=rt;o.dispose();}
 ssao.beautyRenderTarget.texture.encoding=T.sRGBEncoding;
 ssao.overrideVisibility=function(){const c=this._visibilityCache;this.scene.traverse(o=>{c.set(o,o.visible);if(o.isPoints||o.isLine||o.isSprite||(o.material&&o.material.transparent&&o.material.opacity<0.6))o.visible=false;});};
-comp.addPass(ssao);fxaa=new T.ShaderPass(T.FXAAShader);comp.addPass(fxaa);realSize(fig.clientWidth,fig.clientHeight);}
+comp.addPass(ssao);if(!msaa){fxaa=new T.ShaderPass(T.FXAAShader);comp.addPass(fxaa);}realSize(fig.clientWidth,fig.clientHeight);}
 function setReal(on){realOn=on&&canReal;if(realOn)makeReal();const cb=document.getElementById('cReal');if(cb){cb.checked=realOn;cb.disabled=!canReal;}}
 function draw(){if(realOn&&comp){const u=ssao.ssaoMaterial.uniforms;u.cameraNear.value=cam.near;u.cameraFar.value=cam.far;u.cameraProjectionMatrix.value.copy(cam.projectionMatrix);u.cameraInverseProjectionMatrix.value.copy(cam.projectionMatrixInverse);comp.render();}else R.render(S,cam);}
 new ResizeObserver(size).observe(fig);size();setView('all');cth=th;cph=ph;crad=rad;ctgt.set(tgt.x,tgt.y,tgt.z);
