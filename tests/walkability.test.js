@@ -6,7 +6,7 @@ const U=()=>new Proxy(function(){},{get:(t,k)=>{if(k in t)return t[k];if(k==='th
 class V3{constructor(x=0,y=0,z=0){this.x=x;this.y=y;this.z=z;}set(x,y,z){this.x=x;this.y=y;this.z=z;return this;}copy(v){return this.set(v.x,v.y,v.z);}}
 class Mat{constructor(p={}){Object.assign(this,{opacity:1},p);this.color={getHex:()=>p.color};}}
 class Obj{constructor(){this.position=new V3();this.scale=new V3(1,1,1);this.rotation={x:0,y:0,z:0};this.children=[];}add(c){this.children.push(c);}}
-global.THREE=new Proxy({Vector3:V3,MeshLambertMaterial:Mat,MeshBasicMaterial:Mat,SpriteMaterial:Mat,Mesh:class extends Obj{constructor(g,m){super();this.material=m;}},Group:Obj,Scene:Obj,Sprite:Obj,
+global.THREE=new Proxy({Vector3:V3,BufferGeometry:class{constructor(){this.attributes={};}setAttribute(k,v){this.attributes[k]=v;}},MeshLambertMaterial:Mat,MeshBasicMaterial:Mat,SpriteMaterial:Mat,Mesh:class extends Obj{constructor(g,m){super();this.material=m;}},Group:Obj,Scene:Obj,Sprite:Obj,
  DirectionalLight:class extends Obj{constructor(){super();this.shadow={mapSize:{set(){}},camera:{}};this.target=new Obj();}},
  PerspectiveCamera:class extends Obj{lookAt(){}updateProjectionMatrix(){}},
  WebGLRenderer:class{constructor(){this.shadowMap={};this.domElement=el();}setPixelRatio(){}setSize(){}render(){}}},{get:(t,k)=>k in t?t[k]:class extends Obj{}});

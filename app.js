@@ -157,7 +157,7 @@ const pm=new T.MeshBasicMaterial({color:0x2f8ad8});const pg=new T.SphereGeometry
 const parts=[];
 paths.forEach(p=>{const c=cum(p);for(let i=0;i<26;i++){const m=new T.Mesh(pg,pm);air.add(m);const q={p:p,c:c,u:i/26,m:m,sp:0.05};const v=at(p,c,q.u);m.position.set(v[0],v[1],v[2]);parts.push(q);}});
 
-let siteOn=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
+let siteOn=false,raining=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
 let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){
@@ -211,7 +211,7 @@ const ca=(Math.sin(dec)-Math.sin(alt)*Math.sin(lat))/(Math.cos(alt)*Math.cos(lat
 let az=Math.acos(Math.max(-1,Math.min(1,ca)));if(H>0)az=2*Math.PI-az;
 const r2=Math.SQRT1_2;const hx=Math.cos(az)*r2+Math.sin(az)*r2,hz=-Math.cos(az)*r2+Math.sin(az)*r2;
 sun.position.set(30+Math.cos(alt)*hx*150,Math.sin(alt)*150,12+Math.cos(alt)*hz*150);
-sun.intensity=alt>0?0.95*Math.min(1,alt*4):0;
+sun.intensity=(alt>0?0.95*Math.min(1,alt*4):0)*(raining?0.2:1);
 document.getElementById('hrv').textContent=fmt(hour);
 const dir=D[Math.round(az/(Math.PI/8))%16];
 document.getElementById('sunr').textContent=alt>0?'Sun in the '+dir+', '+Math.round(alt*180/Math.PI)+'° above the horizon':'The sun is below the horizon';
@@ -219,6 +219,7 @@ let h;
 if(hour<10)h=season===2?'Winter mornings: the sun rises in the south-east, behind the neighbour, so light reaches you mainly from above, through the courtyard cap and the skylights.':'Early sun lands on the road-facing deck, Bedroom 3 and the open sit-out, and comes through the hall’s glass wall into the family lounge.';
 else if(hour<14.5)h=season===2?'Winter noon: the sun is lower and from the south, so it lights the upper walls of the courtyard, which bounce light down. Keep those walls white.':'High sun drops straight down the courtyard onto the first-floor living and dining, and the glass blocks pass some to the godown below.';
 else h='Low western sun hits the back court. The terracotta jaali filters it into patterned light instead of heat.';
+if(raining){h=rainHint;document.getElementById('sunr').textContent='Overcast: monsoon rain, wind from the south-west';}
 document.getElementById('hint').textContent=h;
 }
 function camUp(){if(walk){const c=Math.cos(pitch);cam.position.copy(eye);cam.lookAt(eye.x+Math.cos(yaw)*c,eye.y+Math.sin(pitch),eye.z+Math.sin(yaw)*c);return;}cam.position.set(tgt.x+rad*Math.sin(ph)*Math.cos(th),tgt.y+rad*Math.cos(ph),tgt.z+rad*Math.sin(ph)*Math.sin(th));cam.lookAt(tgt);}
@@ -257,10 +258,50 @@ document.getElementById('exitw').addEventListener('click',()=>setView('all'));
 gN.visible=false;
 setView('all');sunUpdate();
 
+
+// ---------- Rain (monsoon from the south-west) ----------
+
+const gRain=new T.Group();S.add(gRain);gRain.visible=false;
+const RN=3000,RL=1.3,RV=34,RW=0.3; // drops, streak length ft, fall speed ft/s, drift towards +x (NE) per ft of fall
+const inQ=(x,z,r)=>x>r[0]&&x<r[1]&&z>r[2]&&z<r[3];
+// Where a drop stops: [x0,x1,z0,z1,height]. First match wins.
+const rainStops=[
+[19,27,9,17,TY+3.25],        // courtyard cap keeps the courtyard dry
+[14.6,21.4,16.6,24.9,TY+8.5],// home stair head
+[0,4,0,24.5,BASE[1]],        // back court: through the roof grid onto the 1st-floor court
+[56,60,0,12.25,BASE[2]],     // road deck: through the grille roof
+[44,60,12.25,24.5,BASE[2]],  // sit-out: through the pergola grille
+[0,60,0,24.5,TY]];           // everything else: the terrace
+function rainFloor(x,z){
+if(gN.visible&&x>0&&x<60&&((z>-14&&z<-0.35)||(z>24.85&&z<38)))return 34;
+for(const r of rainStops)if(inQ(x,z,r))return r[4];return 0;}
+const rp=new Float32Array(RN*6),rd=[];
+function dropReset(i,top){const d=rd[i]||(rd[i]={});d.x=-14+Math.random()*80;d.z=-10+Math.random()*44;d.y=top?58+Math.random()*6:rainFloor(d.x,d.z)+Math.random()*(58-rainFloor(d.x,d.z));}
+for(let i=0;i<RN;i++)dropReset(i,false);
+const rg=new T.BufferGeometry();rg.setAttribute('position',new T.BufferAttribute(rp,3));
+const rLines=new T.LineSegments(rg,new T.LineBasicMaterial({color:0x8fa6bd,transparent:true,opacity:0.55,depthWrite:false}));rLines.frustumCulled=false;gRain.add(rLines);
+function rainStep(dt){
+for(let i=0;i<RN;i++){const d=rd[i];d.y-=RV*dt;d.x+=RV*RW*dt;
+if(d.y<=rainFloor(d.x,d.z))dropReset(i,true);
+const k=i*6;rp[k]=d.x;rp[k+1]=d.y;rp[k+2]=d.z;rp[k+3]=d.x-RL*RW;rp[k+4]=d.y+RL;rp[k+5]=d.z;}
+rg.attributes.position.needsUpdate=true;}
+rainStep(0);
+// Wet, open-to-rain surfaces and the rainwater downpipes (shown only while it rains)
+const gWet=new T.Group();gRain.add(gWet);
+box(gWet,0.05,3.95,BASE[1]+0.02,BASE[1]+0.07,0.05,24.45,0x6f8aa3,0.45);
+box(gWet,56.05,59.95,BASE[2]+0.02,BASE[2]+0.07,0.05,12.2,0x6f8aa3,0.45);
+box(gWet,44.05,59.95,BASE[2]+0.02,BASE[2]+0.07,12.3,24.45,0x6f8aa3,0.45);
+[[4,15,0,24.5],[15,19,0,17],[19,27,0,9],[21,27,17,24.5],[27,44,0,24.5],[44,56,0,12.25]].forEach(r=>box(gWet,r[0]+0.05,r[1]-0.05,TY+0.02,TY+0.07,r[2]+0.05,r[3]-0.05,0x6f8aa3,0.4));
+[[12,-0.45],[40,-0.45],[12,24.95],[40,24.95]].forEach(p=>box(gWet,p[0]-0.2,p[0]+0.2,0,TY+0.3,p[1]-0.2,p[1]+0.2,0x3f6f9a));
+label(gWet,'Rainwater downpipe',40,TY-4,-1.5,0.8);label(gWet,'Back court gets wet: slope + drain',2,BASE[1]+3,12,0.8);
+label(gWet,'Courtyard stays dry under the cap',23,TY+5,13,0.8);
+const rainHint='Monsoon rain, blowing in from the south-west. The courtyard cap keeps the courtyard dry (keep the louvre gap above it narrow, or slanting rain gets in). Rain falls through the steel grids onto the back court, the road deck and the sit-out: give those floors a slight slope, a floor drain and a raised door threshold. The terrace drains through downpipes on the neighbour-wall sides into the rainwater recharge pit.';
+document.getElementById('cRain').addEventListener('change',e=>{raining=e.target.checked;S.fog=raining?new T.Fog(0x9aa3ab,90,320):null;sunUpdate();});
 const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 let last=performance.now();
 function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;
 if(air.visible&&!rm)parts.forEach(q=>{q.u=(q.u+dt*q.sp)%1;const v=at(q.p,q.c,q.u);q.m.position.set(v[0],v[1],v[2]);});
+gRain.visible=raining&&(mode==='all'||walk);if(gRain.visible)rainStep(rm?0:dt);
 if(walk){const sp=6*dt;if(keys.f)step(sp);if(keys.b)step(-sp);if(keys.l)yaw-=1.6*dt;if(keys.r)yaw+=1.6*dt;updWalkUI();}
 camUp();R.render(S,cam);requestAnimationFrame(loop);}
 requestAnimationFrame(loop);

@@ -19,6 +19,8 @@
 - [ ] Decide whether the stair being built goes on to the 2nd floor, or stops at the 1st floor (shop stair) as in the model
 - [ ] Steps at the front going down to the road: how many, and how wide
 
+- [ ] Floor drains, slopes and raised door thresholds for the back court, road deck and sit-out (they get rain through the grilles)
+
 ## Ideas to build in the model
 - [ ] Move furniture into `house-data.js` so rooms and furniture move together
 - [ ] Add windows, doors and sunshades as real objects (now walls just have gaps)
