@@ -17,6 +17,8 @@ to make room), an open entrance view to the courtyard, puja in the north-east co
 the water tank in the south-west of the terrace, built-in storage throughout, laundry on the 2nd floor,
 a lockable door between the shop landing and the home, and the family stair continuing to the terrace.
 
+**Single staircase (owner's decision):** the common stair serves shops, home and terrace, with a lockable grille gate above the 1st-floor landing. The 1st floor gains a utility/laundry room opening to the back court, a store/pantry off the wet kitchen, and a 5 × 5 guest WC. The 2nd floor gains a larger master bath, a walk-in dressing room, a suitcase store and a linen store.
+
 **Added after the brief (security):** glass faces only the inside courtyard. There are fixed steel grids
 over the courtyard and the back court at roof level, and full-height grilles plus a grille roof on the
 road deck and sit-out. The back court has full-height side walls. A safety grille door goes behind the
@@ -46,8 +48,11 @@ main door, and a steel door on the terrace. A 2nd-floor gallery now links the fa
 ## Kitchen
 | Item | Plan |
 | --- | --- |
-| Wet kitchen | About 6 × 7.5 ft on the south side, between the family stair and the dry kitchen. Hob, chimney, sink and dishwasher slot, with a window onto the courtyard. |
-| Dry kitchen | An island facing dining, the fridge, a tall pantry, the RO purifier and a breakfast counter. |
+| Kitchen | One parallel kitchen, about 10 × 6.5 ft, with a sliding glass door to dining (closed while frying). Sink and dishwasher slot on the counter under the courtyard window; hob, chimney (own duct to the terrace) and vented LPG cabinet on the opposite counter, about 3 ft away; fridge and tall pantry at the dining end, so sink, hob and fridge form a tight work triangle. Microwave and RO on the back counter. |
+| 1st-floor bedrooms | Bedroom 1 (parents, 11 × 11.5 ft, en-suite bath) and Bedroom 2 (11 × 7.5 ft, guest or child), both facing the back court. A common bath (4 × 6.5 ft, with the washing machine) serves Bedroom 2 and guests. |
+| Dining | About 8 × 7 ft beside the courtyard, open to the living room (the table can straddle the two). |
+| Entrance | Foyer (4 × 6.5 ft, shoe cabinet) → dining with the courtyard tree in view → living (20 × 11 ft). You never pass through a kitchen. |
+| Guest WC | 5 × 5 ft, off a small lobby by the family stair and Bedroom 1, away from the main door. |
 | Counters | About 19 running ft in total. |
 | LPG | A ventilated cabinet on the courtyard side, or gas piped in from cylinders kept outside, plus a gas leak detector. |
 | Hot water | From the solar heater, with an instant geyser as backup. |
@@ -102,3 +107,74 @@ main door, and a steel door on the terrace. A 2nd-floor gallery now links the fa
 | Toilets | W/NW, never NE | South side at the back: not NE ✓, not ideal W/NW |
 
 Have a Vastu consultant check the final drawings if it matters to the family.
+
+## Services update (14 Nov)
+
+### Bathrooms stacked, with service ducts
+Every 2nd-floor bathroom now sits over a 1st-floor wet room:
+- Master bath over Bath 1.
+- Bath 2 over the common bath.
+- The 2nd-floor laundry over the kitchen.
+
+Bath 3 is the one exception: it still sits over a shop. It needs a sunken slab, two layers of waterproofing, and a removable panel in the shop's false ceiling for inspection.
+
+Five ducts run from the ground floor to the terrace:
+
+| Duct | What runs inside |
+| --- | --- |
+| A | Bath 1 + master bath: soil/waste stack, vent, exhaust |
+| B | Common bath + Bath 2: soil/waste stack, vent, exhaust |
+| K | Kitchen chimney duct (to the terrace), kitchen waste, laundry waste, AC drains |
+| C | Bath 3: soil/waste stack, vent, exhaust, boxed through the shop below |
+| E | Electrical riser: meters to floor boards, inverter, solar conduit, CCTV, data |
+
+### Airflow and openings
+- **Breeze path:** air enters from the south-west back court through both 1st-floor bedrooms and the 2nd-floor office and master bedroom. It crosses into the lobby, reading corner and living room, and leaves up the courtyard through the louvred cap.
+- **Fanlights:** keep a ventilator (fanlight or louvred panel, about 1 ft high) above every internal door, so air moves even when doors are shut.
+- **Courtyard openings:** living → courtyard has a 6 ft sliding door, dining → courtyard a 2.5 ft door, and the kitchen a window over the sink. Use full-height sliding or folding glass on the courtyard faces, so living, courtyard and dining open up as one space.
+- **Road side:** on the 1st floor the road side belongs to the shops, so the home has no road-facing openings there. Add high ventilators in the shop fronts to help through-flow. On the 2nd floor, Bedroom 4, its deck and the sit-out are all road-facing, with full-height grilles.
+- **High-level ventilation:** the courtyard cap louvres, openable ventilators at the top of the stair skylight, top-hung vents near the ceiling on every courtyard-facing wall, and exhaust fans in all wet rooms into the ducts.
+
+### Kitchen checklist
+
+| Priority | How the plan meets it |
+| --- | --- |
+| Chimney with external exhaust | The chimney over the hob ducts into Duct K and up to the terrace, never into a neighbour wall |
+| Window for ventilation | The sink counter runs under a 6 ft window onto the courtyard |
+| Space between hob and sink | Sink on the courtyard counter, hob on the opposite counter, with a 2.9 ft aisle between them. Neither splashes the other, and both are a step apart |
+| Tall pantry storage | Tall pantry beside the fridge, plus a 2 ft deep pantry cupboard off the kitchen |
+| Fridge that doesn't block movement | At the dining end of the back counter, out of the aisle and clear of the dining door |
+| Dedicated washing machine / utility | A separate laundry on the 2nd floor over the kitchen: washer with a stacked dryer, utility sink, ceiling pulley rack, and drains into Duct K. The common bath no longer holds the washing machine |
+
+### Bedroom 2 (11 × 7.5 ft)
+- **Bed:** a 4.5 × 6.5 ft bed with its head on the neighbour wall, so the back-court window sits beside the bed rather than behind it.
+- **Storage:** a sliding-door wardrobe on the opposite wall, which needs no door-swing space, and a wall-mounted study shelf between them.
+- **Clearance:** about 3.5 ft of clear floor in front of the wardrobe.
+
+### Courtyard drainage (design before construction)
+- **Floor level:** the courtyard floor sits about 4 inches below the surrounding rooms, with a 2–4 inch upstand at every doorway.
+- **Slope:** the floor falls at 1:100 (about 1 inch in 8 ft) to **two** 100 mm gratings, a main drain and an overflow, in opposite corners.
+- **Downpipes:** both outlets drop through the godown below in 100 mm pipes. Each has a cleaning eye at godown level, and they connect to the rainwater line, recharge pit and street drain.
+- **Waterproofing:** an APP/SBS or PU membrane over the slab, turned up at least 1 ft on all walls. Then protection screed, then stone or tile, with all joints sealed at the drains.
+- **Glass blocks:** reconsider the glass blocks in the courtyard floor. They add leak risk over the godown. If you keep them, use a single factory-sealed unit with its own drip tray.
+- **Maintenance:** gratings that lift out without tools, a hose tap in the courtyard, and ladder access to clean the louvres and bird mesh on the cap above.
+- **Terrace:** at least 2 rainwater outlets per terrace slab, with leaf guards, so one blocked outlet doesn't flood the roof.
+
+### Electrical
+See `docs/electrical-schedule.md` and `docs/plans/electrical-level-*.png`:
+- 273 points placed from the layout.
+- Separate meters at the street.
+- Floor boards with MCBs and an RCCB beside Duct E.
+- Inverter circuits marked.
+- AC points with piping routes.
+- 3 earth pits.
+- CCTV and video doorbells.
+
+### Size update (14 Nov, later)
+| Space | Before | Now |
+| --- | --- | --- |
+| Kitchen | 10 × 6.5 ft + 2 ft pantry cupboard | 13.5 × 6.5 ft parallel kitchen with a tall storage unit, tall pantry and fridge |
+| Dining | 8 × 7 ft | 9 × 7.5 ft, 6-seater + crockery sideboard, fully open to living and courtyard |
+| Courtyard | 8 × 7 ft | 9.5 × 7.5 ft |
+| Living | 20 × 11 ft | 21.5 × 10.5 ft |
+| Back court | 4 ft deep | 2.5 ft deep (still brings light, breeze and the jaali) |

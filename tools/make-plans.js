@@ -4,9 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const root = path.join(__dirname, '..');
 const src = fs.readFileSync(path.join(root, 'house-data.js'), 'utf8');
-const { LV, gaps } = new Function(src + '\nreturn { LV, gaps };')();
+const { LV, gaps, FURN, SHAFTS } = new Function(src + '\nreturn { LV, gaps, FURN, SHAFTS };')();
 
-const S = 14;            // pixels per foot
+const S = 22;            // pixels per foot
 const PAD = 40;
 const W = 60 * S + PAD * 2, H = 24.5 * S + PAD * 2 + 40;
 const FILL = { room: '#f3ead9', wet: '#dcebef', shop: '#d9d7d0', stair: '#cfc6bb', istair: '#e2cdb3',
@@ -16,6 +16,7 @@ const X = x => PAD + x * S, Y = z => PAD + 30 + z * S;
 const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 LV.forEach((level, i) => {
+  const labels = [];
   let out = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="Arial, sans-serif">\n`;
   out += `<rect width="100%" height="100%" fill="#fff"/>\n`;
   out += `<text x="${PAD}" y="${PAD}" font-size="18" font-weight="bold">${NAMES[i]}</text>`;
@@ -25,15 +26,23 @@ LV.forEach((level, i) => {
     const dashed = type === 'air' || type === 'void';
     out += `<rect x="${X(x0)}" y="${Y(z0)}" width="${(x1 - x0) * S}" height="${(z1 - z0) * S}" fill="${FILL[type] || '#fff'}" stroke="#333" stroke-width="1.5"${dashed ? ' stroke-dasharray="6 4"' : ''}/>\n`;
     if (name) {
-      const cx = X((x0 + x1) / 2), cy = Y((z0 + z1) / 2);
-      out += `<text x="${cx}" y="${cy}" font-size="12" text-anchor="middle">${esc(name)}</text>`;
-      out += `<text x="${cx}" y="${cy + 14}" font-size="10" text-anchor="middle" fill="#666">${(x1 - x0).toFixed(1)}' × ${(z1 - z0).toFixed(1)}'</text>\n`;
+      labels.push(`<text x="${X(x0) + 4}" y="${Y(z1) - 14}" font-size="11" font-weight="bold">${esc(name)}</text><text x="${X(x0) + 4}" y="${Y(z1) - 3}" font-size="9" fill="#555">${(x1 - x0).toFixed(1)}' × ${(z1 - z0).toFixed(1)}'</text>\n`);
     }
+  });
+  const FC = { wood: '#c9a27a', fabric: '#8fa0b4', linen: '#ffffff', steel: '#c7cbd0', white: '#ffffff', black: '#333', counter: '#9a9c9f', glass: '#9fcfe6', concrete: '#bdb8ae' };
+  (FURN || []).filter(f => f[0] === i && f[7] > 0.05 && f[6] < 5).forEach(f => {
+    out += `<rect x="${X(f[2])}" y="${Y(f[4])}" width="${(f[3] - f[2]) * S}" height="${Math.max(1.5, (f[5] - f[4]) * S)}" fill="${FC[f[8]] || '#ccc'}" fill-opacity="0.85" stroke="#555" stroke-width="0.6"/>\n`;
+    if (f[9]) out += `<text x="${X((f[2] + f[3]) / 2)}" y="${Y((f[4] + f[5]) / 2) + 3}" font-size="7.5" text-anchor="middle" fill="#222">${esc(f[1])}</text>\n`;
+  });
+  (SHAFTS || []).forEach(sh => {
+    out += `<rect x="${X(sh[1])}" y="${Y(sh[3])}" width="${(sh[2] - sh[1]) * S}" height="${(sh[4] - sh[3]) * S}" fill="#7a7468" stroke="#222" stroke-width="1"/><line x1="${X(sh[1])}" y1="${Y(sh[3])}" x2="${X(sh[2])}" y2="${Y(sh[4])}" stroke="#fff" stroke-width="0.8"/><line x1="${X(sh[2])}" y1="${Y(sh[3])}" x2="${X(sh[1])}" y2="${Y(sh[4])}" stroke="#fff" stroke-width="0.8"/>`;
+    out += `<text x="${X(sh[1]) - 2}" y="${Y(sh[3]) - 3}" font-size="8" text-anchor="end" fill="#222" font-weight="bold">${sh[0]}</text>\n`;
   });
   gaps.filter(g => g[0] === i).forEach(([, ax, f, a, b]) => {
     const [x1, y1, x2, y2] = ax === 'x' ? [X(f), Y(a), X(f), Y(b)] : [X(a), Y(f), X(b), Y(f)];
     out += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="4"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#d85a30" stroke-width="1.5" stroke-dasharray="3 2"/>\n`;
   });
+  out += labels.join('');
   out += `<text x="${PAD}" y="${H - 12}" font-size="11" fill="#d85a30">Orange dashes = door openings</text></svg>\n`;
   const file = path.join(root, 'docs', 'plans', `level-${i}-${NAMES[i].toLowerCase().replace(' ', '-')}.svg`);
   fs.writeFileSync(file, out);
