@@ -235,6 +235,17 @@ LV.forEach((lv,l)=>lv.forEach(r=>{if(r[1]!=='room'||!/bed/i.test(r[0])||/wardrob
  for(let k=0;k<3;k++){const a=k*2*Math.PI/3,bl=new T.Mesh(new T.BoxGeometry(1.9,0.04,0.42),M(0x9b6b43));bl.position.set(cx+Math.cos(a)*1.25,b+8.95,cz+Math.sin(a)*1.25);bl.rotation.y=-a;bl.castShadow=true;TD[l].add(bl);}
 }));
 }
+// Living room -> courtyard sliding glass door (opening x23-25.8 on the z10.5 glass wall). The panel runs on a track on the
+// courtyard side and is shown slid open in front of the fixed glass; glass fanlight above the 7.2 ft frame.
+{const b=BASE[1],z=10.5,x0=23,x1=25.8,h=7.2,fr=0x3a3d40,dz=0.18;
+box(TD[1],x0,x1,b+h,b+h+0.15,z-0.14,z+0.14,fr);box(TD[1],x0-0.06,x0+0.06,b,b+h,z-0.14,z+0.14,fr);box(TD[1],x1-0.06,x1+0.06,b,b+h,z-0.14,z+0.14,fr);
+box(TD[1],x0,x1,b+h+0.15,b+10,z-0.03,z+0.03,C.glass,0.32);
+box(TD[1],20.1,x1,b,b+0.06,z+dz-0.08,z+dz+0.08,fr);box(TD[1],20.1,x1,b+h-0.06,b+h,z+dz-0.08,z+dz+0.08,fr);
+const px=20.2,w=x1-x0+0.1;box(TD[1],px,px+w,b+0.06,b+h-0.06,z+dz-0.03,z+dz+0.03,C.glass,0.32);
+[[px,px+0.12],[px+w-0.12,px+w]].forEach(q=>box(TD[1],q[0],q[1],b+0.06,b+h-0.06,z+dz-0.05,z+dz+0.05,fr));
+box(TD[1],px,px+w,b+0.06,b+0.25,z+dz-0.05,z+dz+0.05,fr);box(TD[1],px,px+w,b+h-0.25,b+h-0.06,z+dz-0.05,z+dz+0.05,fr);
+box(TD[1],px+w-0.3,px+w-0.25,b+3,b+4.4,z+dz+0.05,z+dz+0.1,0xb8bcc0);
+label(LB[1],'Sliding glass door (open)',24.4,b+8.4,11.2,0.6);}
 (typeof SHAFTS!=='undefined'?SHAFTS:[]).forEach(sh=>{[0,1,2].forEach(l=>{box(G[l],sh[1]+0.05,sh[2]-0.05,BASE[l]-0.5,BASE[l]+10,sh[3]+0.05,sh[4]-0.05,0x9a958c);});box(gT,sh[1]+0.05,sh[2]-0.05,31.5,34,sh[3]+0.05,sh[4]-0.05,0x9a958c);label(LB[1],sh[0],(sh[1]+sh[2])/2,BASE[1]+11.5,(sh[3]+sh[4])/2,0.6);label(LB[2],sh[0],(sh[1]+sh[2])/2,BASE[2]+11.5,(sh[3]+sh[4])/2,0.6);});
 box(G[0],36,58,0,7,0.4,2,0xd9d4c8);box(G[1],36,58,10.5,17.5,0.4,2,0xd9d4c8);
 box(G[0],3,20,0,5,1,6,0x9a8a70);box(G[0],3,15,0,4,10,15,0x9a8a70);

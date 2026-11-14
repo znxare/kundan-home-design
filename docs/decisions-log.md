@@ -4,6 +4,7 @@ Newest first. Add a line every time the design changes.
 
 | Date | Decision | Why |
 | --- | --- | --- |
+| 2026-11-14 | The living room → courtyard sliding glass door is now drawn in 3D: dark aluminium frame 7.2 ft high, one glass panel on a track on the courtyard side (shown slid open over the fixed glass), glass fanlight above | Owner: the courtyard has a sliding door |
 | 2026-11-14 | Courtyard centre now completely clear (only the flat rangoli inlay); the tulsi vrindavan moved to the east corner and made smaller; the small tree in the back court replaced by three low potted plants | Owner: the plant on the pedestal in the centre still read as a tree |
 | 2026-11-14 | **Courtyard redesigned, no tree:** rangoli stone inlay (5.8 ft circle) in the centre with a low tulsi vrindavan (1.6 × 1.6 × 2.6 ft) and a diya niche facing the dining room; herb planter (curry leaf, mint, lemongrass) under the kitchen window; stone sitting ledge by the dining door. Courtyard floor stays open for walking and both drains stay clear | Owner asked to remove the centre tree and try a different design. A low tulsi keeps the centre light and open (Brahmasthan) and needs far less soil, water and root-proofing than a tree on a slab |
 | 2026-11-14 | Model controls: smooth camera, move the view (right-drag, Shift-drag, two fingers), zoom much closer, tilt almost to straight down, double-tap anything to glide in, on-screen turn/tilt/zoom/Reset buttons, whole house framed on phones | Owner: some parts of the house could not be seen while rotating |
