@@ -51,6 +51,13 @@ const siteHalf=[[0,'z',24.5,35,60,5],[1,'z',24.5,35,60,5]];
 // {op:'del'|'h'|'add', lv:level, ax:'x' (wall runs along x) or 'z', f: fixed coordinate, a0..a1: extent, h: height ft}
 const wallEdits=[];
 
+// Skylights over 2nd-floor rooms that have no glass of their own: [room, x0, x1, z0, z1]
+// Fixed toughened glass on a raised curb with a steel grille under it (security), a vented gap for hot air.
+const skylights=[['Bath 2',14.9,17.2,20.9,23],['Laundry',19.2,21.2,20.8,22.8],['Family nook',22,25.5,21,24],['Lobby',27,34.4,19.2,23.8],
+['Dress',8.6,13,12.2,16.3],['Hall',31.5,34.5,7.4,10.1],['Hall',35.5,43.5,7.4,10.9],['Bath 3',36,41.5,1.5,6.5]];
+// High frosted, louvred ventilators (7 to 8.5 ft up) in solid walls, for bathrooms on the back wall: [level, 'x'|'z', wall position, from, to]
+const ventilators=[[1,'x',2.5,12.3,15.3],[2,'x',2.5,12,15]];
+
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
 const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
 

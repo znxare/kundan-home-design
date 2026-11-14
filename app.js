@@ -237,16 +237,28 @@ const tank=new T.Mesh(new T.CylinderGeometry(2,2,4,20),M(0x2a2a2a));tank.positio
 [[16.5,10.5],[26,10.5],[16.5,18],[26,18]].forEach(p=>box(gT,p[0]-0.25,p[0]+0.25,TY,TY+3,p[1]-0.25,p[1]+0.25,0x55575a));
 [0.8,1.6,2.4].forEach(d=>{const y=TY+d;box(gT,16.5,26,y,y+0.12,10.35,10.65,C.wall);box(gT,16.5,26,y,y+0.12,17.85,18.15,C.wall);box(gT,16.35,16.65,y,y+0.12,10.5,18,C.wall);box(gT,25.85,26.15,y,y+0.12,10.5,18,C.wall);});
 box(gT,15.9,26.6,TY+3,TY+3.25,9.9,18.6,0xbfe3f2,0.38);
-box(gT,36.5,43.5,TY,TY+0.4,9,15,C.glass,0.5);
-for(let i=0;i<3;i++){const gr=new T.Group();gr.position.set(34+i*4.5,TY+1.4,4.5);gr.rotation.y=-Math.PI/4;const p=new T.Mesh(new T.BoxGeometry(4,0.12,3),M(0x22344e));p.rotation.x=0.4;p.castShadow=true;gr.add(p);gT.add(gr);}
+// ---------- Skylights and high ventilators (light + air for rooms with no window) ----------
+{const skyMat=new T.MeshStandardMaterial({color:0xfffdf2,emissive:0xfff3d0,emissiveIntensity:0.9,roughness:1});
+(typeof skylights!=='undefined'?skylights:[]).forEach(([n,x0,x1,z0,z1])=>{
+box(gT,x0-0.25,x1+0.25,TY,TY+0.6,z0-0.25,z0,C.wall);box(gT,x0-0.25,x1+0.25,TY,TY+0.6,z1,z1+0.25,C.wall);box(gT,x0-0.25,x0,TY,TY+0.6,z0,z1,C.wall);box(gT,x1,x1+0.25,TY,TY+0.6,z0,z1,C.wall);
+box(gT,x0,x1,TY+0.6,TY+0.68,z0,z1,C.glass,0.5);
+const m=new T.Mesh(new T.BoxGeometry(x1-x0,0.05,z1-z0),skyMat);m.position.set((x0+x1)/2,BASE[2]+9.95,(z0+z1)/2);TD[2].add(m);
+label(labT,'Skylight: '+n,(x0+x1)/2,TY+2.2,(z0+z1)/2,0.6);});
+(typeof ventilators!=='undefined'?ventilators:[]).forEach(([l,ax,f,a0,a1])=>{const b=BASE[l];
+const P=(y0,y1,d,c,o)=>ax==='x'?box(TD[l],f-d,f+d,y0,y1,a0,a1,c,o):box(TD[l],a0,a1,y0,y1,f-d,f+d,c,o);
+P(b+7,b+8.5,0.25,0xdfe8ea,0.85);for(let k=1;k<5;k++)P(b+7+k*0.3-0.02,b+7+k*0.3+0.02,0.27,0x8a8f93);});}
+for(let i=0;i<3;i++){const gr=new T.Group();gr.position.set(18.5+i*4.5,TY+1.4,4.5);gr.rotation.y=-Math.PI/4;const p=new T.Mesh(new T.BoxGeometry(4,0.12,3),M(0x22344e));p.rotation.x=0.4;p.castShadow=true;gr.add(p);gT.add(gr);}
 box(gT,3.5,12.5,TY,TY+1.2,1,2.4,0x9a958c);box(gT,3.5,12.5,TY+1.2,TY+1.8,1,2.4,C.leaf);
 box(gT,4.5,12.5,TY,TY+1.2,22.1,23.5,0x9a958c);box(gT,4.5,12.5,TY+1.2,TY+1.8,22.1,23.5,C.leaf);
-label(labT,'Courtyard cap',21.25,TY+6.5,14.25);label(labT,'Stair skylight',38,TY+10,15.5);label(labT,'Water tank (SW)',6,TY+13,12);label(labT,'Solar water heater',10,TY+4,6);label(labT,'Solar panels',38.5,TY+5,4.5);label(labT,'Terrace garden',9.5,TY+4,12);label(labT,'Hall skylight',40,TY+3,12);label(labT,'Open sit-out',52,25,18);label(labT,'Shops + godown',50,5,5);
+label(labT,'Courtyard cap',21.25,TY+6.5,14.25);label(labT,'Stair skylight',38,TY+10,15.5);label(labT,'Water tank (SW)',6,TY+13,12);label(labT,'Solar water heater',10,TY+4,6);label(labT,'Solar panels',23,TY+5,4.5);label(labT,'Terrace garden',9.5,TY+4,12);label(labT,'Open sit-out',52,25,18);label(labT,'Shops + godown',50,5,5);
 
 box(gN,0,60,-0.5,34,-14,-0.35,0xb5b3ac,0.28);box(gN,0,60,-0.5,34,24.85,38,0xb5b3ac,0.28);
 label(labT,'Steel grille over courtyard',21.25,TY+9,10);label(gC,'Road side · NE',68,2,12);label(gC,'Back · SW',-8,2,12);label(gC,'NW neighbour',30,2,-4);label(gC,'SE neighbour',30,2,29);
 
-const paths=[[[-8,14,12],[3,14,12],[16,14.5,12.5],[23,15,13],[23,TY+1.8,13],[23,TY+1.8,4],[23,TY+9,-2]],[[-8,25,7],[3,25,7],[12,25,8],[23,26,12],[23,TY+1.8,12.5],[23,TY+1.8,21],[23,TY+9,27]]];
+// Breeze from the back (SW) through the bedrooms' back windows and open doors, into the courtyard, up and out of the cap louvres
+const paths=[[[-8,14,20],[2.5,14,20],[8,14,18.6],[11.5,14,15.2],[14.5,14,15],[18,14.5,14],[21,16,14],[21,TY+1.8,14],[21,TY+1.8,4],[21,TY+9,-2]],
+[[-8,14,6],[2.5,14,6],[10,14,8.5],[14,14,9],[19,14,9.6],[24,14,10],[24.4,15,12.5],[24.4,TY+1.8,13],[24.4,TY+1.8,21],[24.4,TY+9,27]],
+[[-8,25,6],[2.5,25,6],[9,25,9],[10,25,12.5],[12.5,25,13.2],[15,25,13.5],[19,26,14],[23,TY+1.8,14],[23,TY+1.8,4],[23,TY+9,-2]]];
 const cum=p=>{const c=[0];for(let i=1;i<p.length;i++)c.push(c[i-1]+Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1],p[i][2]-p[i-1][2]));return c;};
 const at=(p,c,u)=>{const d=u*c[c.length-1];let i=1;while(i<c.length-1&&c[i]<d)i++;const t=(d-c[i-1])/((c[i]-c[i-1])||1);return [0,1,2].map(k=>p[i-1][k]+(p[i][k]-p[i-1][k])*t);};
 const pm=new T.MeshBasicMaterial({color:0x2f8ad8,toneMapped:false});const pg=new T.SphereGeometry(0.35,10,8);
