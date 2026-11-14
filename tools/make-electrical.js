@@ -153,7 +153,7 @@ md += `
 ## Rules behind the layout
 - **Meters:** one meter bank at the street end of the ground-floor corridor: a separate meter for each shop, the home, and common services (stair lights, water pump, CCTV).
 - **Boards:** each shop has its own board; the home has one board per floor beside **Duct E** (electrical riser), each with MCBs and a 30 mA RCCB, plus surge protection at the main board.
-- **Inverter:** dedicated inverter wiring for lights, fans, one bedside socket per bed, fridge, RO, Wi-Fi router, CCTV recorder and the office computer (orange rings). Batteries sit in the 1st-floor lobby cupboard, which needs a vent.
+- **Inverter:** dedicated inverter wiring for lights, fans, one bedside socket per bed, fridge, RO, Wi-Fi router, CCTV recorder and the office computer (orange rings). Batteries sit in the foyer cupboard on the 1st floor, which needs a vent.
 - **Sockets:** pairs of 6A sockets beside beds (with USB), at TV walls, desks, sofas and in every passage; 16A sockets for fridge, microwave, dishwasher, washing machine, geysers and every 3 ft of kitchen counter. Over-providing is cheap now and expensive later.
 - **AC:** 16A point with concealed copper pipe and drain sleeve in every bedroom, living room, lounge and office; pipes run in the ceiling to the nearest duct and up to outdoor units on the terrace, never onto a neighbour wall.
 - **Earthing:** at least 2 earth pits at the front and 1 at the back for the lightning arrester and solar; every 16A circuit earthed.

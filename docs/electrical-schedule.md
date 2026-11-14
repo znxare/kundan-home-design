@@ -6,10 +6,10 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 
 | Point | Ground | 1st floor | 2nd floor | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Switchboard | 5 | 23 | 32 | 60 |
-| Light point (ceiling) | 24 | 25 | 27 | 76 |
+| Switchboard | 5 | 21 | 32 | 58 |
+| Light point (ceiling) | 24 | 24 | 27 | 75 |
 | Ceiling fan | 0 | 4 | 8 | 12 |
-| 6A socket (sockets come in pairs) | 8 | 24 | 27 | 59 |
+| 6A socket (sockets come in pairs) | 8 | 23 | 27 | 58 |
 | 16A power socket | 3 | 10 | 1 | 14 |
 | AC point 16A + concealed copper pipe & drain | 2 | 5 | 6 | 13 |
 | Geyser 16A | 0 | 2 | 3 | 5 |
@@ -39,11 +39,10 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 | First floor | Common bath | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
 | First floor | Common stair | 1× Light point, 1× 6A socket, 2× Switchboard |
 | First floor | Dining | 1× Light point, 1× Ceiling fan, 2× 6A socket, 3× Switchboard, 1× Distribution board |
-| First floor | Foyer | 1× Light point, 1× 6A socket, 2× Switchboard, 1× CCTV camera |
+| First floor | Foyer | 1× Light point, 1× 6A socket, 2× Switchboard, 1× Inverter / battery, 1× CCTV camera |
 | First floor | Kitchen | 1× Light point, 8× 16A power socket, 2× 6A socket |
 | First floor | Landing | 1× CCTV camera, 1× Video doorbell |
 | First floor | Living | 4× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 5× 6A socket, 2× Switchboard, 1× Data / TV / Wi-Fi point |
-| First floor | Lobby | 1× Light point, 1× 6A socket, 2× Switchboard, 1× Inverter / battery |
 | First floor | Passage | 3× Light point, 2× 6A socket, 3× Switchboard |
 | First floor | Shop | 8× Light point, 2× 16A power socket, 4× 6A socket, 2× AC point 16A + concealed copper pipe & drain, 2× CCTV camera, 2× Data / TV / Wi-Fi point, 3× Switchboard |
 | Second floor | Bath 2 | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
@@ -71,7 +70,7 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 ## Rules behind the layout
 - **Meters:** one meter bank at the street end of the ground-floor corridor: a separate meter for each shop, the home, and common services (stair lights, water pump, CCTV).
 - **Boards:** each shop has its own board; the home has one board per floor beside **Duct E** (electrical riser), each with MCBs and a 30 mA RCCB, plus surge protection at the main board.
-- **Inverter:** dedicated inverter wiring for lights, fans, one bedside socket per bed, fridge, RO, Wi-Fi router, CCTV recorder and the office computer (orange rings). Batteries sit in the 1st-floor lobby cupboard, which needs a vent.
+- **Inverter:** dedicated inverter wiring for lights, fans, one bedside socket per bed, fridge, RO, Wi-Fi router, CCTV recorder and the office computer (orange rings). Batteries sit in the foyer cupboard on the 1st floor, which needs a vent.
 - **Sockets:** pairs of 6A sockets beside beds (with USB), at TV walls, desks, sofas and in every passage; 16A sockets for fridge, microwave, dishwasher, washing machine, geysers and every 3 ft of kitchen counter. Over-providing is cheap now and expensive later.
 - **AC:** 16A point with concealed copper pipe and drain sleeve in every bedroom, living room, lounge and office; pipes run in the ceiling to the nearest duct and up to outdoor units on the terrace, never onto a neighbour wall.
 - **Earthing:** at least 2 earth pits at the front and 1 at the back for the lightning arrester and solar; every 16A circuit earthed.
