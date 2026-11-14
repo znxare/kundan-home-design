@@ -21,6 +21,8 @@
 
 - [ ] Floor drains, slopes and raised door thresholds for the back court, road deck and sit-out (they get rain through the grilles)
 
+- [ ] Front shop, ground floor: with no wall of its own on the north-west side, check whether it uses the neighbour's wall, and how it is closed and secured
+
 ## Ideas to build in the model
 - [ ] Move furniture into `house-data.js` so rooms and furniture move together
 - [ ] Add windows, doors and sunshades as real objects (now walls just have gaps)
