@@ -39,7 +39,7 @@ main door, and a steel door on the terrace. A 2nd-floor gallery now links the fa
 
 ## Open layout
 - Living, dining, the dry kitchen and the foyer are open to each other around the courtyard.
-- **Entrance view:** from the foyer you see the courtyard tree. The family stair has open risers.
+- **Entrance view:** from the foyer you see the courtyard and its tulsi vrindavan. The family stair has open risers.
 - Doors are 3'6"–4' for the main door and 3' for rooms. The Bedroom 1 bath door is 2'9" or wider, with no step.
 - Glass sliders face the courtyard. Pocket or sliding doors go on the dressing rooms and the wet kitchen.
 - The courtyard is the double-height feature. A double-height living room is optional, at the cost of 2nd-floor lounge space.
@@ -51,7 +51,7 @@ main door, and a steel door on the terrace. A 2nd-floor gallery now links the fa
 | Kitchen | One parallel kitchen, about 10 × 6.5 ft, with a sliding glass door to dining (closed while frying). Sink and dishwasher slot on the counter under the courtyard window; hob, chimney (own duct to the terrace) and vented LPG cabinet on the opposite counter, about 3 ft away; fridge and tall pantry at the dining end, so sink, hob and fridge form a tight work triangle. Microwave and RO on the back counter. |
 | 1st-floor bedrooms | Bedroom 1 (parents, 11 × 11.5 ft, en-suite bath) and Bedroom 2 (11 × 7.5 ft, guest or child), both facing the back court. A common bath (4 × 6.5 ft, with the washing machine) serves Bedroom 2 and guests. |
 | Dining | About 8 × 7 ft beside the courtyard, open to the living room (the table can straddle the two). |
-| Entrance | Foyer (4 × 6.5 ft, shoe cabinet) → dining with the courtyard tree in view → living (20 × 11 ft). You never pass through a kitchen. |
+| Entrance | Foyer (4 × 6.5 ft, shoe cabinet) → dining with the courtyard in view → living (20 × 11 ft). You never pass through a kitchen. |
 | Guest WC | 5 × 5 ft, off a small lobby by the family stair and Bedroom 1, away from the main door. |
 | Counters | About 19 running ft in total. |
 | LPG | A ventilated cabinet on the courtyard side, or gas piped in from cylinders kept outside, plus a gas leak detector. |
@@ -88,7 +88,7 @@ main door, and a steel door on the terrace. A 2nd-floor gallery now links the fa
 
 ## Green spaces
 - A vertical garden in the ground-floor corridor and plants at the home door.
-- A courtyard tree (champa or frangipani) in a deep planter.
+- Courtyard (angan), no tree: a rangoli stone inlay in the centre with a low tulsi vrindavan and diya niche, a herb planter (curry leaf, mint, lemongrass) under the kitchen window, a stone sitting ledge by the dining door.
 - Indoor plants along the courtyard glass: snake plant, ZZ plant, money plant, areca palm.
 - A private seat in the 1st-floor back court, the road-facing deck, the sit-out with its pergola, and terrace planters over the master bedroom.
 - Low-maintenance plants: bougainvillea, tulsi, curry leaf, lemongrass, aloe, portulaca, succulents. Drip irrigation on a timer.

@@ -67,7 +67,7 @@ for thinking through the design and briefing the architect. It is **not** a cons
 5. **Vastu (owner cares about it):** master bedroom SW, kitchen SE, puja NE corner of living, open
    centre, water tank SW on the terrace. (The single stair sits on the NE side by the shops, which Vastu
    does not favour; it was the owner's choice to have only one stair.)
-6. **Entrance sequence:** 1st-floor foyer → dining (courtyard tree in view) → living. Never enter through the kitchen.
+6. **Entrance sequence:** 1st-floor foyer → dining (courtyard and its tulsi vrindavan in view) → living. Never enter through the kitchen.
 7. **One efficient parallel kitchen** in the SE band (owner rejected separate wet/dry kitchens): sink under the courtyard
    window, hob + chimney opposite, fridge + pantry at the dining end. A pantry cupboard and a common bath beside it, laundry on the 2nd floor near the sit-out, built-in storage instead of bulky furniture.
 8. Climate: hot summers (~40°C+), SW monsoon, mild winters. Breeze enters from the SW back court

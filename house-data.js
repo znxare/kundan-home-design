@@ -109,6 +109,11 @@ F_(1,'Study desk',2.8,4.4,19.2,22.8,0,2.5,'wood',1);F_(1,'Desk chair',4.6,5.8,20
 F_(1,'Sliding wardrobe',9.7,13.3,11.6,13.5,0,7,'wood',1);
 // Back court drying rack; courtyard drains
 F_(1,'Drying rack',0.4,2.1,9,15,5.5,0.1,'steel',1);
+// Courtyard (angan): rangoli stone inlay in the centre with a low tulsi vrindavan on it (no tree),
+// a herb planter under the kitchen window, a stone sitting ledge by the dining door
+F_(1,'Tulsi vrindavan',20.45,22.05,13.45,15.05,0,2.6,'stone',1);
+F_(1,'Herb planter (curry leaf, mint, lemongrass)',18.2,24.6,16.8,17.9,0,1.2,'concrete',1);
+F_(1,'Stone sitting ledge',25,25.9,15.3,16.7,0,1.5,'stone',1);
 F_(1,'Floor drain 1 (100 mm)',16.8,17.5,10.8,11.5,0,0.03,'steel',1);F_(1,'Floor drain 2 (overflow)',25,25.7,17,17.7,0,0.03,'steel',1);
 // ---------- 2nd floor ----------
 // Master bedroom: 14 x 11.5 ft (the unnamed room x13.5-16.5 is its bay, open to it; grew into the old Bedroom 3 corner). King bed, bedside tables, wardrobe + easy chair in the bay
