@@ -582,6 +582,14 @@ document.getElementById('seasons').addEventListener('click',e=>{const b=e.target
 document.getElementById('hr').addEventListener('input',e=>{hour=+e.target.value;sunUpdate();});
 document.getElementById('cAir').addEventListener('change',e=>{air.visible=e.target.checked;});
 document.getElementById('cReal').addEventListener('change',e=>setReal(e.target.checked));
+// Full screen: the browser's own full screen where it exists; otherwise (iPhone) stretch the model over the page
+{const fb=document.getElementById('fsBtn');if(fb&&fb.addEventListener&&document.addEventListener){const req=fig.requestFullscreen||fig.webkitRequestFullscreen,ex=document.exitFullscreen||document.webkitExitFullscreen;
+const isFs=()=>!!(document.fullscreenElement||document.webkitFullscreenElement)||fig.classList.contains('fsfake');
+const sync=()=>{fb.textContent=isFs()?'✕ Exit full screen':'⛶ Full screen';setTimeout(size,60);};
+fb.addEventListener('click',()=>{if(isFs()){if(fig.classList.contains('fsfake'))fig.classList.remove('fsfake');else if(ex)ex.call(document);}
+else if(req){try{const p=req.call(fig);if(p&&p.catch)p.catch(()=>{});}catch(_){}setTimeout(()=>{if(!isFs())fig.classList.add('fsfake');sync();},400);}else fig.classList.add('fsfake');sync();});
+document.addEventListener('fullscreenchange',sync);document.addEventListener('webkitfullscreenchange',sync);
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&fig.classList.contains('fsfake')){fig.classList.remove('fsfake');sync();}});}}
 setReal(!(window.matchMedia&&matchMedia('(max-width:900px)').matches));
 // Save a picture: render this view at twice the screen size and download it as a PNG
 document.getElementById('savePic').addEventListener('click',()=>{const w=fig.clientWidth,h=fig.clientHeight,pr=R.getPixelRatio(),k=Math.min(3,Math.max(2,2400/(w*pr)));
