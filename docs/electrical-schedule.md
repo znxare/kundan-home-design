@@ -33,9 +33,10 @@ Generated from `house-data.js` by `tools/make-electrical.js`. Counts are a plann
 | Ground floor | Godown | 12× Light point, 1× 16A power socket, 1× 6A socket, 1× CCTV camera, 2× Switchboard |
 | Ground floor | Shop | 8× Light point, 2× 16A power socket, 4× 6A socket, 2× AC point 16A + concealed copper pipe & drain, 2× CCTV camera, 2× Data / TV / Wi-Fi point, 2× Switchboard, 1× Distribution board |
 | Ground floor | Toilet | 1× Light point, 1× Exhaust fan, 1× 6A socket |
+| First floor | – | 1× 6A socket |
 | First floor | Bath 1 | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
 | First floor | Bedroom 1 | 2× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 3× Switchboard, 2× 6A socket |
-| First floor | Bedroom 2 | 1× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 1× Switchboard, 2× 6A socket |
+| First floor | Bedroom 2 | 1× Light point, 1× Ceiling fan, 1× AC point 16A + concealed copper pipe & drain, 1× Switchboard, 1× 6A socket |
 | First floor | Common bath | 1× Light point, 1× Exhaust fan, 1× Geyser 16A, 1× 6A socket, 1× Switchboard |
 | First floor | Common stair | 1× Light point, 1× 6A socket, 2× Switchboard |
 | First floor | Dining | 1× Light point, 1× Ceiling fan, 2× 6A socket, 3× Switchboard, 1× Distribution board |

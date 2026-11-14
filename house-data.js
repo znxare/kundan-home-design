@@ -12,7 +12,7 @@ const LV=[
 ['Shop','shop',35,60,0,11.5],['Common stair','stair',35,41,11.5,19.5],['Shop','shop',41,60,11.5,21.2],
 ['Back entry corridor','path',41,60,21.2,24.5],['','path',35,41,19.5,24.5]],
 [['Back court','open',0,2.5,0,24.5],
-['Bedroom 1','room',2.5,13.5,0,11.5],['Bath 1','wet',2.5,7.5,11.5,17],['','room',7.5,13.5,11.5,17],['Bedroom 2','room',2.5,13.5,17,24.5],
+['Bedroom 1','room',2.5,13.5,0,11.5],['Bath 1','wet',2.5,9.5,11.5,16.5],['','room',9.5,13.5,11.5,16.5],['Bedroom 2','room',2.5,13.5,16.5,24.5],
 ['Living','room',13.5,35,0,10.5],['Passage','room',13.5,16.5,10.5,18],['Courtyard','open',16.5,26,10.5,18],['Dining','room',26,35,10.5,18],
 ['Common bath','wet',13.5,17.5,18,24.5],['Kitchen','wet',17.5,31,18,24.5],['Foyer','room',31,35,18,24.5],
 ['Shop','shop',35,60,0,11.5],['Common stair','stair',35,41,11.5,19.5],['Shop','shop',41,60,11.5,21.2],
@@ -29,14 +29,14 @@ const gaps=[
 [0,'z',0,35,60], // owner, 14 Nov 2026: no wall of our own on the north-west side of the front shop (ground floor)
 [0,'x',35,21.5,23.5],[0,'z',19.5,36,40],[0,'z',16,24,27],[0,'x',60,3,9],[0,'x',60,14,19],
 [1,'x',35,19.6,21.4],[1,'z',19.5,36,40],[1,'z',18,31,35],[1,'z',10.5,13.5,16.5],[1,'z',10.5,26.5,35],[1,'z',10.5,23,25.8],[1,'z',18,26.3,30.9],[1,'x',26,12.5,15],
-[1,'x',2.5,5,7.5],[1,'x',13.5,7.8,10.3],[1,'z',11.5,4,6.5],[1,'x',13.5,14,16.8],[1,'z',17,7.5,13.5],[1,'z',18,13.8,16.2],
+[1,'x',2.5,5,7.5],[1,'x',13.5,7.8,10.3],[1,'z',11.5,4,6.5],[1,'x',13.5,13.6,16.4],[1,'z',16.5,9.5,13.5],[1,'z',18,13.8,16.2],
 [1,'z',21.2,48,52],[1,'z',11.5,45,49],
 [2,'z',18,26,35],[2,'x',35,20,24],[2,'z',19.5,36,40],[2,'x',44,20,23],[2,'x',35,7.3,10.3],[2,'z',10.5,31,33.8],[2,'x',31,7.5,10.2],[2,'x',31,4,6.5],[2,'x',13.5,0,10.5],[2,'z',7,39,42],[2,'x',44,8,11],[2,'z',11.5,41.4,43.9],[2,'x',56,4,7],
 [2,'x',13.5,12,14.5],[2,'z',11.5,8.5,11.5],[2,'x',7.5,13,16],[2,'x',13.5,17.4,20.1],[2,'z',20.5,13.8,16.2],[2,'x',16.5,18.2,20.3],[2,'x',26,18.2,20.3],[2,'z',20.5,18,20.5],[2,'z',20.5,21.9,25.6]];
 // Walls forced to glass: same format as gaps
 const glassE=[];
 // Walls forced solid even if they face an open space: [level,'x'|'z',fixed,from,to]
-const solidE=[[1,'x',2.5,11.5,17],[2,'x',2.5,11.5,17]];
+const solidE=[[1,'x',2.5,11.5,16.5],[2,'x',2.5,11.5,17]];
 
 // Extra walls not made by a room's edges: [level, 'x' or 'z' (which coordinate the wall sits on), wall position, from, to]
 // Owner, 14 Nov 2026: the shop corridor has an outer wall along the south-east side on the ground and 1st floors.
@@ -52,7 +52,7 @@ const siteHalf=[[0,'z',24.5,35,60,5],[1,'z',24.5,35,60,5]];
 const wallEdits=[];
 
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
-const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,12.8,14.6,5,21.5,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
+const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
 
 // ============================================================
 // FURNITURE AND FITTINGS
@@ -90,15 +90,16 @@ F_(1,'Towel & linen niche',13.8,14.9,20.6,21.8,0,7,'wood');F_(1,'Basin',16.1,17.
 F_(1,'WC',15.9,17.3,22.9,24.3,0,1.3,'white');F_(1,'Shower glass',15.6,15.65,22.4,24.5,0,6.5,'glass');
 // Bedroom 1 (parents)
 bedAt(1,5.5,11,0.6,7.2,'Bed');F_(1,'Wardrobe',7.5,11.3,9.6,11.4,0,7,'wood',1);
-// Bath 1 (en suite to Bedroom 1)
-F_(1,'Shower glass',4.9,4.95,15,16.9,0,6.5,'glass');F_(1,'WC',5.9,7.3,15.4,16.8,0,1.3,'white');F_(1,'Basin',2.8,4.1,13.6,14.8,2.6,0.5,'white');
+// Bath 1 (en suite to Bedroom 1, grandparents): 7 x 5 ft. Step-free walk-in shower with a fold-down seat, grab bars by the WC and in the shower
+F_(1,'Basin',2.7,3.9,12,13.2,2.6,0.5,'white');F_(1,'WC',4.2,5.6,15.1,16.4,0,1.3,'white');F_(1,'Grab bar',5.7,5.75,14.4,16.3,2.6,0.1,'steel',1);
+F_(1,'Shower glass',6.7,6.75,14.2,16.5,0,6.5,'glass');F_(1,'Fold-down shower seat',8.5,9.4,15.3,16.4,1.5,0.15,'wood',1);F_(1,'Grab bar',9.4,9.45,13,15,2.8,0.1,'steel');
 // Inverter + cleaning cupboard: in the foyer corner (vented), since the old lobby is now part of Bedroom 2
 F_(1,'Inverter & cleaning cupboard',33.4,34.9,22,24.4,0,7,'wood',1);
-// Bedroom 2
-// Bedroom 2: 11 x 7.5 ft sleeping area + 6 x 5.5 ft dressing/study nook (the unnamed room x7.5-13.5, z11.5-17, was the lobby)
-F_(1,'Bed (5 x 6.5 ft)',3.2,8.2,17.6,24.1,0,1.8,'linen',1);F_(1,'Headboard',3.2,8.2,24.1,24.4,0,3.6,'wood');F_(1,'Bedside table',8.4,9.6,22.6,24.2,0,1.8,'wood');
-F_(1,'Reading chair',11,12.9,21.4,23.4,0,2.6,'fabric');F_(1,'Rug',8.6,12.8,18.4,21,0,0.03,'fabric');
-F_(1,'Wardrobe',7.7,13.3,11.6,13.6,0,7,'wood',1);F_(1,'Study desk',7.7,9.3,14,16.8,0,2.5,'wood',1);F_(1,'Desk chair',9.5,10.8,14.8,16,0,2.8,'fabric');
+// Bedroom 2: 11 x 8 ft + 4 x 5 ft wardrobe nook (the unnamed room x9.5-13.5). Bed head on the east wall, so there is
+// 2.8 ft along its side and 3.9 ft at its foot; study desk at the back-court window
+F_(1,'Bed (5 x 6.5 ft)',6.4,12.9,19.3,24.3,0,1.8,'linen',1);F_(1,'Headboard',12.9,13.3,19.3,24.3,0,3.6,'wood');F_(1,'Bedside table',11.8,12.9,18.55,19.2,0,1.8,'wood');
+F_(1,'Study desk',2.8,4.4,19.2,22.8,0,2.5,'wood',1);F_(1,'Desk chair',4.6,5.8,20.4,21.6,0,2.8,'fabric');F_(1,'Rug',6,9.3,16.8,19.1,0,0.03,'fabric');
+F_(1,'Sliding wardrobe',9.7,13.3,11.6,13.5,0,7,'wood',1);
 // Back court drying rack; courtyard drains
 F_(1,'Drying rack',0.4,2.1,9,15,5.5,0.1,'steel',1);
 F_(1,'Floor drain 1 (100 mm)',16.8,17.5,10.8,11.5,0,0.03,'steel',1);F_(1,'Floor drain 2 (overflow)',25,25.7,17,17.7,0,0.03,'steel',1);
@@ -132,7 +133,7 @@ F_(2,'Chair',47.2,48.8,14.2,15.8,0,1.6,'wood');F_(2,'Chair',51.2,52.8,14.2,15.8,
 // [name, x0, x1, z0, z1, what runs inside]
 // ============================================================
 const SHAFTS=[
-['Duct A',2.5,3.9,15.6,17,'Bath 1 + Master bath: soil/waste stack, vent, exhaust'],
+['Duct A',2.5,3.9,15.1,16.5,'Bath 1 + Master bath: soil/waste stack, vent, exhaust'],
 ['Duct B',13.5,14.8,23.2,24.5,'Common bath + Bath 2: soil/waste stack, vent, exhaust'],
 ['Duct K',17.5,19,23,24.5,'Kitchen chimney duct, kitchen + laundry waste, AC drains'],
 ['Duct C',42.6,44,0,1.4,'Bath 3: soil/waste stack, vent, exhaust (boxed through the shop below)'],

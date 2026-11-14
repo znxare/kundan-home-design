@@ -173,23 +173,29 @@ const bz=(g,x0,x1,y0,y1,za,zb,c)=>box(g,x0,x1,y0,y1,Math.min(za,zb),Math.max(za,
 let bi=0;
 FURN.forEach(f=>{const l=f[0],b=BASE[l];
  if(f[8]==='linen'&&/bed/i.test(f[1])){
-  const hb=FURN.find(h=>h[0]===l&&h[1]==='Headboard'&&Math.abs(h[2]-f[2])<0.05&&Math.abs(h[3]-f[3])<0.05);if(!hb)return;
-  const head0=Math.abs(hb[5]-f[4])<0.05,x0=f[2],x1=f[3],z0=f[4],z1=f[5],W=x1-x0,L=z1-z0,dir=head0?1:-1;
-  const zz=(a,c)=>head0?[z0+a,z0+c]:[z1-c,z1-a];
+  let hb=FURN.find(h=>h[0]===l&&h[1]==='Headboard'&&Math.abs(h[2]-f[2])<0.05&&Math.abs(h[3]-f[3])<0.05),aZ=true;
+  if(!hb){hb=FURN.find(h=>h[0]===l&&h[1]==='Headboard'&&Math.abs(h[4]-f[4])<0.05&&Math.abs(h[5]-f[5])<0.05);aZ=false;}
+  if(!hb)return;
+  // u = across the bed, v = along the bed (from the headboard)
+  const u0=aZ?f[2]:f[4],u1=aZ?f[3]:f[5],v0=aZ?f[4]:f[2],v1=aZ?f[5]:f[3];
+  const head0=aZ?Math.abs(hb[5]-f[4])<0.05:Math.abs(hb[3]-f[2])<0.05,W=u1-u0,L=v1-v0,dir=head0?1:-1;
+  const vv=(a,c)=>head0?[v0+a,v0+c]:[v1-c,v1-a];
+  const P=(g,a0,a1,y0,y1,b0,b1,c)=>aZ?box(g,a0,a1,y0,y1,Math.min(b0,b1),Math.max(b0,b1),c):box(g,Math.min(b0,b1),Math.max(b0,b1),y0,y1,a0,a1,c);
   const top=b+f[6]+f[7],c=BS[bi%3];
-  let q=zz(L*0.36,L+0.06);box(G[l],x0-0.06,x1+0.06,top,top+0.12,q[0],q[1],c);
-  box(G[l],x0-0.08,x0-0.02,top-1,top+0.1,q[0],q[1],c);box(G[l],x1+0.02,x1+0.08,top-1,top+0.1,q[0],q[1],c);
-  q=head0?[z1,z1+0.06]:[z0-0.06,z0];box(G[l],x0-0.06,x1+0.06,top-1,top+0.1,q[0],q[1],c);
-  q=zz(L-1.5,L-0.4);box(G[l],x0+0.1,x1-0.1,top+0.12,top+0.26,q[0],q[1],ACC[(bi+2)%6]);
+  let q=vv(L*0.36,L+0.06);P(G[l],u0-0.06,u1+0.06,top,top+0.12,q[0],q[1],c);
+  P(G[l],u0-0.08,u0-0.02,top-1,top+0.1,q[0],q[1],c);P(G[l],u1+0.02,u1+0.08,top-1,top+0.1,q[0],q[1],c);
+  q=head0?[v1,v1+0.06]:[v0-0.06,v0];P(G[l],u0-0.06,u1+0.06,top-1,top+0.1,q[0],q[1],c);
+  q=vv(L-1.5,L-0.4);P(G[l],u0+0.1,u1-0.1,top+0.12,top+0.26,q[0],q[1],ACC[(bi+2)%6]);
   const np=W>=4.8?2:1,pw=(W-0.6-(np-1)*0.2)/np;
-  for(let i=0;i<np;i++){const px=x0+0.3+i*(pw+0.2);q=zz(0.2,1.5);box(G[l],px,px+pw,top,top+0.45,q[0],q[1],0xfdfcf8);
-   q=zz(1.55,1.95);box(G[l],px+0.35,px+pw-0.35,top,top+0.95,q[0],q[1],ACC[bi%6]);}
-  const r=roomOf(l,(x0+x1)/2,(z0+z1)/2);
-  if(r){const ax0=Math.max(r[2]+0.2,x0-1.8),ax1=Math.min(r[3]-0.2,x1+1.8),wz=head0?r[4]+0.2:r[5]-0.2;
-   bz(TD[l],ax0,ax1,b,b+9.8,wz,wz+dir*0.03,ACC[bi%6]);
-   const fw=Math.min(4,W-0.4),fx=(x0+x1)/2,fz=wz+dir*0.03;
-   bz(TD[l],fx-fw/2-0.12,fx+fw/2+0.12,b+5,b+7.5,fz,fz+dir*0.1,0x3a2a1e);
-   bz(TD[l],fx-fw/2,fx+fw/2,b+5.12,b+7.38,fz+dir*0.1,fz+dir*0.12,ART[bi%3]);}
+  for(let i=0;i<np;i++){const pu=u0+0.3+i*(pw+0.2);q=vv(0.2,1.5);P(G[l],pu,pu+pw,top,top+0.45,q[0],q[1],0xfdfcf8);
+   q=vv(1.55,1.95);P(G[l],pu+0.35,pu+pw-0.35,top,top+0.95,q[0],q[1],ACC[bi%6]);}
+  const r=roomOf(l,(f[2]+f[3])/2,(f[4]+f[5])/2);
+  if(r){const ru0=aZ?r[2]:r[4],ru1=aZ?r[3]:r[5],rv0=aZ?r[4]:r[2],rv1=aZ?r[5]:r[3];
+   const ax0=Math.max(ru0+0.2,u0-1.8),ax1=Math.min(ru1-0.2,u1+1.8),wv=head0?rv0+0.2:rv1-0.2;
+   P(TD[l],ax0,ax1,b,b+9.8,wv,wv+dir*0.03,ACC[bi%6]);
+   const fw=Math.min(4,W-0.4),fu=(u0+u1)/2,fv=wv+dir*0.03;
+   P(TD[l],fu-fw/2-0.12,fu+fw/2+0.12,b+5,b+7.5,fv,fv+dir*0.1,0x3a2a1e);
+   P(TD[l],fu-fw/2,fu+fw/2,b+5.12,b+7.38,fv+dir*0.1,fv+dir*0.12,ART[bi%3]);}
   bi++;}
  if(f[1]==='Bedside table'){const cx=(f[2]+f[3])/2,cz=(f[4]+f[5])/2,t=b+f[6]+f[7];
   cyl(G[l],0.15,0.22,0.9,cx,t+0.45,cz,M(0x6b5a48));cyl(G[l],0.34,0.48,0.6,cx,t+1.2,cz,shade);}
