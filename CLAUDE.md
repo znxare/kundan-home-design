@@ -44,8 +44,6 @@ for thinking through the design and briefing the architect. It is **not** a cons
 - `spots`: "Jump into a room" viewpoints `[name, level, eyeX, eyeZ, lookX, lookZ, lookUp]`.
 - Stair zones used by walk mode are hard-coded in `app.js` (`stairOpts`): common stair x35–41 z11.5–19.5
   (ground ↔ 1st only), family stair x15–21 z17–24.5 (1st ↔ 2nd ↔ terrace). Update them if stairs move.
-- `frontStair` in `house-data.js`: the open outside stair beside the SE wall (road ↔ 1st-floor passage), built on site.
-- `extraWalls` / `siteHalf` in `house-data.js`: walls not made by room edges, and walls built only part-height on site ("Site today" view).
 - Furniture, terrace items, grilles and jaali screens are hard-coded boxes in `app.js` (search for `bed(`,
   `sofa(`, `grid(`, `vbars(`). Moving a room may require moving its furniture too.
 

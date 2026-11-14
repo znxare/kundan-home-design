@@ -20,8 +20,3 @@
 - Floor-to-floor height of 10.5 ft (used in the model).
 - That local rules (JNAC) allow 3 storeys, the setbacks used, and a terrace structure over the stair.
 - Exact positions of the existing columns, if construction has already started.
-
-## Road-side photo (14 Nov 2026)
-- Two shops with rolling shutters on the ground floor, the corridor opening on their south-east side.
-- An open concrete stair outside the south-east wall, from road level up to the 1st floor.
-- North-west: a taller neighbour building right on the boundary. South-east: open land for now.

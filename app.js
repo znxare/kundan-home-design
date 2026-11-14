@@ -71,9 +71,7 @@ if(!run||run.k!==k){flush(a);if(k)run={a:a,k:k};}
 flush(a1);
 });
 });
-(typeof extraWalls!=='undefined'?extraWalls:[]).filter(q=>q[0]===lv).forEach(q=>{
-let parts=[[q[3],q[4]]];myg.filter(d=>d[1]===q[1]&&Math.abs(d[2]-q[2])<1e-6).forEach(d=>{parts=parts.flatMap(p=>d[4]<=p[0]||d[3]>=p[1]?[p]:[[p[0],d[3]],[d[4],p[1]]].filter(r=>r[1]-r[0]>1e-6));});
-parts.forEach(p=>seg(g,q[1]==='z'?'x':'z',q[2],p[0],p[1],base,'solid','path',lv));});
+(typeof extraWalls!=='undefined'?extraWalls:[]).filter(q=>q[0]===lv).forEach(q=>seg(g,q[1]==='z'?'x':'z',q[2],q[3],q[4],base,'solid','path',lv));
 }
 const G=[new T.Group(),new T.Group(),new T.Group()],LB=[new T.Group(),new T.Group(),new T.Group()];
 const gT=new T.Group(),gP=new T.Group(),gN=new T.Group(),air=new T.Group(),labT=new T.Group(),gC=new T.Group();
@@ -88,10 +86,6 @@ for(let i=0;i<9;i++){const t=base+(i+1)*rh;box(g,15.2+i*rn,15.2+(i+1)*rn,t-0.15,
 for(let j=0;j<9;j++){const t=base+5.25+(j+1)*rh;box(g,20.8-(j+1)*rn,20.8-j*rn,t-0.15,t,20.9,24.3,C.wood);}
 box(g,15.1,21,base,base+10.5,20.82,20.88,0x55575a,0.5);}
 stairs(G[0],0);istair(G[1],10.5);istair(G[2],21);
-if(typeof frontStair!=='undefined'){const fx0=frontStair[0],fx1=frontStair[1],fz0=frontStair[2],fz1=frontStair[3],n=18,rh=10.5/n,rn=(fx0-fx1)/n;
-for(let i=0;i<n;i++)box(G[0],fx0-(i+1)*rn,fx0-i*rn,0,(i+1)*rh,fz0,fz1,C.stair);
-box(G[0],fx1-2.6,fx1,0,10.5,fz0,fz1,C.stair); // top landing
-label(LB[0],'Outside stair to 1st-floor shops',(fx0+fx1)/2,7,fz1+1,0.9);label(labT,'Outside shop stair',(fx0+fx1)/2,14,fz1+1.5,0.9);}
 
 box(S,-40,100,-0.62,-0.52,-40,65,0xd6d1c6);
 const tree=(g,x,z,b,h,r)=>{const m=new T.Mesh(new T.CylinderGeometry(0.3,0.4,h,10),M(C.wood));m.position.set(x,b+h/2,z);m.castShadow=true;g.add(m);const s=new T.Mesh(new T.SphereGeometry(r,18,14),M(C.leaf));s.position.set(x,b+h,z);s.castShadow=true;s.receiveShadow=true;g.add(s);};
@@ -153,7 +147,7 @@ box(gT,5,14,TY,TY+1.2,1,2.4,0x9a958c);box(gT,5,14,TY+1.2,TY+1.8,1,2.4,C.leaf);
 box(gT,5,14,TY,TY+1.2,22.1,23.5,0x9a958c);box(gT,5,14,TY+1.2,TY+1.8,22.1,23.5,C.leaf);
 label(labT,'Courtyard cap',23,TY+6.5,13);label(labT,'Home stair skylight',18,TY+10,20.8);label(labT,'Water tank (SW)',7.5,TY+13,12);label(labT,'Solar water heater',11.5,TY+4,6);label(labT,'Solar panels',38.5,TY+5,4.5);label(labT,'Terrace garden',9.5,TY+4,12);label(labT,'Hall skylight',40,TY+3,12);label(labT,'Open sit-out',52,25,18);label(labT,'Shops + godown',50,5,5);
 
-box(gN,0,60,-0.5,34,-14,-0.35,0xb5b3ac,0.28);box(gN,0,60,-0.5,34,(typeof frontStair!=='undefined'?frontStair[3]+0.3:24.85),38,0xb5b3ac,0.28);
+box(gN,0,60,-0.5,34,-14,-0.35,0xb5b3ac,0.28);box(gN,0,60,-0.5,34,24.85,38,0xb5b3ac,0.28);
 label(labT,'Steel grille over courtyard',23,TY+9,9);label(gC,'Road side · NE',68,2,12);label(gC,'Back · SW',-8,2,12);label(gC,'NW neighbour',30,2,-4);label(gC,'SE neighbour',30,2,29);
 
 const paths=[[[-8,14,12],[3,14,12],[16,14.5,12.5],[23,15,13],[23,TY+1.8,13],[23,TY+1.8,4],[23,TY+9,-2]],[[-8,25,7],[3,25,7],[12,25,8],[23,26,12],[23,TY+1.8,12.5],[23,TY+1.8,21],[23,TY+9,27]]];
@@ -185,26 +179,22 @@ LV.forEach((l,i)=>l.forEach(r=>{if(r[1]==='void'||r[1]==='air')BLK[i].push([r[2]
 BLK[3].push([19,27,9,17],[-9,4,-9,40],[44,70,12.25,40],[56,70,-9,12.25]);
 function eyeY(l){return (l===3?TY:BASE[l])+5.2;}
 function free(x,z){const L=lvlW,r=0.6;
-const fsz=(typeof frontStair!=='undefined'&&L===0&&x>frontStair[0]-4)?frontStair[3]-0.3:24.1;
-if(z<0.4||z>fsz||x<0.4||x>(L===0?78:59.6))return false;
+if(z<0.4||z>24.1||x<0.4||x>(L===0?78:59.6))return false;
 for(const w of walls){if(w.lvl!==L)continue;const b=w.b;if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return false;}
 for(const b of BLK[L]){if(x>b[0]&&x<b[1]&&z>b[2]&&z<b[3])return false;}
 return true;}
 function step(d){const nx=eye.x+Math.cos(yaw)*d,nz=eye.z+Math.sin(yaw)*d;if(free(nx,nz)){eye.x=nx;eye.z=nz;}else if(free(nx,eye.z))eye.x=nx;else if(free(eye.x,nz))eye.z=nz;}
 const inS=(x0,x1,z0,z1)=>eye.x>x0&&eye.x<x1&&eye.z>z0&&eye.z<z1;
 function stairOpts(){const c=inS(35,41,11.5,19.5),h=inS(15,21,17,24.5);
-const fs=typeof frontStair!=='undefined'&&((lvlW===0&&inS(frontStair[0]-4,frontStair[0]+3,frontStair[2]-0.5,frontStair[3]))||(lvlW===1&&inS(frontStair[1]-2.6,frontStair[1]+1,21.2,24.5)));
-if(lvlW===0)return [c||fs?1:null,null];
-if(lvlW===1)return [h?2:null,c||fs?0:null];
+if(lvlW===0)return [c?1:null,null];
+if(lvlW===1)return [h?2:null,c?0:null];
 if(lvlW===2)return [h?3:null,h?1:null];
 return [null,h?2:null];}
 let lastOpt='';
 function updWalkUI(){const o=stairOpts();const k=o.join(',')+lvlW;if(k===lastOpt)return;lastOpt=k;
 document.getElementById('upF').disabled=o[0]===null;document.getElementById('dnF').disabled=o[1]===null;
 document.getElementById('walkfloor').textContent=LVLN[lvlW]+(o[0]!==null||o[1]!==null?' · on the stairs':'');}
-function goFloor(i){const o=stairOpts();const t=o[i];if(t===null)return;
-if(typeof frontStair!=='undefined'&&!inS(35,41,11.5,19.5)&&!inS(15,21,17,24.5)){if(t===1){eye.x=frontStair[1]-1.3;eye.z=22.8;yaw=Math.PI/2;}else{eye.x=frontStair[0]+1.5;eye.z=(frontStair[2]+frontStair[3])/2;yaw=Math.PI;}}
-lvlW=t;eye.y=eyeY(t);lastOpt='';}
+function goFloor(i){const o=stairOpts();const t=o[i];if(t===null)return;lvlW=t;eye.y=eyeY(t);lastOpt='';}
 function enterWalk(name,l,x,z,yw,pt){mode='all';walk=true;setX(false);LB.forEach(g=>g.visible=false);labT.visible=false;gC.visible=false;
 lvlW=l;eye.set(x,eyeY(l),z);yaw=yw;pitch=pt;lastOpt='';
 cam.fov=68;cam.near=0.25;cam.updateProjectionMatrix();

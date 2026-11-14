@@ -4,7 +4,6 @@ Newest first. Add a line every time the design changes.
 
 | Date | Decision | Why |
 | --- | --- | --- |
-| 2026-11-14 | Added the **outside front stair**: open concrete stair beside the south-east wall, from road level up to the 1st-floor shop passage, with a doorway at the top. Walkable in walk mode | Road-side site photo: the stair is built outside the building on the south-east side |
 | 2026-11-14 | Added a **Rain (monsoon)** switch: rain from the south-west, wet open floors, downpipes. Shows the courtyard cap keeps the courtyard dry; the back court, deck and sit-out get wet and need slopes and drains | Owner wanted to see how the house behaves in rain |
 | 2026-11-14 | Added the outer wall of the shop corridor (south-east side, ground and 1st floors). New **Site today** switch shows it at half height, as built so far | Owner: on site this wall is built half-height on both floors |
 | 2026-11-14 | Site video reviewed: ground floor built, 1st-floor walls up, back is open land. The 1st-floor home walls are not built yet, so the model's home layout stays as the proposal | Owner confirmed the home walls are yet to be built |
