@@ -169,7 +169,81 @@ const F=0xf2efe8,W2=0x9b6b43,SO=0x5b6b7a;
 const bed=(g,b,x0,x1,z0,z1)=>{box(g,x0,x1,b,b+1.8,z0,z1,F);box(g,x0,x1,b,b+3.6,z0,z0+0.4,W2);box(g,x0+0.5,x1-0.5,b+1.8,b+2.2,z0+0.6,z0+1.8,0xffffff);};
 const sofa=(g,b,x0,x1,z0)=>{box(g,x0,x1,b,b+1.5,z0,z0+3,SO);box(g,x0,x1,b,b+3,z0,z0+0.8,SO);};
 const FM={wood:0x9b6b43,fabric:0x5b6b7a,linen:0xf2efe8,steel:0xb8bcc0,white:0xfbfbf8,black:0x2b2b2b,counter:0x7a7c80,stone:C.stair,glass:C.glass,plant:C.leaf,concrete:0x9a958c};
-FURN.forEach(f=>{const b=BASE[f[0]];box(G[f[0]],f[2],f[3],b+f[6],b+f[6]+f[7],f[4],f[5],f[1]==='Rug'?0x8c3a32:(FM[f[8]]||0x999999),f[8]==='glass'?0.3:1);if(f[9])label(LB[f[0]],f[1],(f[2]+f[3])/2,b+f[6]+f[7]+1.6,(f[4]+f[5])/2,0.6);});
+// ---------- Detailed furniture: legs, cushions, rounded mattresses, ceramic fittings, kitchen units ----------
+// detail(f) draws a realistic version of a FURN item and returns true; returns false to fall back to a plain box.
+const CER=new T.MeshStandardMaterial({color:0xf7f6f2,roughness:0.12,metalness:0,envMapIntensity:0.9});
+const CHR=new T.MeshStandardMaterial({color:0xd9dcdf,roughness:0.18,metalness:0.95,envMapIntensity:1.2});
+const RBG=(w,h,d,r)=>{r=Math.max(0.005,Math.min(r,w/2-0.005,h/2-0.005,d/2-0.005));return T.RoundedBoxGeometry?new T.RoundedBoxGeometry(w,h,d,3,r):new T.BoxGeometry(w,h,d);};
+function rbox(g,x0,x1,y0,y1,z0,z1,c,r){const m=new T.Mesh(RBG(x1-x0,y1-y0,z1-z0,r||0.1),typeof c==='number'?M(c):c);m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);m.castShadow=true;m.receiveShadow=true;g.add(m);return m;}
+const roomAt2=(l,x,z)=>LV[l].find(r=>!['air','void'].includes(r[1])&&x>=r[2]-0.01&&x<=r[3]+0.01&&z>=r[4]-0.01&&z<=r[5]+0.01);
+// Local frame for an item: u runs along its long side, v runs from its back (the wall side) to its front.
+function frameOf(f,backDir){const dx=f[3]-f[2],dz=f[5]-f[4];let ax=dx<dz?'x':'z',s;
+if(backDir){ax=backDir.ax;s=backDir.s;}else{const r=roomAt2(f[0],(f[2]+f[3])/2,(f[4]+f[5])/2);
+ if(ax==='x')s=r?((f[2]-r[2])<=(r[3]-f[3])?1:-1):1;else s=r?((f[4]-r[4])<=(r[5]-f[5])?1:-1):1;}
+const alongX=ax==='z',U0=alongX?f[2]:f[4],U1=alongX?f[3]:f[5],V0=alongX?f[4]:f[2],V1=alongX?f[5]:f[3],back=s>0?V0:V1;
+const P=(g,u0,u1,v0,v1,y0,y1,c,r)=>{const a=back+s*v0,b2=back+s*v1,w0=Math.min(a,b2),w1=Math.max(a,b2);
+ if(r)return alongX?rbox(g,u0,u1,y0,y1,w0,w1,c,r):rbox(g,w0,w1,y0,y1,u0,u1,c,r);
+ const mm=typeof c==='number'?null:c;if(mm){const m=new T.Mesh(new T.BoxGeometry(alongX?u1-u0:w1-w0,y1-y0,alongX?w1-w0:u1-u0),mm);m.position.set(alongX?(u0+u1)/2:(w0+w1)/2,(y0+y1)/2,alongX?(w0+w1)/2:(u0+u1)/2);m.castShadow=true;g.add(m);return m;}
+ return alongX?box(g,u0,u1,y0,y1,w0,w1,c):box(g,w0,w1,y0,y1,u0,u1,c);};
+return {U0,U1,L:U1-U0,D:V1-V0,P,ax,s};}
+const LEG=0x2f2620,SOF=0x8d8579,SOFD=0x7a7266;
+const legs=(F,g,y0,y1,inset,t,c)=>{[[F.U0+inset,F.D-inset-t],[F.U1-inset-t,F.D-inset-t],[F.U0+inset,inset],[F.U1-inset-t,inset]].forEach(p=>F.P(g,p[0],p[0]+t,p[1],p[1]+t,y0,y1,c||LEG));};
+const tableNear=f=>{let best=null,bd=4;FURN.forEach(t=>{if(t[0]!==f[0]||!/table|desk/i.test(t[1])||/bedside/i.test(t[1]))return;const cx=(t[2]+t[3])/2,cz=(t[4]+t[5])/2,d=Math.hypot(cx-(f[2]+f[3])/2,cz-(f[4]+f[5])/2);if(d<bd){bd=d;best=t;}});return best;};
+function detail(f){const g=G[f[0]],y=BASE[f[0]]+f[6],h=f[7],n=f[1];
+// sofas, armchairs, easy chairs
+if(/^Sofa$|^Sofa-cum-bed|^Armchair|^Easy chair/.test(n)){const F=frameOf(f),hasBack=FURN.some(o=>o!==f&&o[0]===f[0]&&o[1]==='Sofa back'&&o[2]<f[3]&&o[3]>f[2]&&o[4]<f[5]&&o[5]>f[4]);
+ const arm=Math.min(0.45,F.L*0.18),seatH=n==='Armchair'||n==='Easy chair'?1.45:1.4;
+ legs(F,g,y,y+0.35,0.12,0.14);F.P(g,F.U0,F.U1,0,F.D,y+0.35,y+0.95,SOFD,0.08);
+ F.P(g,F.U0,F.U0+arm,0,F.D,y+0.35,y+2.0,SOF,0.14);F.P(g,F.U1-arm,F.U1,0,F.D,y+0.35,y+2.0,SOF,0.14);
+ const bk=hasBack?0.62:0.7,k=Math.max(1,Math.round((F.L-2*arm)/2.3)),cw=(F.L-2*arm)/k;
+ for(let i=0;i<k;i++){const u=F.U0+arm+i*cw;F.P(g,u+0.03,u+cw-0.03,bk,F.D-0.04,y+0.95,y+seatH,SOF,0.13);
+  if(!hasBack)F.P(g,u+0.05,u+cw-0.05,0.05,bk+0.05,y+0.95,y+2.65,SOF,0.16);}
+ return true;}
+if(n==='Sofa back'){const F=frameOf(f,null),k=Math.max(1,Math.round(F.L/2.3)),cw=F.L/k,yb=BASE[f[0]];
+ F.P(g,F.U0,F.U1,0,0.25,yb+0.95,yb+2.6,SOFD,0.08);
+ for(let i=0;i<k;i++){const u=F.U0+i*cw;F.P(g,u+0.05,u+cw-0.05,0.15,F.D,yb+0.95,yb+2.7,SOF,0.16);}return true;}
+// chairs: seat, four legs, back on the side away from the table
+if(/^Chair$|^Desk chair$|^Office chair$/.test(n)){const t=tableNear(f),cx=(f[2]+f[3])/2,cz=(f[4]+f[5])/2;let bd=null;
+ if(t){const tx=(t[2]+t[3])/2,tz=(t[4]+t[5])/2,ddx=tx-cx,ddz=tz-cz;bd=Math.abs(ddx)>Math.abs(ddz)?{ax:'x',s:ddx>0?1:-1}:{ax:'z',s:ddz>0?1:-1};}
+ const ff=f.slice(),c=f[8]==='wood'?0x9b6b43:SOF;
+ // dining chairs are stored as a thin strip; give them a real 1.4 ft seat that tucks under the table
+ const F0=frameOf(ff,bd);if(F0.D<1.2&&bd){const ext=1.4-F0.D;if(bd.ax==='x'){if(bd.s>0)ff[3]+=ext;else ff[2]-=ext;}else{if(bd.s>0)ff[5]+=ext;else ff[4]-=ext;}}
+ const F=frameOf(ff,bd),u0=F.U0+(F.L-Math.min(F.L,1.5))/2,u1=u0+Math.min(F.L,1.5),FF={U0:u0,U1:u1,D:F.D,P:F.P};
+ legs(FF,g,y,y+1.45,0.08,0.1,n==='Chair'?0x5a3d26:0x333333);
+ F.P(g,u0,u1,0,F.D,y+1.45,y+1.65,c,0.06);F.P(g,u0,u1,0,0.14,y+1.65,y+3.1,c,0.06);return true;}
+// tables and desks: top + four legs (bedside tables stay cabinets)
+if(/table|desk/i.test(n)&&!/bedside/i.test(n)){const F=frameOf(f),top=y+h,th=n==='Coffee table'?0.14:0.12;
+ F.P(g,F.U0,F.U1,0,F.D,top-th,top,0x9b6b43,0.03);legs(F,g,y,top-th,0.15,0.16);
+ if(n==='Coffee table')F.P(g,F.U0+0.2,F.U1-0.2,0.2,F.D-0.2,y+0.35,y+0.42,0x9b6b43);return true;}
+// beds: wooden frame on legs + rounded mattress (bedspread and pillows are added later)
+if(f[8]==='linen'&&/bed/i.test(n)){const top=y+h;box(g,f[2]+0.05,f[3]-0.05,y+0.35,y+1.15,f[4]+0.05,f[5]-0.05,0x9b6b43);
+ [[f[2]+0.1,f[4]+0.1],[f[3]-0.3,f[4]+0.1],[f[2]+0.1,f[5]-0.3],[f[3]-0.3,f[5]-0.3]].forEach(p=>box(g,p[0],p[0]+0.2,y,y+0.35,p[1],p[1]+0.2,LEG));
+ rbox(g,f[2]+0.12,f[3]-0.12,y+1.12,top,f[4]+0.12,f[5]-0.12,0xf2efe8,0.18);return true;}
+// WC: pedestal + bowl + seat, cistern against the wall
+if(/^WC$/.test(n)){const F=frameOf(f),um=(F.U0+F.U1)/2;
+ F.P(g,um-0.55,um+0.55,0,0.5,y+0.9,y+2.5,CER,0.1);F.P(g,um-0.3,um+0.3,0.35,F.D-0.25,y,y+0.95,CER,0.12);
+ F.P(g,um-0.48,um+0.48,0.4,F.D-0.02,y+0.95,y+1.3,CER,0.16);F.P(g,um-0.46,um+0.46,0.42,F.D,y+1.3,y+1.36,CER,0.04);return true;}
+// basins: ceramic bowl + chrome tap
+if(/basin/i.test(n)){const F=frameOf(f),um=(F.U0+F.U1)/2;F.P(g,F.U0,F.U1,0,F.D,y,y+h,CER,0.12);
+ F.P(g,um-0.04,um+0.04,0.06,0.16,y+h,y+h+0.45,CHR);F.P(g,um-0.04,um+0.04,0.06,0.5,y+h+0.4,y+h+0.47,CHR);return true;}
+// kitchen base units: shutters, handles, plinth, stone top
+if(/^Sink counter$|^Hob counter$|^Utility sink$/.test(n)){const F=frameOf(f),top=y+h;
+ F.P(g,F.U0,F.U1,0,F.D-0.12,y,y+0.3,0x3b3632);F.P(g,F.U0,F.U1,0,F.D-0.05,y+0.3,top-0.12,0xe4ded3);
+ F.P(g,F.U0-0.03,F.U1+0.03,0,F.D+0.06,top-0.12,top,0x2f3133,0.02);
+ const k=Math.max(1,Math.round(F.L/1.8));for(let i=0;i<=k;i++){const u=F.U0+F.L*i/k;F.P(g,u-0.015,u+0.015,F.D-0.06,F.D-0.03,y+0.35,top-0.15,0x8a8378);}
+ for(let i=0;i<k;i++){const u=F.U0+F.L*(i+0.5)/k;F.P(g,u-0.3,u+0.3,F.D-0.05,F.D+0.02,top-0.4,top-0.34,CHR);}return true;}
+return false;}
+// small finishing touches on cabinets that stay as boxes
+function detailExtras(f){const g=G[f[0]],y=BASE[f[0]]+f[6],h=f[7],n=f[1];
+if(/^Bedside table$|^Crockery sideboard$|^Shoe bench$|^Wall cabinets$|^Tall pantry$|^Tall storage unit$|^Shoe tower$/.test(n)){const F=frameOf(f),k=Math.max(1,Math.round(F.L/1.6));
+ for(let i=1;i<k;i++){const u=F.U0+F.L*i/k;F.P(g,u-0.015,u+0.015,F.D,F.D+0.03,y+0.05,y+h-0.05,0x3b2a1c);}
+ if(n==='Bedside table')F.P(g,F.U0+0.05,F.U1-0.05,F.D,F.D+0.03,y+h-0.45,y+h-0.42,0x3b2a1c);
+ for(let i=0;i<k;i++){const u=F.U0+F.L*(i+0.5)/k;F.P(g,u-0.2,u+0.2,F.D,F.D+0.06,n==='Wall cabinets'?y+0.15:y+h-0.3,n==='Wall cabinets'?y+0.2:y+h-0.25,CHR);}}
+if(n==='Fridge'){const F=frameOf(f);F.P(g,F.U0,F.U1,F.D,F.D+0.02,y+4.2,y+4.25,0x555a5e);F.P(g,F.U0+0.15,F.U0+0.22,F.D,F.D+0.12,y+2.4,y+4.0,CHR);F.P(g,F.U0+0.15,F.U0+0.22,F.D,F.D+0.12,y+4.5,y+5.6,CHR);}
+if(n==='Washing machine'){const F=frameOf(f),um=(F.U0+F.U1)/2;const d=new T.Mesh(new T.CylinderGeometry(0.55,0.55,0.06,32),new T.MeshStandardMaterial({color:0x3a4550,roughness:0.1,metalness:0.4}));
+ d.rotation[F.ax==='x'?'z':'x']=Math.PI/2;const p=F.ax==='x'?[(F.s>0?f[3]+0.03:f[2]-0.03),y+1.3,um]:[um,y+1.3,(F.s>0?f[5]+0.03:f[4]-0.03)];d.position.set(p[0],p[1],p[2]);g.add(d);}
+}
+FURN.forEach(f=>{const b=BASE[f[0]];if(!detail(f))box(G[f[0]],f[2],f[3],b+f[6],b+f[6]+f[7],f[4],f[5],f[1]==='Rug'?0x8c3a32:(FM[f[8]]||0x999999),f[8]==='glass'?0.3:1);detailExtras(f);if(f[9])label(LB[f[0]],f[1],(f[2]+f[3])/2,b+f[6]+f[7]+1.6,(f[4]+f[5])/2,0.6);});
 // ---------- Bedroom dressing: bedspreads, pillows, accent wall + painting, lamps, curtains, fans, wardrobe shutters ----------
 // Tall items go in TD[level], hidden when that floor is shown cut away (walls at 4 ft) or in x-ray.
 const TD=[0,1,2].map(l=>{const g=new T.Group();G[l].add(g);return g;});
@@ -238,6 +312,34 @@ LV.forEach((lv,l)=>lv.forEach(r=>{if(r[1]!=='room'||!/bed/i.test(r[0])||/wardrob
  for(let k=0;k<3;k++){const a=k*2*Math.PI/3,bl=new T.Mesh(new T.BoxGeometry(1.9,0.04,0.42),M(0x9b6b43));bl.position.set(cx+Math.cos(a)*1.25,b+8.95,cz+Math.sin(a)*1.25);bl.rotation.y=-a;bl.castShadow=true;TD[l].add(bl);}
 }));
 }
+// ---------- Architectural finish: door frames + open door leaves + lintels, window frames, skirting, ceiling lights ----------
+{const FRM=0x5a3d26,LEAF=0x9b6b43,AL=0x4a4d50,SK=0xcfc6b6;
+// doors (openings up to 4 ft wide): frame, wall above the door, and the door leaf standing open
+gaps.forEach(([lv,ax,f,a0,a1])=>{const w=a1-a0;if(w>4.05||w<1.5)return;if(lv===0&&ax==='x'&&f===60)return;if(lv===1&&ax==='z'&&f===10.5&&a0===23)return;
+ const b=BASE[lv],P=(u0,u1,y0,y1,d0,d1,c,g)=>ax==='x'?box(g||TD[lv],f+d0,f+d1,y0,y1,u0,u1,c):box(g||TD[lv],u0,u1,y0,y1,f+d0,f+d1,c);
+ P(a0,a0+0.18,b,b+7.2,-0.28,0.28,FRM);P(a1-0.18,a1,b,b+7.2,-0.28,0.28,FRM);P(a0,a1,b+7,b+7.25,-0.28,0.28,FRM);
+ P(a0,a1,b+7.25,b+10,-0.2,0.2,C.wall);
+ // the open leaf: hinged at a0, swung 90 degrees into the side with more room
+ const s=(()=>{const r1=roomAt2(lv,ax==='x'?f+1:(a0+a1)/2,ax==='x'?(a0+a1)/2:f+1),r0=roomAt2(lv,ax==='x'?f-1:(a0+a1)/2,ax==='x'?(a0+a1)/2:f-1);
+  const area=r=>r&&r[1]!=='open'?(r[3]-r[2])*(r[5]-r[4]):-1;return area(r1)>=area(r0)?1:-1;})();
+ const lw=w-0.36,u=a0+0.18;
+ if(ax==='x')box(TD[lv],Math.min(f,f+s*lw),Math.max(f,f+s*lw),b+0.05,b+7,u,u+0.12,LEAF);else box(TD[lv],u,u+0.12,b+0.05,b+7,Math.min(f,f+s*lw),Math.max(f,f+s*lw),LEAF);
+ const hx=ax==='x'?f+s*(lw-0.35):u+0.06,hz=ax==='x'?u+0.06:f+s*(lw-0.35);box(TD[lv],hx-0.04,hx+0.04,b+3.3,b+3.4,hz-0.14,hz+0.14,0xb8bcc0);});
+// window frames on every glass wall: aluminium posts about every 3 ft, top and bottom rails, a transom at door height
+const GL=M(C.glass,0.32);
+walls.forEach(w=>{if(w.orig!==GL||!w.ax)return;const g=TD[w.lvl],b=w.base,f=w.f,P=(u0,u1,y0,y1,d)=>w.ax==='x'?box(g,u0,u1,y0,y1,f-d,f+d,AL):box(g,f-d,f+d,y0,y1,u0,u1,AL);
+ const L=w.a1-w.a0,k=Math.max(1,Math.round(L/3));for(let i=0;i<=k;i++){const u=w.a0+L*i/k;P(u-0.06,u+0.06,b,b+10,0.13);}
+ P(w.a0,w.a1,b,b+0.18,0.14);P(w.a0,w.a1,b+7,b+7.12,0.12);P(w.a0,w.a1,b+9.85,b+10,0.13);});
+// skirting at the foot of every solid wall, both faces (hidden with the wall if the wall is deleted in Edit mode)
+walls.forEach(w=>{if(w.orig===GL||!w.ax||w.lvl===0)return;const f=w.f,d=0.235;
+ w.sk=w.ax==='x'?box(G[w.lvl],w.a0,w.a1,w.base,w.base+0.33,f-d,f+d,SK):box(G[w.lvl],f-d,f+d,w.base,w.base+0.33,w.a0,w.a1,SK);w.sk.castShadow=false;});
+// recessed ceiling downlights about every 5 ft in the home rooms
+const DL=new T.MeshStandardMaterial({color:0xfffaf0,emissive:0xfff1d6,emissiveIntensity:1.1,roughness:0.5});
+[1,2].forEach(l=>LV[l].forEach(r=>{if(!['room','wet'].includes(r[1]))return;const w=r[3]-r[2],d=r[5]-r[4];if(w*d<12)return;
+ const nx=Math.max(1,Math.round(w/5.5)),nz=Math.max(1,Math.round(d/5.5));
+ for(let i=0;i<nx;i++)for(let j=0;j<nz;j++){const x=r[2]+w*(i+0.5)/nx,z=r[4]+d*(j+0.5)/nz;
+  const m=new T.Mesh(new T.CylinderGeometry(0.22,0.22,0.03,20),DL);m.position.set(x,BASE[l]+9.955,z);TD[l].add(m);}}));
+}
 // Living room -> courtyard sliding glass door (opening x23-25.8 on the z10.5 glass wall). The panel runs on a track on the
 // courtyard side and is shown slid open in front of the fixed glass; glass fanlight above the 7.2 ft frame.
 {const b=BASE[1],z=10.5,x0=23,x1=25.8,h=7.2,fr=0x3a3d40,dz=0.18;
@@ -300,7 +402,7 @@ const PHMIN=0.02,PHMAX=1.55,RMIN=10,RMAX=260;const clampT=()=>{tgt.x=Math.min(75
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){TD.forEach((g,i)=>g.visible=!xr&&(mode==='all'||mode!==i));
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
-walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
+walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;if(w.sk)w.sk.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
 }
 function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2]*Math.max(1,1.1/(cam.aspect||1));tgt.set(30,s[3],12);if(plan){th=Math.PI/2;ph=0.02;rad=Math.max(85,108/(cam.aspect||1));}th+=TAU*Math.round((cth-th)/TAU);apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
