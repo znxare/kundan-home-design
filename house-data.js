@@ -26,6 +26,7 @@ const LV=[
 const BASE=[0,10.5,21];
 // Door openings: [level, 'x' or 'z' (which coordinate the wall sits on), wall position, from, to]
 const gaps=[
+[0,'z',0,35,60], // owner, 14 Nov 2026: no wall of our own on the north-west side of the front shop (ground floor)
 [0,'x',35,21.5,23.5],[0,'z',19.5,36,40],[0,'z',16,24,27],[0,'x',60,3,9],[0,'x',60,14,19],
 [1,'x',35,19.6,21.4],[1,'z',19.5,36,40],[1,'z',18,31,35],[1,'z',10.5,13.5,16.5],[1,'z',10.5,26.5,35],[1,'z',10.5,23,25.8],[1,'z',18,26.3,30.9],[1,'x',26,12.5,15],
 [1,'x',2.5,5,7.5],[1,'x',13.5,7.8,10.3],[1,'z',11.5,4,6.5],[1,'x',13.5,12,16.5],[1,'z',17,8.5,11],[1,'z',18,13.8,16.2],
@@ -36,6 +37,19 @@ const gaps=[
 const glassE=[];
 // Walls forced solid even if they face an open space: [level,'x'|'z',fixed,from,to]
 const solidE=[[1,'x',2.5,11.5,17],[2,'x',2.5,11.5,17]];
+
+// Extra walls not made by a room's edges: [level, 'x' or 'z' (which coordinate the wall sits on), wall position, from, to]
+// Owner, 14 Nov 2026: the shop corridor has an outer wall along the south-east side on the ground and 1st floors.
+const extraWalls=[[0,'z',24.5,35,60],[1,'z',24.5,35,60]];
+
+// Walls built only part of their height on site today (shown with "Site today" ticked):
+// [level, 'x' or 'z', wall position, from, to, height built so far in ft]
+// Owner, 14 Nov 2026: the corridor's outer wall is about half-height on the ground and 1st floors.
+const siteHalf=[[0,'z',24.5,35,60,5],[1,'z',24.5,35,60,5]];
+
+// Wall changes made in the model's Edit mode and made permanent (pasted from "Copy my changes"):
+// {op:'del'|'h'|'add', lv:level, ax:'x' (wall runs along x) or 'z', f: fixed coordinate, a0..a1: extent, h: height ft}
+const wallEdits=[];
 
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
 const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,12.5,18.5,4,21,0],['Master bed',2,12.5,9.5,2.5,4,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33,15,22,6,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];

@@ -49,6 +49,10 @@ for thinking through the design and briefing the architect. It is **not** a cons
 - Furniture and fittings live in `FURN` in `house-data.js` (one line per item; see the header there).
   `npm test` checks every item is inside a room, keeps 2 ft clear at doors and doesn't collide.
   Terrace items, grilles and jaali screens are still hard-coded in `app.js` (search `grid(`, `vbars(`).
+- `wallEdits` in `house-data.js`: permanent wall edits. The owner makes changes in the model's Edit mode and pastes
+  "Copy my changes" text whose last line is `DATA [...]`: copy that JSON array into `wallEdits` (merge with what is there),
+  run `npm run check`, log it in `docs/decisions-log.md`. Format: {op:'del'|'h'|'add', lv, ax, f, a0, a1, h}.
+- `extraWalls` / `siteHalf` in `house-data.js`: walls not made by room edges, and walls built only part-height on site ("Site today" view).
 
 ## Design rules (agreed with the owner, keep them)
 1. **Light and air without side windows.** Neighbours will build on the NW and SE walls, so no room may

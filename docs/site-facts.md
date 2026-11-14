@@ -3,7 +3,10 @@
 - **Location:** Jamshedpur, Jharkhand, India (latitude about 22.8° N).
 - **Plot:** about 60'0¾" long × 24'6" wide (from the owner's drawing). The road is on the short north-east side.
 - **Orientation (owner's compass):** front/road = north-east, back = south-west, long sides = north-west and south-east.
-- **Neighbours:** houses will be built against both long sides. The back (south-west) is assumed open for now. **Confirm this.**
+- **Neighbours:** houses will be built against both long sides. One side already has a blue 2-storey house close to the boundary.
+  The back (south-west) is **open land**: a fenced yard, then fields (site video, 12 Nov 2026).
+- **Construction (12 Nov 2026):** ground floor built and plastered; 1st-floor shop, corridor and stair walls up to beam level (home walls not yet built); stair to the 2nd floor started.
+  See `docs/site-visit-2026-11-12.md`.
 - **Front shops (owner's drawing):** Shop 1 is about 12'3" deep (from the north-west wall), Shop 2 about 8'11".
   The stair box sits beside Shop 2. The entry corridor runs along the south-east wall.
 - **Ground floor (owner's drawing):** a godown across the back about 35 × 24 ft, with a toilet near the south-east wall.

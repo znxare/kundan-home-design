@@ -11,7 +11,17 @@
 - [ ] JNAC rules: rainwater harvesting, openings in walls shared with neighbours, height for 3 storeys
 - [ ] Terrace positions for the AC outdoor units, solar PV and solar water heater
 - [ ] Separate electricity meters for the shops and the home
-- [ ] Confirm whether the back (SW) will also have a neighbour
+- [x] Confirm whether the back (SW) will also have a neighbour: open land for now (site video)
+
+## Before the next stage of building (site video, 12 Nov 2026)
+- [ ] Tell the builder about the courtyard opening before the 2nd-floor slab is cast
+- [ ] Note the positions of the columns already cast on the 1st floor
+- [ ] Decide whether the stair being built goes on to the 2nd floor, or stops at the 1st floor (shop stair) as in the model
+- [ ] Steps at the front going down to the road: how many, and how wide
+
+- [ ] Floor drains, slopes and raised door thresholds for the back court, road deck and sit-out (they get rain through the grilles)
+
+- [ ] Front shop, ground floor: with no wall of its own on the north-west side, check whether it uses the neighbour's wall, and how it is closed and secured
 
 ## Ideas to build in the model
 - [ ] Move furniture into `house-data.js` so rooms and furniture move together

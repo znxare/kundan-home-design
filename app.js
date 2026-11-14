@@ -67,11 +67,20 @@ function label(g,txt,x,y,z,s){s=s||1;const c=document.createElement('canvas');co
 const walls=[];
 const inR=(p,r)=>p[0]>r[2]&&p[0]<r[3]&&p[1]>r[4]&&p[1]<r[5];
 function seg(g,ax,f,a0,a1,base,k,t,lv){
+const fx=ax==='x'?'z':'x';
+const hs=(typeof siteHalf!=='undefined'?siteHalf:[]).filter(q=>q[0]===lv&&q[1]===fx&&Math.abs(q[2]-f)<1e-6&&q[3]<a1&&q[4]>a0);
+if(!hs.length){seg0(g,ax,f,a0,a1,base,k,t,lv,0);return;}
+const cuts=[a0,a1];hs.forEach(q=>{if(q[3]>a0)cuts.push(q[3]);if(q[4]<a1)cuts.push(q[4]);});
+cuts.sort((p,q)=>p-q);
+for(let i=0;i<cuts.length-1;i++){const p0=cuts[i],p1=cuts[i+1];if(p1-p0<1e-6)continue;const mid=(p0+p1)/2;
+const q=hs.find(q=>mid>q[3]&&mid<q[4]);seg0(g,ax,f,p0,p1,base,k,t,lv,q?q[5]:0);}
+}
+function seg0(g,ax,f,a0,a1,base,k,t,lv,site){
 let c=k==='glass'?C.glass:C.wall,o=k==='glass'?0.32:1;
 if(t==='shop'&&ax==='z'&&f===60){if(lv===0)c=C.shutter;else{c=C.glass;o=0.32;}}
 const th=0.2;
 const m=ax==='x'?box(g,a0,a1,0,1,f-th,f+th,c,o):box(g,f-th,f+th,0,1,a0,a1,c,o);
-walls.push({m:m,base:base,lvl:lv,orig:m.material,b:ax==='x'?[a0,a1,f-th,f+th]:[f-th,f+th,a0,a1]});
+walls.push({m:m,base:base,lvl:lv,site:site,ax:ax,f:f,a0:a0,a1:a1,orig:m.material,b:ax==='x'?[a0,a1,f-th,f+th]:[f-th,f+th,a0,a1]});
 }
 function build(level,base,g,lab,lv){
 const opens=level.filter(r=>r[1]==='open'||r[1]==='air'||r[1]==='void');
@@ -100,6 +109,7 @@ if(!run||run.k!==k){flush(a);if(k)run={a:a,k:k};}
 flush(a1);
 });
 });
+(typeof extraWalls!=='undefined'?extraWalls:[]).filter(q=>q[0]===lv).forEach(q=>seg(g,q[1]==='z'?'x':'z',q[2],q[3],q[4],base,'solid','path',lv));
 }
 const G=[new T.Group(),new T.Group(),new T.Group()],LB=[new T.Group(),new T.Group(),new T.Group()];
 const gT=new T.Group(),gP=new T.Group(),gN=new T.Group(),air=new T.Group(),labT=new T.Group(),gC=new T.Group();
@@ -175,15 +185,15 @@ const pm=new T.MeshBasicMaterial({color:0x2f8ad8,toneMapped:false});const pg=new
 const parts=[];
 paths.forEach(p=>{const c=cum(p);for(let i=0;i<26;i++){const m=new T.Mesh(pg,pm);air.add(m);const q={p:p,c:c,u:i/26,m:m,sp:0.05};const v=at(p,c,q.u);m.position.set(v[0],v[1],v[2]);parts.push(q);}});
 
-let mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
+let plan=false,siteOn=false,raining=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
 let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
-walls.forEach(w=>{const h=(mode!=='all'&&w.lvl===mode)?4:10;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
+walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
 }
-function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
+function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];if(plan){th=Math.PI/2;ph=0.02;rad=Math.max(85,108/(cam.aspect||1));}apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
 function setX(on){xr=on;walls.forEach(w=>{const o=w.orig;const solid=o.opacity===1;w.m.material=on&&solid?M(o.color.getHex(),0.2):o;w.m.castShadow=!(on&&solid)&&o.opacity>=0.6;});apply();}
 document.getElementById('spots').innerHTML=spots.map((s,i)=>'<button data-i="'+i+'" aria-pressed="false">'+s[0]+'</button>').join('');
 function goSpot(i){const s=spots[i];const dx=s[4]-s[2],dz=s[5]-s[3];enterWalk(s[0],s[1],s[2],s[3],Math.atan2(dz,dx),Math.atan2(s[6],Math.hypot(dx,dz)));
@@ -198,7 +208,7 @@ BLK[3].push([16.5,26,10.5,18],[-9,2.5,-9,40],[44,70,12.25,40],[56,70,-9,12.25]);
 function eyeY(l){return (l===3?TY:BASE[l])+5.2;}
 function free(x,z){const L=lvlW,r=0.6;
 if(z<0.4||z>24.1||x<0.4||x>(L===0?78:59.6))return false;
-for(const w of walls){if(w.lvl!==L)continue;const b=w.b;if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return false;}
+for(const w of walls){if(w.lvl!==L||w.del)continue;const b=w.b;if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return false;}
 for(const b of BLK[L]){if(x>b[0]&&x<b[1]&&z>b[2]&&z<b[3])return false;}
 return true;}
 function step(d){const nx=eye.x+Math.cos(yaw)*d,nz=eye.z+Math.sin(yaw)*d;if(free(nx,nz)){eye.x=nx;eye.z=nz;}else if(free(nx,eye.z))eye.x=nx;else if(free(eye.x,nz))eye.z=nz;}
@@ -225,7 +235,7 @@ const ca=(Math.sin(dec)-Math.sin(alt)*Math.sin(lat))/(Math.cos(alt)*Math.cos(lat
 let az=Math.acos(Math.max(-1,Math.min(1,ca)));if(H>0)az=2*Math.PI-az;
 const r2=Math.SQRT1_2;const hx=Math.cos(az)*r2+Math.sin(az)*r2,hz=-Math.cos(az)*r2+Math.sin(az)*r2;
 sun.position.set(30+Math.cos(alt)*hx*150,Math.sin(alt)*150,12+Math.cos(alt)*hz*150);
-sun.intensity=alt>0?2.4*Math.min(1,alt*4):0;hemi.intensity=alt>0?0.55:0.25;
+sun.intensity=(alt>0?2.4*Math.min(1,alt*4):0)*(raining?0.2:1);hemi.intensity=alt>0?0.55:0.25;
 document.getElementById('hrv').textContent=fmt(hour);
 const dir=D[Math.round(az/(Math.PI/8))%16];
 document.getElementById('sunr').textContent=alt>0?'Sun in the '+dir+', '+Math.round(alt*180/Math.PI)+'° above the horizon':'The sun is below the horizon';
@@ -233,6 +243,7 @@ let h;
 if(hour<10)h=season===2?'Winter mornings: the sun rises in the south-east, behind the neighbour, so light reaches you mainly from above, through the courtyard cap and the skylights.':'Early sun lands on the road-facing deck, Bedroom 3 and the open sit-out, and comes through the hall’s glass wall into the family lounge.';
 else if(hour<14.5)h=season===2?'Winter noon: the sun is lower and from the south, so it lights the upper walls of the courtyard, which bounce light down. Keep those walls white.':'High sun drops straight down the courtyard onto the first-floor living and dining, and the glass blocks pass some to the godown below.';
 else h='Low western sun hits the back court. The terracotta jaali filters it into patterned light instead of heat.';
+if(raining){h=rainHint;document.getElementById('sunr').textContent='Overcast: monsoon rain, wind from the south-west';}
 document.getElementById('hint').textContent=h;
 }
 function camUp(){if(walk){const c=Math.cos(pitch);cam.position.copy(eye);cam.lookAt(eye.x+Math.cos(yaw)*c,eye.y+Math.sin(pitch),eye.z+Math.sin(yaw)*c);return;}cam.position.set(tgt.x+rad*Math.sin(ph)*Math.cos(th),tgt.y+rad*Math.cos(ph),tgt.z+rad*Math.sin(ph)*Math.sin(th));cam.lookAt(tgt);}
@@ -242,7 +253,7 @@ new ResizeObserver(size).observe(fig);size();
 const pts=new Map();let pinch=0;
 cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId);}catch(_){}pts.set(e.pointerId,[e.clientX,e.clientY]);});
 cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const p=pts.get(e.pointerId);
-if(pts.size===1){if(walk){yaw+=(e.clientX-p[0])*0.005;pitch=Math.min(1.2,Math.max(-1.2,pitch-(e.clientY-p[1])*0.005));}else{th+=(e.clientX-p[0])*0.008;ph=Math.min(1.5,Math.max(0.12,ph-(e.clientY-p[1])*0.008));}}
+if(pts.size===1){if(walk){yaw+=(e.clientX-p[0])*0.005;pitch=Math.min(1.2,Math.max(-1.2,pitch-(e.clientY-p[1])*0.005));}else{th+=(e.clientX-p[0])*0.008;ph=Math.min(1.5,Math.max(plan?0.02:0.12,ph-(e.clientY-p[1])*0.008));}}
 pts.set(e.pointerId,[e.clientX,e.clientY]);
 if(pts.size===2){const v=[...pts.values()];const d=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);if(pinch&&d&&!walk)rad=Math.min(220,Math.max(25,rad*pinch/d));pinch=d;}});
 const up=e=>{pts.delete(e.pointerId);pinch=0;};
@@ -255,6 +266,8 @@ document.getElementById('hr').addEventListener('input',e=>{hour=+e.target.value;
 document.getElementById('cAir').addEventListener('change',e=>{air.visible=e.target.checked;});
 document.getElementById('cFast').addEventListener('change',e=>{const f=e.target.checked;sun.castShadow=!f;R.setPixelRatio(f?1:Math.min(2,window.devicePixelRatio||1));size();});
 document.getElementById('cNb').addEventListener('change',e=>{gN.visible=e.target.checked;});
+document.getElementById('cSite').addEventListener('change',e=>{siteOn=e.target.checked;apply();});
+document.getElementById('cPlan').addEventListener('change',e=>{plan=e.target.checked;setView(mode==='all'?'all':String(mode));});
 document.getElementById('cLab').addEventListener('change',e=>{showLab=e.target.checked;apply();});
 document.getElementById('reset').addEventListener('click',()=>setView(mode));
 document.getElementById('spots').addEventListener('click',e=>{const b=e.target.closest('button');if(b)goSpot(+b.dataset.i);});
@@ -271,10 +284,125 @@ document.getElementById('exitw').addEventListener('click',()=>setView('all'));
 gN.visible=false;
 setView('all');sunUpdate();
 
+
+// ---------- Rain (monsoon from the south-west) ----------
+
+const gRain=new T.Group();S.add(gRain);gRain.visible=false;
+const RN=3000,RLEN=1.3,RV=34,RW=0.3; // drops, streak length ft, fall speed ft/s, drift towards +x (NE) per ft of fall
+const inQ=(x,z,r)=>x>r[0]&&x<r[1]&&z>r[2]&&z<r[3];
+// Where a drop stops: [x0,x1,z0,z1,height]. First match wins.
+const rainStops=[
+[15.9,26.6,9.9,18.6,TY+3.25],// courtyard cap keeps the courtyard dry
+[34.6,41.4,11.1,19.9,TY+8.5],// stair head
+[0,2.5,0,24.5,BASE[1]],        // back court: through the roof grid onto the 1st-floor court
+[56,60,0,12.25,BASE[2]],     // road deck: through the grille roof
+[44,60,12.25,24.5,BASE[2]],  // sit-out: through the pergola grille
+[0,60,0,24.5,TY]];           // everything else: the terrace
+function rainFloor(x,z){
+if(gN.visible&&x>0&&x<60&&((z>-14&&z<-0.35)||(z>24.85&&z<38)))return 34;
+for(const r of rainStops)if(inQ(x,z,r))return r[4];return 0;}
+const rp=new Float32Array(RN*6),rd=[];
+function dropReset(i,top){const d=rd[i]||(rd[i]={});d.x=-14+Math.random()*80;d.z=-10+Math.random()*44;d.y=top?58+Math.random()*6:rainFloor(d.x,d.z)+Math.random()*(58-rainFloor(d.x,d.z));}
+for(let i=0;i<RN;i++)dropReset(i,false);
+const rg=new T.BufferGeometry();rg.setAttribute('position',new T.BufferAttribute(rp,3));
+const rLines=new T.LineSegments(rg,new T.LineBasicMaterial({color:0x8fa6bd,transparent:true,opacity:0.55,depthWrite:false}));rLines.frustumCulled=false;gRain.add(rLines);
+function rainStep(dt){
+for(let i=0;i<RN;i++){const d=rd[i];d.y-=RV*dt;d.x+=RV*RW*dt;
+if(d.y<=rainFloor(d.x,d.z))dropReset(i,true);
+const k=i*6;rp[k]=d.x;rp[k+1]=d.y;rp[k+2]=d.z;rp[k+3]=d.x-RLEN*RW;rp[k+4]=d.y+RLEN;rp[k+5]=d.z;}
+rg.attributes.position.needsUpdate=true;}
+rainStep(0);
+// Wet, open-to-rain surfaces and the rainwater downpipes (shown only while it rains)
+const gWet=new T.Group();gRain.add(gWet);
+box(gWet,0.05,2.45,BASE[1]+0.02,BASE[1]+0.07,0.05,24.45,0x6f8aa3,0.45);
+box(gWet,56.05,59.95,BASE[2]+0.02,BASE[2]+0.07,0.05,12.2,0x6f8aa3,0.45);
+box(gWet,44.05,59.95,BASE[2]+0.02,BASE[2]+0.07,12.3,24.45,0x6f8aa3,0.45);
+[[2.5,16.5,0,24.5],[16.5,26,0,10.5],[16.5,26,18,24.5],[26,35,0,24.5],[35,41,0,11.5],[35,41,19.5,24.5],[41,44,0,24.5],[44,56,0,12.25]].forEach(r=>box(gWet,r[0]+0.05,r[1]-0.05,TY+0.02,TY+0.07,r[2]+0.05,r[3]-0.05,0x6f8aa3,0.4));
+[[12,-0.45],[40,-0.45],[12,24.95],[40,24.95]].forEach(p=>box(gWet,p[0]-0.2,p[0]+0.2,0,TY+0.3,p[1]-0.2,p[1]+0.2,0x3f6f9a));
+label(gWet,'Rainwater downpipe',40,TY-4,-1.5,0.8);label(gWet,'Back court gets wet: slope + drain',1.25,BASE[1]+3,12,0.8);
+label(gWet,'Courtyard stays dry under the cap',21.25,TY+5,14.25,0.8);
+const rainHint='Monsoon rain, blowing in from the south-west. The courtyard cap keeps the courtyard dry (keep the louvre gap above it narrow, or slanting rain gets in). Rain falls through the steel grids onto the back court, the road deck and the sit-out: give those floors a slight slope, a floor drain and a raised door threshold. The terrace drains through downpipes on the neighbour-wall sides into the rainwater recharge pit.';
+document.getElementById('cRain').addEventListener('change',e=>{raining=e.target.checked;S.fog=raining?new T.Fog(0x9aa3ab,90,320):null;sunUpdate();});
+
+// ---------- Wall editor: tap a wall to delete it or change its height; add new walls ----------
+const EDK='kundan-wall-edits-v1';
+let edits=[];try{edits=JSON.parse(localStorage.getItem(EDK)||'[]')||[];}catch(_){edits=[];}
+const r2=v=>Math.round(v*100)/100;
+const wkey=(lv,ax,f,a0,a1)=>[lv,ax,r2(f),r2(a0),r2(a1)].join('|');
+const wk=w=>wkey(w.lvl,w.ax,w.f,w.a0,w.a1);
+const ek=e=>wkey(e.lv,e.ax,e.f,e.a0,e.a1);
+const SIDE={nw:'north-west',se:'south-east',sw:'back (south-west)',ne:'road (north-east)'};
+function roomAt(lv,x,z){if(z<0)return SIDE.nw;if(z>24.5)return SIDE.se;if(x<0)return SIDE.sw;if(x>60)return SIDE.ne;
+const r=LV[lv].find(r=>x>r[2]&&x<r[3]&&z>r[4]&&z<r[5]);return r?(r[0]||({path:'corridor',air:'open air',void:'void',open:'open court'}[r[1]]||r[1])):'open space';}
+function wallName(w){const m=(w.a0+w.a1)/2;
+const A=w.ax==='x'?roomAt(w.lvl,m,w.f-0.6):roomAt(w.lvl,w.f-0.6,m),B=w.ax==='x'?roomAt(w.lvl,m,w.f+0.6):roomAt(w.lvl,w.f+0.6,m);
+const out=Object.values(SIDE);let s;
+if(out.includes(A)&&!out.includes(B))s='Outer wall of '+B+', '+A+' side';
+else if(out.includes(B)&&!out.includes(A))s='Outer wall of '+A+', '+B+' side';
+else if(A===B&&w.added)s='Wall inside '+A;else if(A===B)s='Wall between the two '+A+' spaces';else s='Wall between '+A+' and '+B;
+return LVLN[w.lvl]+': '+s+' ('+(Math.round((w.a1-w.a0)*10)/10)+' ft long)';}
+function addWall(lv,ax,f,a0,a1){seg0(G[lv],ax,f,a0,a1,BASE[lv],'solid','room',lv,0);const w=walls[walls.length-1];w.added=true;return w;}
+function applyEdit(e){
+if(e.op==='add'){const w=addWall(e.lv,e.ax,e.f,e.a0,e.a1);if(e.h!=null)w.hh=e.h;return;}
+const k=ek(e);walls.forEach(w=>{if(wk(w)!==k)return;if(e.op==='del')w.del=true;if(e.op==='h')w.hh=e.h;});}
+(typeof wallEdits!=='undefined'?wallEdits:[]).forEach(applyEdit);
+edits.forEach(applyEdit);
+const $=id=>document.getElementById(id);
+function edCount(){const n=edits.length;$('edN').textContent=n?n+' change'+(n>1?'s':'')+' saved in this browser':'No changes yet';$('edCopy').disabled=!n;$('edUndoAll').disabled=!n;}
+function saveEd(){try{localStorage.setItem(EDK,JSON.stringify(edits));}catch(_){}edCount();}
+let editOn=false,sel=null,adding=0,addStart=null;
+const hiMat=new T.MeshLambertMaterial({color:0xffc400});
+const marker=box(S,-0.4,0.4,0,3,-0.4,0.4,0xffc400);marker.visible=false;
+function msg(t){$('edMsg').textContent=t;}
+function unsel(){if(sel){const o=sel.orig;sel.m.material=xr&&o.opacity===1?M(o.color.getHex(),0.2):o;}sel=null;$('edPanel').hidden=true;}
+function select(w){unsel();sel=w;w.m.material=hiMat;$('edPanel').hidden=false;
+$('edInfo').textContent=wallName(w)+(w.added?' · added by you':'');
+const h=w.hh!=null?w.hh:10;$('edH').value=h;$('edHv').textContent=h+' ft';$('edRestore').disabled=!!w.added;}
+function upsert(op,w,h){const k=wk(w);
+if(w.added){const a=edits.find(e=>e.op==='add'&&ek(e)===k);if(op==='del')edits=edits.filter(e=>e!==a);else if(a)a.h=h;saveEd();return;}
+edits=edits.filter(e=>!(e.op===op&&ek(e)===k));
+edits.push(Object.assign({op:op,lv:w.lvl,ax:w.ax,f:r2(w.f),a0:r2(w.a0),a1:r2(w.a1)},op==='h'?{h:h}:{}));saveEd();}
+$('cEdit').addEventListener('change',e=>{editOn=e.target.checked;$('edTools').hidden=!editOn;
+if(!editOn){unsel();adding=0;marker.visible=false;}
+msg(editOn?'Tap a wall to select it. Tip: choose Ground, 1st floor or 2nd floor under View first, so that floor\'s walls are easy to reach.':'');});
+$('edDel').addEventListener('click',()=>{if(!sel)return;const w=sel;unsel();w.del=true;if(!w.added){const k=wk(w);edits=edits.filter(e=>!(e.op==='h'&&ek(e)===k));}upsert('del',w);
+if(w.added){if(w.m.parent)w.m.parent.remove(w.m);walls.splice(walls.indexOf(w),1);}
+apply();msg('Wall deleted. "Undo all my changes" brings everything back.');});
+$('edH').addEventListener('input',e=>{if(!sel)return;const h=+e.target.value;sel.hh=h;$('edHv').textContent=h+' ft';upsert('h',sel,h);apply();});
+$('edRestore').addEventListener('click',()=>{if(!sel||sel.added)return;const k=wk(sel);edits=edits.filter(e=>ek(e)!==k);sel.hh=null;saveEd();select(sel);apply();msg('Wall is back to the original design.');});
+$('edAdd').addEventListener('click',()=>{if(mode==='all'){msg('First choose Ground, 1st floor or 2nd floor under View, then press "Add a wall" again.');return;}
+unsel();adding=1;msg('Tap on the floor where the new wall starts ('+LVLN[mode]+').');});
+$('edUndoAll').addEventListener('click',()=>{if(!confirm('Remove all your wall changes and go back to the original design?'))return;edits=[];saveEd();location.reload();});
+$('edCopy').addEventListener('click',()=>{
+const lines=edits.map(e=>{const n=wallName({lvl:e.lv,ax:e.ax,f:e.f,a0:e.a0,a1:e.a1});
+return e.op==='del'?'- Delete: '+n:e.op==='h'?'- Make '+e.h+' ft high: '+n:'- Add new wall: '+n+(e.h!=null?', '+e.h+' ft high':'');});
+const txt='My wall changes in the 3D model:\n'+lines.join('\n')+'\n\nDATA '+JSON.stringify(edits);
+const ta=$('edOut');ta.hidden=false;ta.value=txt;ta.select();
+const manual=()=>msg('Select all the text in the box below, copy it, and paste it to Claude.');
+try{navigator.clipboard.writeText(txt).then(()=>msg('Copied. Paste it into the chat with Claude to make these changes permanent.'),manual);}catch(_){manual();}});
+edCount();
+const rc=new T.Raycaster(),ndc=new T.Vector2();let tap=null;
+cv.addEventListener('pointerdown',e=>{tap=[e.clientX,e.clientY];});
+cv.addEventListener('pointerup',e=>{if(!editOn||walk||!tap)return;if(Math.hypot(e.clientX-tap[0],e.clientY-tap[1])>6)return;
+const b=cv.getBoundingClientRect();ndc.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);rc.setFromCamera(ndc,cam);
+if(adding){const y=BASE[mode],o=rc.ray.origin,d=rc.ray.direction;if(Math.abs(d.y)<1e-6)return;const t=(y-o.y)/d.y;if(t<0)return;
+const px=Math.round((o.x+d.x*t)*2)/2,pz=Math.round((o.z+d.z*t)*2)/2;
+if(adding===1){addStart=[px,pz];marker.position.set(px,y+1.5,pz);marker.visible=true;adding=2;msg('Now tap where the wall ends. It is drawn as a straight line.');return;}
+const dx=px-addStart[0],dz=pz-addStart[1];let w;
+if(Math.abs(dx)>=Math.abs(dz)){if(Math.abs(dx)<1){msg('Too short. Tap a point further away.');return;}w={ax:'x',f:addStart[1],a0:Math.min(px,addStart[0]),a1:Math.max(px,addStart[0])};}
+else{if(Math.abs(dz)<1){msg('Too short. Tap a point further away.');return;}w={ax:'z',f:addStart[0],a0:Math.min(pz,addStart[1]),a1:Math.max(pz,addStart[1])};}
+const nw=addWall(mode,w.ax,w.f,w.a0,w.a1);edits.push({op:'add',lv:mode,ax:w.ax,f:r2(w.f),a0:r2(w.a0),a1:r2(w.a1)});saveEd();
+adding=0;marker.visible=false;apply();select(nw);msg('Wall added. Change its height below, or delete it.');return;}
+const objs=walls.filter(w=>!w.del&&w.m.visible&&G[w.lvl].visible).map(w=>w.m);const hit=rc.intersectObjects(objs,false)[0];
+if(!hit){unsel();msg('No wall there. Tap directly on a wall.');return;}
+select(walls.find(w=>w.m===hit.object));msg('');});
+apply();
+
 const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 let last=performance.now();
 function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;
 if(air.visible&&!rm)parts.forEach(q=>{q.u=(q.u+dt*q.sp)%1;const v=at(q.p,q.c,q.u);q.m.position.set(v[0],v[1],v[2]);});
+gRain.visible=raining&&(mode==='all'||walk);if(gRain.visible)rainStep(rm?0:dt);
 if(walk){const sp=6*dt;if(keys.f)step(sp);if(keys.b)step(-sp);if(keys.l)yaw-=1.6*dt;if(keys.r)yaw+=1.6*dt;updWalkUI();}
 camUp();R.render(S,cam);requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
