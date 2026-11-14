@@ -29,11 +29,20 @@ function label(g,txt,x,y,z,s){s=s||1;const c=document.createElement('canvas');co
 const walls=[];
 const inR=(p,r)=>p[0]>r[2]&&p[0]<r[3]&&p[1]>r[4]&&p[1]<r[5];
 function seg(g,ax,f,a0,a1,base,k,t,lv){
+const fx=ax==='x'?'z':'x';
+const hs=(typeof siteHalf!=='undefined'?siteHalf:[]).filter(q=>q[0]===lv&&q[1]===fx&&Math.abs(q[2]-f)<1e-6&&q[3]<a1&&q[4]>a0);
+if(!hs.length){seg0(g,ax,f,a0,a1,base,k,t,lv,0);return;}
+const cuts=[a0,a1];hs.forEach(q=>{if(q[3]>a0)cuts.push(q[3]);if(q[4]<a1)cuts.push(q[4]);});
+cuts.sort((p,q)=>p-q);
+for(let i=0;i<cuts.length-1;i++){const p0=cuts[i],p1=cuts[i+1];if(p1-p0<1e-6)continue;const mid=(p0+p1)/2;
+const q=hs.find(q=>mid>q[3]&&mid<q[4]);seg0(g,ax,f,p0,p1,base,k,t,lv,q?q[5]:0);}
+}
+function seg0(g,ax,f,a0,a1,base,k,t,lv,site){
 let c=k==='glass'?C.glass:C.wall,o=k==='glass'?0.32:1;
 if(t==='shop'&&ax==='z'&&f===60){if(lv===0)c=C.shutter;else{c=C.glass;o=0.32;}}
 const th=0.2;
 const m=ax==='x'?box(g,a0,a1,0,1,f-th,f+th,c,o):box(g,f-th,f+th,0,1,a0,a1,c,o);
-walls.push({m:m,base:base,lvl:lv,orig:m.material,b:ax==='x'?[a0,a1,f-th,f+th]:[f-th,f+th,a0,a1]});
+walls.push({m:m,base:base,lvl:lv,site:site,orig:m.material,b:ax==='x'?[a0,a1,f-th,f+th]:[f-th,f+th,a0,a1]});
 }
 function build(level,base,g,lab,lv){
 const opens=level.filter(r=>r[1]==='open'||r[1]==='air'||r[1]==='void');
@@ -62,6 +71,7 @@ if(!run||run.k!==k){flush(a);if(k)run={a:a,k:k};}
 flush(a1);
 });
 });
+(typeof extraWalls!=='undefined'?extraWalls:[]).filter(q=>q[0]===lv).forEach(q=>seg(g,q[1]==='z'?'x':'z',q[2],q[3],q[4],base,'solid','path',lv));
 }
 const G=[new T.Group(),new T.Group(),new T.Group()],LB=[new T.Group(),new T.Group(),new T.Group()];
 const gT=new T.Group(),gP=new T.Group(),gN=new T.Group(),air=new T.Group(),labT=new T.Group(),gC=new T.Group();
@@ -147,12 +157,12 @@ const pm=new T.MeshBasicMaterial({color:0x2f8ad8});const pg=new T.SphereGeometry
 const parts=[];
 paths.forEach(p=>{const c=cum(p);for(let i=0;i<26;i++){const m=new T.Mesh(pg,pm);air.add(m);const q={p:p,c:c,u:i/26,m:m,sp:0.05};const v=at(p,c,q.u);m.position.set(v[0],v[1],v[2]);parts.push(q);}});
 
-let mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
+let siteOn=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
 let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
-walls.forEach(w=>{const h=(mode!=='all'&&w.lvl===mode)?4:10;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
+walls.forEach(w=>{let h=(mode!=='all'&&w.lvl===mode)?4:10;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
 }
 function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
@@ -230,6 +240,7 @@ document.getElementById('seasons').addEventListener('click',e=>{const b=e.target
 document.getElementById('hr').addEventListener('input',e=>{hour=+e.target.value;sunUpdate();});
 document.getElementById('cAir').addEventListener('change',e=>{air.visible=e.target.checked;});
 document.getElementById('cNb').addEventListener('change',e=>{gN.visible=e.target.checked;});
+document.getElementById('cSite').addEventListener('change',e=>{siteOn=e.target.checked;apply();});
 document.getElementById('cLab').addEventListener('change',e=>{showLab=e.target.checked;apply();});
 document.getElementById('reset').addEventListener('click',()=>setView(mode));
 document.getElementById('spots').addEventListener('click',e=>{const b=e.target.closest('button');if(b)goSpot(+b.dataset.i);});

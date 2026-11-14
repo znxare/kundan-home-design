@@ -36,5 +36,14 @@ const glassE=[[1,'x',27,17.5,24]];
 // Walls forced solid even if they face an open space: [level,'x'|'z',fixed,from,to]
 const solidE=[];
 
+// Extra walls not made by a room's edges: [level, 'x' or 'z' (which coordinate the wall sits on), wall position, from, to]
+// Owner, 14 Nov 2026: the shop corridor has an outer wall along the south-east side on the ground and 1st floors.
+const extraWalls=[[0,'z',24.5,35,60],[1,'z',24.5,35,60]];
+
+// Walls built only part of their height on site today (shown with "Site today" ticked):
+// [level, 'x' or 'z', wall position, from, to, height built so far in ft]
+// Owner, 14 Nov 2026: the corridor's outer wall is about half-height on the ground and 1st floors.
+const siteHalf=[[0,'z',24.5,35,60,5],[1,'z',24.5,35,60,5]];
+
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
 const spots=[['Entrance view',1,34,23,23,13,0],['Living',1,32,4.5,22,13,0],['Courtyard',1,20,10,26,16,9],['Dining',1,34,15,20,12,0],['Dry kitchen',1,30.5,21.5,22,12,0],['Wet kitchen',1,26,23,21,17,0],['Bedroom 1',1,14,12,3,4,0],['Master bed',2,14,12,3,4,0],['Study by void',2,16.5,12,27,13,-2],['Family lounge',2,33,15,22,6,0],['Bedroom 3',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];

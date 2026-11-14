@@ -4,6 +4,7 @@ Newest first. Add a line every time the design changes.
 
 | Date | Decision | Why |
 | --- | --- | --- |
+| 2026-11-14 | Added the outer wall of the shop corridor (south-east side, ground and 1st floors). New **Site today** switch shows it at half height, as built so far | Owner: on site this wall is built half-height on both floors |
 | 2026-11-14 | Site video reviewed: ground floor built, 1st-floor walls up, back is open land. The 1st-floor home walls are not built yet, so the model's home layout stays as the proposal | Owner confirmed the home walls are yet to be built |
 | 2026-11-14 | Project packaged for Claude Code: data split into `house-data.js`, walkability test, plan generator | Owner wants to keep working on it and host it on GitHub |
 | 2026-11-14 | Added a 2nd-floor **gallery** (x21–27, z17–19.5) beside the void; Bath 2 reduced to 6 × 5 ft | The walk test showed the stair/study half and the lounge/hall half of the 2nd floor were not connected |
