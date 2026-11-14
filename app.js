@@ -267,19 +267,22 @@ paths.forEach(p=>{const c=cum(p);for(let i=0;i<26;i++){const m=new T.Mesh(pg,pm)
 
 let plan=false,siteOn=false,raining=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
 let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
+// The camera glides towards th/ph/rad/tgt; cth/cph/crad/ctgt are what is shown this frame.
+let cth=th,cph=ph,crad=rad;const ctgt=new T.Vector3(tgt.x,tgt.y,tgt.z);const TAU=Math.PI*2;
+const PHMIN=0.02,PHMAX=1.55,RMIN=10,RMAX=260;const clampT=()=>{tgt.x=Math.min(75,Math.max(-15,tgt.x));tgt.z=Math.min(40,Math.max(-15,tgt.z));tgt.y=Math.min(45,Math.max(0,tgt.y));};
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){TD.forEach((g,i)=>g.visible=!xr&&(mode==='all'||mode!==i));
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
 walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
 }
-function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];if(plan){th=Math.PI/2;ph=0.02;rad=Math.max(85,108/(cam.aspect||1));}apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
+function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2]*Math.max(1,1.1/(cam.aspect||1));tgt.set(30,s[3],12);if(plan){th=Math.PI/2;ph=0.02;rad=Math.max(85,108/(cam.aspect||1));}th+=TAU*Math.round((cth-th)/TAU);apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
 function setX(on){xr=on;walls.forEach(w=>{const o=w.orig;const solid=o.opacity===1;w.m.material=on&&solid?M(o.color.getHex(),0.2):o;w.m.castShadow=!(on&&solid)&&o.opacity>=0.6;});apply();}
 document.getElementById('spots').innerHTML=spots.map((s,i)=>'<button data-i="'+i+'" aria-pressed="false">'+s[0]+'</button>').join('');
 function goSpot(i){const s=spots[i];const dx=s[4]-s[2],dz=s[5]-s[3];enterWalk(s[0],s[1],s[2],s[3],Math.atan2(dz,dx),Math.atan2(s[6],Math.hypot(dx,dz)));
 document.querySelectorAll('#spots button').forEach((b,j)=>b.setAttribute('aria-pressed',String(j===i)));}
 function leaveWalk(){walk=false;R.toneMappingExposure=1.05;cam.fov=38;cam.near=1;cam.updateProjectionMatrix();document.getElementById('walkbar').hidden=true;
-document.querySelectorAll('#spots button').forEach(b=>b.setAttribute('aria-pressed','false'));hb.textContent='Drag to rotate · scroll to zoom';setX(document.getElementById('cX').checked);}
+document.querySelectorAll('#spots button').forEach(b=>b.setAttribute('aria-pressed','false'));hb.textContent='Drag to turn · right-drag, Shift-drag or two fingers to move · scroll or pinch to zoom · double-tap to look closer';setX(document.getElementById('cX').checked);}
 let lvlW=1;const keys={f:0,b:0,l:0,r:0};
 const LVLN=['Ground floor','1st floor','2nd floor','Terrace'];
 const BLK=[[],[],[],[]];
@@ -326,19 +329,44 @@ else h='Low western sun hits the back court. The terracotta jaali filters it int
 if(raining){h=rainHint;document.getElementById('sunr').textContent='Overcast: monsoon rain, wind from the south-west';}
 document.getElementById('hint').textContent=h;
 }
-function camUp(){if(walk){const c=Math.cos(pitch);cam.position.copy(eye);cam.lookAt(eye.x+Math.cos(yaw)*c,eye.y+Math.sin(pitch),eye.z+Math.sin(yaw)*c);return;}cam.position.set(tgt.x+rad*Math.sin(ph)*Math.cos(th),tgt.y+rad*Math.cos(ph),tgt.z+rad*Math.sin(ph)*Math.sin(th));cam.lookAt(tgt);}
+function camUp(){if(walk){const c=Math.cos(pitch);cam.position.copy(eye);cam.lookAt(eye.x+Math.cos(yaw)*c,eye.y+Math.sin(pitch),eye.z+Math.sin(yaw)*c);return;}const k=(typeof rm!=='undefined'&&rm)?1:0.2;cth+=(th-cth)*k;cph+=(ph-cph)*k;crad+=(rad-crad)*k;ctgt.lerp(tgt,k);
+cam.position.set(ctgt.x+crad*Math.sin(cph)*Math.cos(cth),ctgt.y+crad*Math.cos(cph),ctgt.z+crad*Math.sin(cph)*Math.sin(cth));cam.lookAt(ctgt);}
 function size(){const w=fig.clientWidth,h=fig.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}
-new ResizeObserver(size).observe(fig);size();
+new ResizeObserver(size).observe(fig);size();setView('all');cth=th;cph=ph;crad=rad;ctgt.set(tgt.x,tgt.y,tgt.z);
 
 const pts=new Map();let pinch=0;
-cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId);}catch(_){}pts.set(e.pointerId,[e.clientX,e.clientY]);});
+let panBtn=false;let mid=null;
+function pan(dx,dy){const s=crad*0.0016,c=Math.cos(cth),n=Math.sin(cth);
+tgt.x+=(-n*dx-c*dy)*s;tgt.z+=(c*dx-n*dy)*s;clampT();}
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId);}catch(_){}pts.set(e.pointerId,[e.clientX,e.clientY]);panBtn=e.button===2||e.button===1||e.shiftKey;mid=null;});
 cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const p=pts.get(e.pointerId);
-if(pts.size===1){if(walk){yaw+=(e.clientX-p[0])*0.005;pitch=Math.min(1.2,Math.max(-1.2,pitch-(e.clientY-p[1])*0.005));}else{th+=(e.clientX-p[0])*0.008;ph=Math.min(1.5,Math.max(plan?0.02:0.12,ph-(e.clientY-p[1])*0.008));}}
+if(pts.size===1){if(walk){yaw+=(e.clientX-p[0])*0.005;pitch=Math.min(1.2,Math.max(-1.2,pitch-(e.clientY-p[1])*0.005));}else if(panBtn)pan(e.clientX-p[0],e.clientY-p[1]);else{th+=(e.clientX-p[0])*0.008;ph=Math.min(PHMAX,Math.max(PHMIN,ph-(e.clientY-p[1])*0.008));}}
 pts.set(e.pointerId,[e.clientX,e.clientY]);
-if(pts.size===2){const v=[...pts.values()];const d=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);if(pinch&&d&&!walk)rad=Math.min(220,Math.max(25,rad*pinch/d));pinch=d;}});
-const up=e=>{pts.delete(e.pointerId);pinch=0;};
+if(pts.size===2){const v=[...pts.values()];const d=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);if(pinch&&d&&!walk)rad=Math.min(RMAX,Math.max(RMIN,rad*pinch/d));pinch=d;
+const m=[(v[0][0]+v[1][0])/2,(v[0][1]+v[1][1])/2];if(mid&&!walk)pan(m[0]-mid[0],m[1]-mid[1]);mid=m;}});
+const up=e=>{pts.delete(e.pointerId);pinch=0;mid=null;};
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
-cv.addEventListener('wheel',e=>{e.preventDefault();if(walk){step(-e.deltaY*0.01);return;}rad=Math.min(220,Math.max(25,rad*(1+e.deltaY*0.001)));},{passive:false});
+cv.addEventListener('wheel',e=>{e.preventDefault();if(walk){step(-e.deltaY*0.01);return;}rad=Math.min(RMAX,Math.max(RMIN,rad*(1+Math.max(-0.3,Math.min(0.3,e.deltaY*0.001)))));},{passive:false});
+// Double-tap / double-click: glide in to look closely at that spot
+const frc=new T.Raycaster(),fnd=new T.Vector2();let lastTap=null,downAt=null;
+const shown=o=>{while(o){if(!o.visible)return false;o=o.parent;}return true;};
+function focusAt(cx,cy){const b=cv.getBoundingClientRect();fnd.set((cx-b.left)/b.width*2-1,-(cy-b.top)/b.height*2+1);frc.setFromCamera(fnd,cam);
+const hits=frc.intersectObjects([...G,gT,gP],true).filter(h=>h.object.isMesh&&shown(h.object));let p=hits.length?hits[0].point:null;
+if(!p){const y=mode==='all'?0:BASE[mode],o=frc.ray.origin,d=frc.ray.direction;if(Math.abs(d.y)>1e-6){const t=(y-o.y)/d.y;if(t>0)p=o.clone().addScaledVector(d,t);}}
+if(!p)return;tgt.copy(p);clampT();rad=Math.max(RMIN+6,Math.min(rad*0.55,45));}
+cv.addEventListener('pointerdown',e=>{downAt=[e.clientX,e.clientY];});
+cv.addEventListener('pointerup',e=>{if(walk||!downAt||pts.size>0)return;if(Math.hypot(e.clientX-downAt[0],e.clientY-downAt[1])>8){lastTap=null;return;}
+const now=performance.now();if(lastTap&&now-lastTap[2]<350&&Math.hypot(e.clientX-lastTap[0],e.clientY-lastTap[1])<30){lastTap=null;focusAt(e.clientX,e.clientY);return;}
+lastTap=[e.clientX,e.clientY,now];});
+// On-screen buttons: hold to keep turning / tilting / zooming
+let ob=null;const orbitEl=document.getElementById('orbit');
+if(orbitEl&&orbitEl.querySelectorAll){orbitEl.querySelectorAll('button').forEach(b=>{const o=b.dataset.o;
+if(o==='c'){b.addEventListener('click',()=>setView(mode==='all'?'all':String(mode)));return;}
+const on=e=>{e.preventDefault();ob=o;orbMove(o,0.22);},off=()=>{ob=null;};b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointerleave',off);b.addEventListener('pointercancel',off);});}
+function orbMove(o,dt){if(walk)return;if(o==='l')th-=1.3*dt;if(o==='r')th+=1.3*dt;if(o==='u')ph=Math.max(PHMIN,ph-0.9*dt);if(o==='d')ph=Math.min(PHMAX,ph+0.9*dt);
+if(o==='i')rad=Math.max(RMIN,rad*(1-1.3*dt));if(o==='o')rad=Math.min(RMAX,rad*(1+1.3*dt));}
+function orbStep(dt){if(orbitEl&&orbitEl.hidden!==walk)orbitEl.hidden=walk;if(ob)orbMove(ob,dt);}
 
 document.getElementById('views').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setView(b.dataset.v);});
 document.getElementById('seasons').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;season=+b.dataset.s;document.querySelectorAll('#seasons button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));sunUpdate();});
@@ -463,7 +491,7 @@ try{navigator.clipboard.writeText(txt).then(()=>msg('Copied. Paste it into the c
 edCount();
 const rc=new T.Raycaster(),ndc=new T.Vector2();let tap=null;
 cv.addEventListener('pointerdown',e=>{tap=[e.clientX,e.clientY];});
-cv.addEventListener('pointerup',e=>{if(!editOn||walk||!tap)return;if(Math.hypot(e.clientX-tap[0],e.clientY-tap[1])>6)return;
+cv.addEventListener('pointerup',e=>{if(!editOn||walk||!tap||e.button>0)return;if(Math.hypot(e.clientX-tap[0],e.clientY-tap[1])>6)return;
 const b=cv.getBoundingClientRect();ndc.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);rc.setFromCamera(ndc,cam);
 if(adding){const y=BASE[mode],o=rc.ray.origin,d=rc.ray.direction;if(Math.abs(d.y)<1e-6)return;const t=(y-o.y)/d.y;if(t<0)return;
 const px=Math.round((o.x+d.x*t)*2)/2,pz=Math.round((o.z+d.z*t)*2)/2;
@@ -484,7 +512,7 @@ function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;
 if(air.visible&&!rm)parts.forEach(q=>{q.u=(q.u+dt*q.sp)%1;const v=at(q.p,q.c,q.u);q.m.position.set(v[0],v[1],v[2]);});
 gRain.visible=raining&&(mode==='all'||walk);if(gRain.visible)rainStep(rm?0:dt);
 if(walk){const sp=6*dt;if(keys.f)step(sp);if(keys.b)step(-sp);if(keys.l)yaw-=1.6*dt;if(keys.r)yaw+=1.6*dt;updWalkUI();}
-camUp();R.render(S,cam);requestAnimationFrame(loop);}
+orbStep(dt);camUp();R.render(S,cam);requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
 };
 (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(start,start);
