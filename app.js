@@ -42,7 +42,7 @@ let c=k==='glass'?C.glass:C.wall,o=k==='glass'?0.32:1;
 if(t==='shop'&&ax==='z'&&f===60){if(lv===0)c=C.shutter;else{c=C.glass;o=0.32;}}
 const th=0.2;
 const m=ax==='x'?box(g,a0,a1,0,1,f-th,f+th,c,o):box(g,f-th,f+th,0,1,a0,a1,c,o);
-walls.push({m:m,base:base,lvl:lv,site:site,orig:m.material,b:ax==='x'?[a0,a1,f-th,f+th]:[f-th,f+th,a0,a1]});
+walls.push({m:m,base:base,lvl:lv,site:site,ax:ax,f:f,a0:a0,a1:a1,orig:m.material,b:ax==='x'?[a0,a1,f-th,f+th]:[f-th,f+th,a0,a1]});
 }
 function build(level,base,g,lab,lv){
 const opens=level.filter(r=>r[1]==='open'||r[1]==='air'||r[1]==='void');
@@ -162,7 +162,7 @@ let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
-walls.forEach(w=>{let h=(mode!=='all'&&w.lvl===mode)?4:10;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.scale.y=h;w.m.position.y=w.base+h/2;});
+walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
 }
 function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];if(plan){th=Math.PI/2;ph=0.02;rad=Math.max(85,108/(cam.aspect||1));}apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
@@ -180,7 +180,7 @@ BLK[3].push([19,27,9,17],[-9,4,-9,40],[44,70,12.25,40],[56,70,-9,12.25]);
 function eyeY(l){return (l===3?TY:BASE[l])+5.2;}
 function free(x,z){const L=lvlW,r=0.6;
 if(z<0.4||z>24.1||x<0.4||x>(L===0?78:59.6))return false;
-for(const w of walls){if(w.lvl!==L)continue;const b=w.b;if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return false;}
+for(const w of walls){if(w.lvl!==L||w.del)continue;const b=w.b;if(x>b[0]-r&&x<b[1]+r&&z>b[2]-r&&z<b[3]+r)return false;}
 for(const b of BLK[L]){if(x>b[0]&&x<b[1]&&z>b[2]&&z<b[3])return false;}
 return true;}
 function step(d){const nx=eye.x+Math.cos(yaw)*d,nz=eye.z+Math.sin(yaw)*d;if(free(nx,nz)){eye.x=nx;eye.z=nz;}else if(free(nx,eye.z))eye.x=nx;else if(free(eye.x,nz))eye.z=nz;}
@@ -298,6 +298,81 @@ label(gWet,'Rainwater downpipe',40,TY-4,-1.5,0.8);label(gWet,'Back court gets we
 label(gWet,'Courtyard stays dry under the cap',23,TY+5,13,0.8);
 const rainHint='Monsoon rain, blowing in from the south-west. The courtyard cap keeps the courtyard dry (keep the louvre gap above it narrow, or slanting rain gets in). Rain falls through the steel grids onto the back court, the road deck and the sit-out: give those floors a slight slope, a floor drain and a raised door threshold. The terrace drains through downpipes on the neighbour-wall sides into the rainwater recharge pit.';
 document.getElementById('cRain').addEventListener('change',e=>{raining=e.target.checked;S.fog=raining?new T.Fog(0x9aa3ab,90,320):null;sunUpdate();});
+
+// ---------- Wall editor: tap a wall to delete it or change its height; add new walls ----------
+const EDK='kundan-wall-edits-v1';
+let edits=[];try{edits=JSON.parse(localStorage.getItem(EDK)||'[]')||[];}catch(_){edits=[];}
+const r2=v=>Math.round(v*100)/100;
+const wkey=(lv,ax,f,a0,a1)=>[lv,ax,r2(f),r2(a0),r2(a1)].join('|');
+const wk=w=>wkey(w.lvl,w.ax,w.f,w.a0,w.a1);
+const ek=e=>wkey(e.lv,e.ax,e.f,e.a0,e.a1);
+const SIDE={nw:'north-west',se:'south-east',sw:'back (south-west)',ne:'road (north-east)'};
+function roomAt(lv,x,z){if(z<0)return SIDE.nw;if(z>24.5)return SIDE.se;if(x<0)return SIDE.sw;if(x>60)return SIDE.ne;
+const r=LV[lv].find(r=>x>r[2]&&x<r[3]&&z>r[4]&&z<r[5]);return r?(r[0]||({path:'corridor',air:'open air',void:'void',open:'open court'}[r[1]]||r[1])):'open space';}
+function wallName(w){const m=(w.a0+w.a1)/2;
+const A=w.ax==='x'?roomAt(w.lvl,m,w.f-0.6):roomAt(w.lvl,w.f-0.6,m),B=w.ax==='x'?roomAt(w.lvl,m,w.f+0.6):roomAt(w.lvl,w.f+0.6,m);
+const out=Object.values(SIDE);let s;
+if(out.includes(A)&&!out.includes(B))s='Outer wall of '+B+', '+A+' side';
+else if(out.includes(B)&&!out.includes(A))s='Outer wall of '+A+', '+B+' side';
+else if(A===B&&w.added)s='Wall inside '+A;else if(A===B)s='Wall between the two '+A+' spaces';else s='Wall between '+A+' and '+B;
+return LVLN[w.lvl]+': '+s+' ('+(Math.round((w.a1-w.a0)*10)/10)+' ft long)';}
+function addWall(lv,ax,f,a0,a1){seg0(G[lv],ax,f,a0,a1,BASE[lv],'solid','room',lv,0);const w=walls[walls.length-1];w.added=true;return w;}
+function applyEdit(e){
+if(e.op==='add'){const w=addWall(e.lv,e.ax,e.f,e.a0,e.a1);if(e.h!=null)w.hh=e.h;return;}
+const k=ek(e);walls.forEach(w=>{if(wk(w)!==k)return;if(e.op==='del')w.del=true;if(e.op==='h')w.hh=e.h;});}
+(typeof wallEdits!=='undefined'?wallEdits:[]).forEach(applyEdit);
+edits.forEach(applyEdit);
+const $=id=>document.getElementById(id);
+function edCount(){const n=edits.length;$('edN').textContent=n?n+' change'+(n>1?'s':'')+' saved in this browser':'No changes yet';$('edCopy').disabled=!n;$('edUndoAll').disabled=!n;}
+function saveEd(){try{localStorage.setItem(EDK,JSON.stringify(edits));}catch(_){}edCount();}
+let editOn=false,sel=null,adding=0,addStart=null;
+const hiMat=new T.MeshLambertMaterial({color:0xffc400});
+const marker=box(S,-0.4,0.4,0,3,-0.4,0.4,0xffc400);marker.visible=false;
+function msg(t){$('edMsg').textContent=t;}
+function unsel(){if(sel){const o=sel.orig;sel.m.material=xr&&o.opacity===1?M(o.color.getHex(),0.2):o;}sel=null;$('edPanel').hidden=true;}
+function select(w){unsel();sel=w;w.m.material=hiMat;$('edPanel').hidden=false;
+$('edInfo').textContent=wallName(w)+(w.added?' · added by you':'');
+const h=w.hh!=null?w.hh:10;$('edH').value=h;$('edHv').textContent=h+' ft';$('edRestore').disabled=!!w.added;}
+function upsert(op,w,h){const k=wk(w);
+if(w.added){const a=edits.find(e=>e.op==='add'&&ek(e)===k);if(op==='del')edits=edits.filter(e=>e!==a);else if(a)a.h=h;saveEd();return;}
+edits=edits.filter(e=>!(e.op===op&&ek(e)===k));
+edits.push(Object.assign({op:op,lv:w.lvl,ax:w.ax,f:r2(w.f),a0:r2(w.a0),a1:r2(w.a1)},op==='h'?{h:h}:{}));saveEd();}
+$('cEdit').addEventListener('change',e=>{editOn=e.target.checked;$('edTools').hidden=!editOn;
+if(!editOn){unsel();adding=0;marker.visible=false;}
+msg(editOn?'Tap a wall to select it. Tip: choose Ground, 1st floor or 2nd floor under View first, so that floor\'s walls are easy to reach.':'');});
+$('edDel').addEventListener('click',()=>{if(!sel)return;const w=sel;unsel();w.del=true;if(!w.added){const k=wk(w);edits=edits.filter(e=>!(e.op==='h'&&ek(e)===k));}upsert('del',w);
+if(w.added){if(w.m.parent)w.m.parent.remove(w.m);walls.splice(walls.indexOf(w),1);}
+apply();msg('Wall deleted. "Undo all my changes" brings everything back.');});
+$('edH').addEventListener('input',e=>{if(!sel)return;const h=+e.target.value;sel.hh=h;$('edHv').textContent=h+' ft';upsert('h',sel,h);apply();});
+$('edRestore').addEventListener('click',()=>{if(!sel||sel.added)return;const k=wk(sel);edits=edits.filter(e=>ek(e)!==k);sel.hh=null;saveEd();select(sel);apply();msg('Wall is back to the original design.');});
+$('edAdd').addEventListener('click',()=>{if(mode==='all'){msg('First choose Ground, 1st floor or 2nd floor under View, then press "Add a wall" again.');return;}
+unsel();adding=1;msg('Tap on the floor where the new wall starts ('+LVLN[mode]+').');});
+$('edUndoAll').addEventListener('click',()=>{if(!confirm('Remove all your wall changes and go back to the original design?'))return;edits=[];saveEd();location.reload();});
+$('edCopy').addEventListener('click',()=>{
+const lines=edits.map(e=>{const n=wallName({lvl:e.lv,ax:e.ax,f:e.f,a0:e.a0,a1:e.a1});
+return e.op==='del'?'- Delete: '+n:e.op==='h'?'- Make '+e.h+' ft high: '+n:'- Add new wall: '+n+(e.h!=null?', '+e.h+' ft high':'');});
+const txt='My wall changes in the 3D model:\n'+lines.join('\n')+'\n\nDATA '+JSON.stringify(edits);
+const ta=$('edOut');ta.hidden=false;ta.value=txt;ta.select();
+const manual=()=>msg('Select all the text in the box below, copy it, and paste it to Claude.');
+try{navigator.clipboard.writeText(txt).then(()=>msg('Copied. Paste it into the chat with Claude to make these changes permanent.'),manual);}catch(_){manual();}});
+edCount();
+const rc=new T.Raycaster(),ndc=new T.Vector2();let tap=null;
+cv.addEventListener('pointerdown',e=>{tap=[e.clientX,e.clientY];});
+cv.addEventListener('pointerup',e=>{if(!editOn||walk||!tap)return;if(Math.hypot(e.clientX-tap[0],e.clientY-tap[1])>6)return;
+const b=cv.getBoundingClientRect();ndc.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);rc.setFromCamera(ndc,cam);
+if(adding){const y=BASE[mode],o=rc.ray.origin,d=rc.ray.direction;if(Math.abs(d.y)<1e-6)return;const t=(y-o.y)/d.y;if(t<0)return;
+const px=Math.round((o.x+d.x*t)*2)/2,pz=Math.round((o.z+d.z*t)*2)/2;
+if(adding===1){addStart=[px,pz];marker.position.set(px,y+1.5,pz);marker.visible=true;adding=2;msg('Now tap where the wall ends. It is drawn as a straight line.');return;}
+const dx=px-addStart[0],dz=pz-addStart[1];let w;
+if(Math.abs(dx)>=Math.abs(dz)){if(Math.abs(dx)<1){msg('Too short. Tap a point further away.');return;}w={ax:'x',f:addStart[1],a0:Math.min(px,addStart[0]),a1:Math.max(px,addStart[0])};}
+else{if(Math.abs(dz)<1){msg('Too short. Tap a point further away.');return;}w={ax:'z',f:addStart[0],a0:Math.min(pz,addStart[1]),a1:Math.max(pz,addStart[1])};}
+const nw=addWall(mode,w.ax,w.f,w.a0,w.a1);edits.push({op:'add',lv:mode,ax:w.ax,f:r2(w.f),a0:r2(w.a0),a1:r2(w.a1)});saveEd();
+adding=0;marker.visible=false;apply();select(nw);msg('Wall added. Change its height below, or delete it.');return;}
+const objs=walls.filter(w=>!w.del&&w.m.visible&&G[w.lvl].visible).map(w=>w.m);const hit=rc.intersectObjects(objs,false)[0];
+if(!hit){unsel();msg('No wall there. Tap directly on a wall.');return;}
+select(walls.find(w=>w.m===hit.object));msg('');});
+apply();
+
 const rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 let last=performance.now();
 function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;

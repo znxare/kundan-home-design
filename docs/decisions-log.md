@@ -4,6 +4,7 @@ Newest first. Add a line every time the design changes.
 
 | Date | Decision | Why |
 | --- | --- | --- |
+| 2026-11-14 | Added **Edit walls** to the model: tap a wall to delete it or change its height, add new walls, and copy the changes to make them permanent | Owner wants to change walls directly instead of describing them |
 | 2026-11-14 | Removed the north-west side wall of the front shop on the ground floor | Owner: on site there is no wall there |
 | 2026-11-14 | Removed the outside front stair added from the road-side photo. Added a **Look straight down** option to see each floor as a plan | Owner: that stair was not correct; wants to see each floor from above |
 | 2026-11-14 | Added a **Rain (monsoon)** switch: rain from the south-west, wet open floors, downpipes. Shows the courtyard cap keeps the courtyard dry; the back court, deck and sit-out get wet and need slopes and drains | Owner wanted to see how the house behaves in rain |

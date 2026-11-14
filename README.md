@@ -25,6 +25,15 @@ Open `index.html` in a browser (it needs an internet connection to load the 3D l
 | `tests/walkability.test.js` | Checks every room can still be reached on foot (`npm test`) |
 | `tools/make-plans.js` | Redraws the 2D plans in `docs/plans/` from the data (`npm run plans`) |
 
+## Editing walls yourself (in the model)
+1. Under **Edit walls**, tick **Edit mode**.
+2. Under **View**, pick **Ground**, **1st floor** or **2nd floor** (and **Look straight down** if you like).
+3. **Tap a wall**: it turns yellow. Use the **Height** slider, **Delete wall**, or **Restore original**.
+4. **Add a wall**: press **Add a wall**, tap where it starts on the floor, then where it ends.
+5. Your changes are saved in your browser only. To make them permanent for everyone, press
+   **Copy my changes** and paste the text to Claude Code. It goes into `wallEdits` in `house-data.js`.
+6. **Undo all my changes** goes back to the original design.
+
 ## Changing the design
 All sizes are in feet. `x` runs from the back of the plot (0, south-west) to the road (60, north-east).
 `z` runs from the north-west neighbour wall (0) to the south-east wall (24.5).
