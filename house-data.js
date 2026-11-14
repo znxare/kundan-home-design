@@ -59,7 +59,7 @@ const skylights=[['Bath 2',14.9,17.2,20.9,23],['Laundry',19.2,21.2,20.8,22.8],['
 const ventilators=[[1,'x',2.5,12.3,15.3],[2,'x',2.5,12,15]];
 
 // Look-inside viewpoints: [button name, level, eye x, eye z, look-at x, look-at z, look up/down]
-const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
+const spots=[['Entrance view',1,34,20.5,22,13,0],['Living',1,32,4,18,13,0],['Courtyard',1,19,12,25,17,9],['Water feature',1,21.2,13.2,25.6,16.1,-1.6],['Dining',1,34,13,20,12,0],['Kitchen',1,30,21.5,20,19,0],['Bedroom 1',1,12.5,9.5,2.5,4,0],['Bedroom 2',1,3.3,17.1,12.5,22,0],['Master bed',2,15.8,9.6,6,3,0],['Bedroom 3',2,30.2,9.6,22,3,0],['Upper lobby',2,42,22,30,14,0],['Study by void',2,15,14,26,14.5,-2],['Family lounge',2,33.5,17,28.5,11,0],['Bedroom 4',2,45,10,60,4,0],['Sit-out',2,45.5,23,60,13,0]];
 
 // ============================================================
 // FURNITURE AND FITTINGS
@@ -114,7 +114,10 @@ F_(1,'Drying rack',0.4,2.1,9,15,5.5,0.1,'steel',1);
 // a herb planter under the kitchen window, a stone sitting ledge by the dining door
 F_(1,'Tulsi vrindavan',23.6,24.8,15.3,16.5,0,2.4,'stone',1);
 F_(1,'Herb planter (curry leaf, mint, lemongrass)',18.2,24.6,16.8,17.9,0,1.2,'concrete',1);
-F_(1,'Stone sitting ledge',25,25.9,15.3,16.7,0,1.5,'stone',1);
+// Recirculating stone water feature in the east corner by the dining door (NE side for Vastu): slate panel with a
+// water sheet into a granite basin; covered sump + small pump, so no standing water for mosquitoes
+F_(1,'Stone water feature (recirculating)',24.95,25.95,15.2,16.95,0,4.2,'stone',1);
+F_(1,'Stone sitting ledge',17.8,21.8,10.6,11.3,0,1.5,'stone',1);
 F_(1,'Floor drain 1 (100 mm)',16.8,17.5,10.8,11.5,0,0.03,'steel',1);F_(1,'Floor drain 2 (overflow)',25,25.7,17,17.7,0,0.03,'steel',1);
 // ---------- 2nd floor ----------
 // Master bedroom: 14 x 11.5 ft (the unnamed room x13.5-16.5 is its bay, open to it; grew into the old Bedroom 3 corner). King bed, bedside tables, wardrobe + easy chair in the bay

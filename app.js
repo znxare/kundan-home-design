@@ -173,6 +173,7 @@ const sofa=(g,b,x0,x1,z0)=>{box(g,x0,x1,b,b+1.5,z0,z0+3,SO);box(g,x0,x1,b,b+3,z0
 const FM={wood:0x9b6b43,fabric:0x5b6b7a,linen:0xf2efe8,steel:0xb8bcc0,white:0xfbfbf8,black:0x2b2b2b,counter:0x7a7c80,stone:C.stair,glass:C.glass,plant:C.leaf,concrete:0x9a958c};
 // ---------- Detailed furniture: legs, cushions, rounded mattresses, ceramic fittings, kitchen units ----------
 // detail(f) draws a realistic version of a FURN item and returns true; returns false to fall back to a plain box.
+const anims=[];// small per-frame animations (e.g. flowing water): each gets dt in seconds
 const CER=new T.MeshStandardMaterial({color:0xf7f6f2,roughness:0.12,metalness:0,envMapIntensity:0.9});
 const CHR=new T.MeshStandardMaterial({color:0xd9dcdf,roughness:0.18,metalness:0.95,envMapIntensity:1.2});
 const RBG=(w,h,d,r)=>{r=Math.max(0.005,Math.min(r,w/2-0.005,h/2-0.005,d/2-0.005));return T.RoundedBoxGeometry?new T.RoundedBoxGeometry(w,h,d,3,r):new T.BoxGeometry(w,h,d);};
@@ -192,6 +193,16 @@ const LEG=0x2f2620,SOF=0x8d8579,SOFD=0x7a7266;
 const legs=(F,g,y0,y1,inset,t,c)=>{[[F.U0+inset,F.D-inset-t],[F.U1-inset-t,F.D-inset-t],[F.U0+inset,inset],[F.U1-inset-t,inset]].forEach(p=>F.P(g,p[0],p[0]+t,p[1],p[1]+t,y0,y1,c||LEG));};
 const tableNear=f=>{let best=null,bd=4;FURN.forEach(t=>{if(t[0]!==f[0]||!/table|desk/i.test(t[1])||/bedside/i.test(t[1]))return;const cx=(t[2]+t[3])/2,cz=(t[4]+t[5])/2,d=Math.hypot(cx-(f[2]+f[3])/2,cz-(f[4]+f[5])/2);if(d<bd){bd=d;best=t;}});return best;};
 function detail(f){const g=G[f[0]],y=BASE[f[0]]+f[6],h=f[7],n=f[1];
+// stone water feature: granite basin, slate back panel, a moving sheet of water, brass spout, a warm light under the water
+if(/water feature/i.test(n)){const F=frameOf(f),um=(F.U0+F.U1)/2;
+ const wt=tex((c,s)=>{c.fillStyle='#6f98ad';c.fillRect(0,0,s,s);for(let i=0;i<140;i++){c.fillStyle=`rgba(255,255,255,${0.06+rnd()*0.22})`;c.fillRect(rnd()*s,rnd()*s,1+rnd()*3,8+rnd()*40);}},256);wt.repeat.set(1,2);
+ const sheet=new T.MeshStandardMaterial({map:wt,transparent:true,opacity:0.75,roughness:0.05,metalness:0.1,envMapIntensity:1.6});
+ const pool=new T.MeshStandardMaterial({color:0x2e5566,transparent:true,opacity:0.85,roughness:0.03,metalness:0.2,envMapIntensity:1.8});
+ const glow=new T.MeshStandardMaterial({color:0xfff2d0,emissive:0xffd28a,emissiveIntensity:1.0});
+ anims.push(dt=>{wt.offset.y+=dt*0.9;});
+ F.P(g,F.U0,F.U1,0,F.D,y,y+1.2,0x2f3133,0.06);F.P(g,F.U0+0.1,F.U1-0.1,0.1,F.D-0.1,y+1.02,y+1.06,pool);
+ F.P(g,F.U0+0.12,F.U1-0.12,0,0.32,y+1.2,y+h,0x3d3b38,0.03);F.P(g,F.U0+0.35,F.U1-0.35,0.32,0.35,y+1.06,y+h-0.3,sheet);
+ F.P(g,F.U0+0.3,F.U1-0.3,0.32,0.5,y+h-0.32,y+h-0.24,CHR);F.P(g,um-0.18,um+0.18,0.55,0.95,y+0.98,y+1.0,glow);return true;}
 // sofas, armchairs, easy chairs
 if(/^Sofa$|^Sofa-cum-bed|^Armchair|^Easy chair/.test(n)){const F=frameOf(f),hasBack=FURN.some(o=>o!==f&&o[0]===f[0]&&o[1]==='Sofa back'&&o[2]<f[3]&&o[3]>f[2]&&o[4]<f[5]&&o[5]>f[4]);
  const arm=Math.min(0.45,F.L*0.18),seatH=n==='Armchair'||n==='Easy chair'?1.45:1.4;
@@ -663,7 +674,7 @@ function loop(now){const dt=Math.min(0.05,(now-last)/1000);last=now;
 if(air.visible&&!rm)parts.forEach(q=>{q.u=(q.u+dt*q.sp)%1;const v=at(q.p,q.c,q.u);q.m.position.set(v[0],v[1],v[2]);});
 gRain.visible=raining&&(mode==='all'||walk);if(gRain.visible)rainStep(rm?0:dt);
 if(walk){const sp=6*dt;if(keys.f)step(sp);if(keys.b)step(-sp);if(keys.l)yaw-=1.6*dt;if(keys.r)yaw+=1.6*dt;updWalkUI();}
-orbStep(dt);camUp();draw();requestAnimationFrame(loop);}
+anims.forEach(a=>a(rm?0:dt));orbStep(dt);camUp();draw();requestAnimationFrame(loop);}
 // give the cut plane to every other mesh material made outside M() (ceramics, chrome, lamps, rangoli ...)
 if(S.traverse)S.traverse(o=>{if(!o.isMesh||o.isSprite)return;[].concat(o.material).forEach(m=>{if(m&&!m.clippingPlanes){m.clippingPlanes=[clipPlane];m.clipShadows=true;m.side=T.DoubleSide;}});});
 requestAnimationFrame(loop);
