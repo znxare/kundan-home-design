@@ -4,6 +4,7 @@ Newest first. Add a line every time the design changes.
 
 | Date | Decision | Why |
 | --- | --- | --- |
+| 2026-11-14 | Site video reviewed: ground floor built, 1st-floor walls up, back is open land. Model to be redrawn to match the site once the 1st-floor walls are known | Owner: the model should follow what is already built |
 | 2026-11-14 | Project packaged for Claude Code: data split into `house-data.js`, walkability test, plan generator | Owner wants to keep working on it and host it on GitHub |
 | 2026-11-14 | Added a 2nd-floor **gallery** (x21–27, z17–19.5) beside the void; Bath 2 reduced to 6 × 5 ft | The walk test showed the stair/study half and the lounge/hall half of the 2nd floor were not connected |
 | 2026-11-14 | **Security:** steel grids over the courtyard and the back court at roof level; full-height grilles and a grille roof on the deck and sit-out; full-height back-court side walls; Bath 2 no longer faces the void | Owner: glass is a burglary risk, the area is not a gated society |
