@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Courtyard house 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE calm architect's study, plain and exact
+   IDEA a white card study model sitting on a concrete board
+   PICTURE the rotatable 3D model of the house, most of the first screen
+   COLOUR white, black, concrete planes, safety yellow on the active control
+   TYPE Hanken Grotesk; LAYOUT model wide left, control column right, stacks under 900px */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#1a1a19);--ink:light-dark(#111111,#f1f0ec);--mute:light-dark(#5b5b56,#a9a8a2);--line:light-dark(#d8d8d4,#3a3a37);--panel:light-dark(#efefec,#242422);--acc:#ffe600}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Hanken Grotesk",system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(20px,3vw,40px) max(4vw,16px)}
+header{max-width:1240px;margin:0 auto 18px}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.05;font-weight:700;margin:0 0 10px;text-wrap:balance}
+header p{margin:0;color:var(--mute);max-width:68ch}
+.wrap{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px}
+.fig{position:relative;min-height:clamp(380px,64vh,740px);background:var(--panel);border-radius:4px;overflow:hidden}
+.fig>canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.fig>canvas:active{cursor:grabbing}
+.hintbar{position:absolute;right:12px;top:10px;text-align:right;max-width:45%;font-size:13px;color:var(--mute);pointer-events:none}
+#err{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--mute)}
+.panel h2{font-size:13px;font-weight:500;color:var(--mute);margin:18px 0 8px}
+.panel h2:first-child{margin-top:0}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;font-size:15px;min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:4px;cursor:pointer}
+button[aria-pressed=true]{background:var(--acc);color:#111;border-color:#111}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:15px}
+input[type=range]{width:100%;height:44px;accent-color:#111}
+.chk{justify-content:flex-start;min-height:40px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:#111}
+.read{font-weight:500;margin:4px 0}
+#hint{margin:4px 0 0;color:var(--mute);font-size:15px}
+#reset{margin-top:10px;width:100%}
+.walkbar{position:absolute;inset:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;align-content:flex-start;pointer-events:none}.walkbar>*{pointer-events:auto}#walkfloor{font-weight:400!important}
+.pad{position:absolute;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,52px);gap:6px}.pad button{min-height:52px;padding:0;font-size:18px;touch-action:none}.pad [data-k=f]{grid-column:2}.pad [data-k=l]{grid-column:1;grid-row:2}.pad [data-k=b]{grid-column:2;grid-row:2}.pad [data-k=r]{grid-column:3;grid-row:2}
+.stairbtn{position:absolute;left:0;bottom:0;display:flex;flex-direction:column;gap:6px}.stairbtn button:disabled{opacity:.4;cursor:default}.wide{width:100%}.walkbar[hidden]{display:none}.walkbar span{background:var(--bg);padding:10px 12px;border-radius:4px;font-weight:500}#spots button{font-size:14px;padding:0 10px}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:14px;margin-top:6px}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:14px;height:14px;border-radius:2px;flex:none;border:1px solid rgba(0,0,0,.15)}
+.notes{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;border-top:1px solid var(--line);padding-top:22px}
+.notes h3{font-size:17px;margin:0 0 6px;font-weight:700}
+.notes p{margin:0;color:var(--mute)}
+.small{max-width:1240px;margin:22px auto 0;font-size:13px;color:var(--mute)}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}.notes{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="band">
+<header>
+<h1>A courtyard house that breathes</h1>
+<p>3D concept of the Kundan home in Jamshedpur: shops and a godown at street level, a two-storey home above with four bedrooms around a courtyard, and an open terrace. Drag to turn the model, scroll or pinch to zoom, or press Walk in from the street to explore on foot.</p>
+</header>
+<div class="wrap">
+<div class="fig" id="fig"><div id="err" hidden>The 3D model needs WebGL and could not start in this browser. Try opening the page in Chrome on a computer or phone.</div><div id="walkbar" class="walkbar" hidden><span id="walkname"></span><span id="walkfloor"></span><button id="exitw">Back to model</button><div class="pad" id="pad"><button data-k="f" aria-label="Walk forward">▲</button><button data-k="l" aria-label="Turn left">◀</button><button data-k="b" aria-label="Walk back">▼</button><button data-k="r" aria-label="Turn right">▶</button></div><div class="stairbtn"><button id="upF" disabled>Go up a floor</button><button id="dnF" disabled>Go down a floor</button></div></div><div class="hintbar" id="hb">Drag to rotate · scroll to zoom</div></div>
+<div class="panel">
+<h2>View</h2>
+<div class="seg" id="views"><button data-v="all" aria-pressed="true">Whole house</button><button data-v="0" aria-pressed="false">Ground</button><button data-v="1" aria-pressed="false">1st floor</button><button data-v="2" aria-pressed="false">2nd floor</button></div>
+<h2>Walk through</h2>
+<button id="walkStart" class="wide">Walk in from the street</button>
+<h2>Jump into a room</h2>
+<div class="seg" id="spots"></div>
+<h2>Sunlight</h2>
+<div class="seg" id="seasons"><button data-s="0" aria-pressed="true">June</button><button data-s="1" aria-pressed="false">March</button><button data-s="2" aria-pressed="false">December</button></div>
+<label for="hr" style="margin-top:10px">Time of day <output id="hrv">8:00 am</output></label>
+<input type="range" id="hr" min="6" max="18" step="0.25" value="8">
+<p id="sunr" class="read"></p>
+<p id="hint"></p>
+<h2>Show</h2>
+<label class="chk"><input type="checkbox" id="cX"> X-ray walls</label>
+<label class="chk"><input type="checkbox" id="cAir" checked> Airflow</label>
+<label class="chk"><input type="checkbox" id="cNb"> Neighbour houses</label>
+<label class="chk"><input type="checkbox" id="cLab" checked> Room names</label>
+<button id="reset">Reset view</button>
+<h2>Key</h2>
+<div class="legend">
+<span><i style="background:#dcc6a2"></i>Rooms</span>
+<span><i style="background:#c9dde2"></i>Baths, utility</span>
+<span><i style="background:#8fb46f"></i>Open to sky</span>
+<span><i style="background:#9fcfe6"></i>Glass</span>
+<span><i style="background:#c0663a"></i>Jaali screen</span>
+<span><i style="background:#bdbbb4"></i>Shops</span>
+<span><i style="background:#2f8ad8"></i>Airflow</span>
+<span><i style="background:#2b2b2b"></i>Steel grille</span>
+</div>
+</div>
+</div>
+</div>
+<div class="band" style="padding-top:0">
+<div class="notes">
+<div><h3>Courtyard in the middle</h3><p>Starts at the first floor and opens to the terrace; glass blocks in its floor light the godown below. Every main room looks into it through glass, and its raised, louvred cap lets hot air out while keeping rain and pigeons off.</p></div>
+<div><h3>Back court and jaali</h3><p>The south-west back court brings in the summer and monsoon breeze. A terracotta jaali turns the harsh evening sun into soft patterned light.</p></div>
+<div><h3>Secure without losing light</h3><p>Every opening a burglar could reach has fixed steel: a grille over the courtyard and the back court at roof level, full-height grilles on the road-facing deck and sit-out, and full-height side walls at the back. Glass faces only the inside courtyard, behind those grilles.</p></div>
+<div><h3>Private home stair</h3><p>The common stair stops at the first floor for the shops. The family has its own stair under a skylight, and the second-floor sit-out and deck catch the morning sun from the road side.</p></div>
+</div>
+<p class="small">Concept model for discussion with your architect. Sizes follow your 60 × 24.5 ft plan approximately, with 10.5 ft floor-to-floor; doors, windows, columns and structure are simplified.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="house-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

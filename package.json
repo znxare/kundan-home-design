@@ -1,0 +1,12 @@
+{
+  "name": "kundan-home-design",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive 3D concept model of the Kundan home, Jamshedpur",
+  "scripts": {
+    "test": "node tests/walkability.test.js",
+    "plans": "node tools/make-plans.js",
+    "check": "node tests/walkability.test.js && node tools/make-plans.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}
