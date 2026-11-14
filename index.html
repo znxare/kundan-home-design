@@ -92,7 +92,7 @@ input[type=range]{width:100%;height:44px;accent-color:#111}
 </div>
 <h2>Show</h2>
 <label class="chk"><input type="checkbox" id="cX"> X-ray walls</label>
-<label class="chk"><input type="checkbox" id="cFast"> Faster graphics (for phones)</label>
+<label class="chk"><input type="checkbox" id="cReal"> Realistic render (soft corner shadows, smooth edges)</label><button id="savePic" class="wide">Save a picture of this view</button><label class="chk"><input type="checkbox" id="cFast"> Faster graphics (for phones)</label>
 <label class="chk"><input type="checkbox" id="cAir" checked> Airflow</label>
 <label class="chk"><input type="checkbox" id="cNb"> Neighbour houses</label>
 <label class="chk"><input type="checkbox" id="cRain"> Rain (monsoon)</label>
@@ -123,6 +123,13 @@ input[type=range]{width:100%;height:44px;accent-color:#111}
 <p class="small">Concept model for discussion with your architect. Sizes follow your 60 × 24.5 ft plan approximately, with 10.5 ft floor-to-floor; doors, windows, columns and structure are simplified.</p>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/SSAOShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/math/SimplexNoise.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/SSAOPass.js"></script>
 <script src="house-data.js"></script>
 <script src="app.js"></script>
 </body>
