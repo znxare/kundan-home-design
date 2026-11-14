@@ -157,7 +157,7 @@ const pm=new T.MeshBasicMaterial({color:0x2f8ad8});const pg=new T.SphereGeometry
 const parts=[];
 paths.forEach(p=>{const c=cum(p);for(let i=0;i<26;i++){const m=new T.Mesh(pg,pm);air.add(m);const q={p:p,c:c,u:i/26,m:m,sp:0.05};const v=at(p,c,q.u);m.position.set(v[0],v[1],v[2]);parts.push(q);}});
 
-let siteOn=false,raining=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
+let plan=false,siteOn=false,raining=false,mode='all',showLab=true,season=0,hour=8,xr=false,walk=false,yaw=0,pitch=0;const eye=new T.Vector3();const hb=document.getElementById('hb');
 let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
 function apply(){
@@ -165,7 +165,7 @@ G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!x
 walls.forEach(w=>{let h=(mode!=='all'&&w.lvl===mode)?4:10;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
 }
-function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
+function setView(v){if(walk)leaveWalk();mode=v==='all'?'all':+v;const s=views[v];th=s[0];ph=s[1];rad=s[2];tgt.y=s[3];if(plan){th=Math.PI/2;ph=0.02;rad=Math.max(85,108/(cam.aspect||1));}apply();document.querySelectorAll('#views button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===String(v))));}
 function setX(on){xr=on;walls.forEach(w=>{const o=w.orig;const solid=o.opacity===1;w.m.material=on&&solid?M(o.color.getHex(),0.2):o;w.m.castShadow=!(on&&solid)&&o.opacity>=0.6;});apply();}
 document.getElementById('spots').innerHTML=spots.map((s,i)=>'<button data-i="'+i+'" aria-pressed="false">'+s[0]+'</button>').join('');
 function goSpot(i){const s=spots[i];const dx=s[4]-s[2],dz=s[5]-s[3];enterWalk(s[0],s[1],s[2],s[3],Math.atan2(dz,dx),Math.atan2(s[6],Math.hypot(dx,dz)));
@@ -229,7 +229,7 @@ new ResizeObserver(size).observe(fig);size();
 const pts=new Map();let pinch=0;
 cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId);}catch(_){}pts.set(e.pointerId,[e.clientX,e.clientY]);});
 cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;const p=pts.get(e.pointerId);
-if(pts.size===1){if(walk){yaw+=(e.clientX-p[0])*0.005;pitch=Math.min(1.2,Math.max(-1.2,pitch-(e.clientY-p[1])*0.005));}else{th+=(e.clientX-p[0])*0.008;ph=Math.min(1.5,Math.max(0.12,ph-(e.clientY-p[1])*0.008));}}
+if(pts.size===1){if(walk){yaw+=(e.clientX-p[0])*0.005;pitch=Math.min(1.2,Math.max(-1.2,pitch-(e.clientY-p[1])*0.005));}else{th+=(e.clientX-p[0])*0.008;ph=Math.min(1.5,Math.max(plan?0.02:0.12,ph-(e.clientY-p[1])*0.008));}}
 pts.set(e.pointerId,[e.clientX,e.clientY]);
 if(pts.size===2){const v=[...pts.values()];const d=Math.hypot(v[0][0]-v[1][0],v[0][1]-v[1][1]);if(pinch&&d&&!walk)rad=Math.min(220,Math.max(25,rad*pinch/d));pinch=d;}});
 const up=e=>{pts.delete(e.pointerId);pinch=0;};
@@ -242,6 +242,7 @@ document.getElementById('hr').addEventListener('input',e=>{hour=+e.target.value;
 document.getElementById('cAir').addEventListener('change',e=>{air.visible=e.target.checked;});
 document.getElementById('cNb').addEventListener('change',e=>{gN.visible=e.target.checked;});
 document.getElementById('cSite').addEventListener('change',e=>{siteOn=e.target.checked;apply();});
+document.getElementById('cPlan').addEventListener('change',e=>{plan=e.target.checked;setView(mode==='all'?'all':String(mode));});
 document.getElementById('cLab').addEventListener('change',e=>{showLab=e.target.checked;apply();});
 document.getElementById('reset').addEventListener('click',()=>setView(mode));
 document.getElementById('spots').addEventListener('click',e=>{const b=e.target.closest('button');if(b)goSpot(+b.dataset.i);});
