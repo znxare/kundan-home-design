@@ -12,6 +12,8 @@ fig.appendChild(R.domElement);
 const cv=R.domElement;
 const S=new T.Scene();
 const cam=new T.PerspectiveCamera(38,1,1,700);
+// One horizontal cut plane: in a single-floor view everything on that floor above the 4 ft wall cut is trimmed off
+const clipPlane=new T.Plane(new T.Vector3(0,-1,0),1e6);R.localClippingEnabled=true;
 R.outputEncoding=T.sRGBEncoding;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
 const hemi=new T.HemisphereLight(0xdfeeff,0x8a7a66,0.55);S.add(hemi);
 const sun=new T.DirectionalLight(0xfff0d8,2.2);
@@ -56,7 +58,7 @@ const M=(c,o)=>{o=o===undefined?1:o;const k=c+'_'+o;if(mats[k])return mats[k];le
 if(c===C.glass||c===0xbfe3f2)m=new T.MeshStandardMaterial({color:0xd6ebf5,transparent:true,opacity:Math.min(o,0.28),roughness:0.04,metalness:0.25,depthWrite:false,envMapIntensity:1.4});
 else{const r=RL[c];m=new T.MeshStandardMaterial({color:r&&r[0]?0xffffff:c,map:r&&r[0]?TX[r[0]]:null,roughness:r?r[2]:0.8,metalness:r&&r[3]?r[3]:0,transparent:o<1,opacity:o,depthWrite:o>=0.6,envMapIntensity:0.6});
 if(r){m.userData.ts=r[1];if(r[0]&&!['art1','art2','art3','vitrified'].includes(r[0])){m.bumpMap=TX[r[0]];m.bumpScale=['fabric','linen','curtain','bs1','bs2','bs3','rug'].includes(r[0])?0.006:0.018;}}if(c===C.jaali){m.alphaTest=0.5;m.transparent=false;m.opacity=1;m.depthWrite=true;m.side=T.DoubleSide;}}
-mats[k]=m;return m;};
+m.clippingPlanes=[clipPlane];m.clipShadows=true;m.side=T.DoubleSide;mats[k]=m;return m;};
 function uvScale(geo,w,h,d,ts){const uv=geo.attributes.uv;for(let i=0;i<uv.count;i++){const f=Math.floor(i/4);const [su,sv]=f<2?[d,h]:f<4?[w,d]:[w,h];uv.setXY(i,uv.getX(i)*su/ts,uv.getY(i)*sv/ts);}uv.needsUpdate=true;}
 const box=(g,x0,x1,y0,y1,z0,z1,c,o)=>{o=o===undefined?1:o;const mat=M(c,o);const geo=new T.BoxGeometry(x1-x0,y1-y0,z1-z0);if(mat.userData.ts){const hh=(y1-y0)===1?10:(y1-y0);uvScale(geo,x1-x0,hh,z1-z0,mat.userData.ts);}const m=new T.Mesh(geo,mat);m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);if(o>=0.6||c===C.jaali){m.castShadow=true;m.receiveShadow=true;}g.add(m);return m;};
 // sky background + reflections
@@ -400,7 +402,7 @@ let th=0.75,ph=1.0,rad=115;const tgt=new T.Vector3(30,14,12);
 let cth=th,cph=ph,crad=rad;const ctgt=new T.Vector3(tgt.x,tgt.y,tgt.z);const TAU=Math.PI*2;
 const PHMIN=0.02,PHMAX=1.55,RMIN=10,RMAX=260;const clampT=()=>{tgt.x=Math.min(75,Math.max(-15,tgt.x));tgt.z=Math.min(40,Math.max(-15,tgt.z));tgt.y=Math.min(45,Math.max(0,tgt.y));};
 const views={all:[0.75,1.0,118,14],0:[0.6,0.75,85,2],1:[0.6,0.72,88,13],2:[0.6,0.72,92,23]};
-function apply(){TD.forEach((g,i)=>g.visible=!xr&&(mode==='all'||mode!==i));
+function apply(){clipPlane.constant=(mode!=='all'&&!walk)?BASE[mode]+4.02:1e6;TD.forEach((g,i)=>g.visible=!xr&&(mode==='all'||mode!==i));
 G.forEach((g,i)=>{g.visible=mode==='all'||i<=mode;});gT.visible=mode==='all'&&!xr;gP.visible=mode==='all'&&!xr;
 walls.forEach(w=>{const cut=mode!=='all'&&w.lvl===mode;let h=cut?4:10;if(w.hh!=null)h=cut?Math.min(4,w.hh):w.hh;if(siteOn&&w.site)h=Math.min(h,w.site);w.m.visible=!w.del;if(w.sk)w.sk.visible=!w.del;w.m.scale.y=h;w.m.position.y=w.base+h/2;});
 LB.forEach((g,i)=>{g.visible=showLab&&mode===i;});labT.visible=showLab&&mode==='all';gC.visible=showLab;
@@ -470,7 +472,7 @@ ssao.kernelRadius=1.1;ssao.minDistance=0.0003;ssao.maxDistance=0.006;
 const msaa=!!(R.capabilities.isWebGL2&&T.WebGLMultisampleRenderTarget);
 if(msaa){const o=ssao.beautyRenderTarget,rt=new T.WebGLMultisampleRenderTarget(o.width,o.height,{minFilter:T.LinearFilter,magFilter:T.LinearFilter,format:T.RGBAFormat});rt.samples=4;ssao.beautyRenderTarget=rt;o.dispose();}
 ssao.beautyRenderTarget.texture.encoding=T.sRGBEncoding;
-ssao.overrideVisibility=function(){const c=this._visibilityCache;this.scene.traverse(o=>{c.set(o,o.visible);if(o.isPoints||o.isLine||o.isSprite||(o.material&&o.material.transparent&&o.material.opacity<0.6))o.visible=false;});};
+ssao.normalMaterial.clippingPlanes=[clipPlane];ssao.normalMaterial.side=T.DoubleSide;ssao.overrideVisibility=function(){const c=this._visibilityCache;this.scene.traverse(o=>{c.set(o,o.visible);if(o.isPoints||o.isLine||o.isSprite||(o.material&&o.material.transparent&&o.material.opacity<0.6))o.visible=false;});};
 comp.addPass(ssao);if(!msaa){fxaa=new T.ShaderPass(T.FXAAShader);comp.addPass(fxaa);}realSize(fig.clientWidth,fig.clientHeight);}
 function setReal(on){realOn=on&&canReal;if(realOn)makeReal();const cb=document.getElementById('cReal');if(cb){cb.checked=realOn;cb.disabled=!canReal;}}
 function draw(){if(realOn&&comp){const u=ssao.ssaoMaterial.uniforms;u.cameraNear.value=cam.near;u.cameraFar.value=cam.far;u.cameraProjectionMatrix.value.copy(cam.projectionMatrix);u.cameraInverseProjectionMatrix.value.copy(cam.projectionMatrixInverse);comp.render();}else R.render(S,cam);}
@@ -662,6 +664,8 @@ if(air.visible&&!rm)parts.forEach(q=>{q.u=(q.u+dt*q.sp)%1;const v=at(q.p,q.c,q.u
 gRain.visible=raining&&(mode==='all'||walk);if(gRain.visible)rainStep(rm?0:dt);
 if(walk){const sp=6*dt;if(keys.f)step(sp);if(keys.b)step(-sp);if(keys.l)yaw-=1.6*dt;if(keys.r)yaw+=1.6*dt;updWalkUI();}
 orbStep(dt);camUp();draw();requestAnimationFrame(loop);}
+// give the cut plane to every other mesh material made outside M() (ceramics, chrome, lamps, rangoli ...)
+if(S.traverse)S.traverse(o=>{if(!o.isMesh||o.isSprite)return;[].concat(o.material).forEach(m=>{if(m&&!m.clippingPlanes){m.clippingPlanes=[clipPlane];m.clipShadows=true;m.side=T.DoubleSide;}});});
 requestAnimationFrame(loop);
 };
 (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(start,start);
