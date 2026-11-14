@@ -21,6 +21,10 @@
 
 - [ ] Floor drains, slopes and raised door thresholds for the back court, road deck and sit-out (they get rain through the grilles)
 
+- [ ] Outside front stair: confirm its width and length, and whether it stands inside the plot or on the side margin
+- [ ] With the outside stair for shop customers, is the inside stair now only for the family (and the godown)? Then the model's middle stair can change
+- [ ] Outside stair: add a handrail and a lockable gate at the top (it is open to the street)
+
 ## Ideas to build in the model
 - [ ] Move furniture into `house-data.js` so rooms and furniture move together
 - [ ] Add windows, doors and sunshades as real objects (now walls just have gaps)

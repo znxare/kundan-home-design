@@ -27,7 +27,7 @@ const BASE=[0,10.5,21];
 // Door openings: [level, 'x' or 'z' (which coordinate the wall sits on), wall position, from, to]
 const gaps=[
 [0,'x',35,21.5,23.5],[0,'z',19.5,36,40],[0,'z',16,24,27],[0,'x',60,3,9],[0,'x',60,14,19],
-[1,'x',35,21.5,23.5],[1,'z',19.5,36,40],[1,'z',17,27,31],[1,'x',31,20.5,24.5],[1,'z',17,15,19],[1,'z',9,15,19],[1,'z',9,28,35],
+[1,'x',35,21.5,23.5],[1,'z',24.5,40.6,43],[1,'z',19.5,36,40],[1,'z',17,27,31],[1,'x',31,20.5,24.5],[1,'z',17,15,19],[1,'z',9,15,19],[1,'z',9,28,35],
 [1,'x',15,10.5,13.5],[1,'z',21.2,48,52],[1,'z',11.5,45,49],[1,'z',20.5,32,34],[1,'x',27,21,23.5],[1,'x',27,12,14.5],[1,'x',4,5,7.5],[1,'x',10,18,20.5],[1,'z',15,11,14],
 [2,'z',17,27,35],[2,'x',35,8,16],[2,'x',44,8,11],[2,'z',17.5,38,41],[2,'z',7,39,42],[2,'z',17,15,19],[2,'z',9,16,18.5],[2,'x',15,10,13],
 [2,'x',21,17.2,19.3],[2,'x',27,17.2,19.3],[2,'z',19.5,22,24.5],[2,'x',56,4,7],[2,'x',44,13,15.5],[2,'x',10,18,20.5],[2,'z',15,11,14]];
@@ -39,6 +39,11 @@ const solidE=[];
 // Extra walls not made by a room's edges: [level, 'x' or 'z' (which coordinate the wall sits on), wall position, from, to]
 // Owner, 14 Nov 2026: the shop corridor has an outer wall along the south-east side on the ground and 1st floors.
 const extraWalls=[[0,'z',24.5,35,60],[1,'z',24.5,35,60]];
+
+// Outside front stair (seen in the road-side photo, 14 Nov 2026): open concrete stair beside the
+// south-east wall, from road level at the front up to the 1st-floor shop passage.
+// [x at the bottom step, x at the top, z from, z to]
+const frontStair=[60,43,24.7,28.5];
 
 // Walls built only part of their height on site today (shown with "Site today" ticked):
 // [level, 'x' or 'z', wall position, from, to, height built so far in ft]
