@@ -88,7 +88,7 @@ main door, and a steel door on the terrace. A 2nd-floor gallery now links the fa
 
 ## Green spaces
 - A vertical garden in the ground-floor corridor and plants at the home door.
-- Courtyard (angan), no tree: a rangoli stone inlay in the centre with a low tulsi vrindavan and diya niche, a herb planter (curry leaf, mint, lemongrass) under the kitchen window, a stone sitting ledge by the dining door.
+- Courtyard (angan), no tree: the centre kept completely open with a flat rangoli stone inlay; a small tulsi vrindavan with a diya niche in the east corner, a herb planter (curry leaf, mint, lemongrass) under the kitchen window, a stone sitting ledge by the dining door.
 - Indoor plants along the courtyard glass: snake plant, ZZ plant, money plant, areca palm.
 - A private seat in the 1st-floor back court, the road-facing deck, the sit-out with its pergola, and terrace planters over the master bedroom.
 - Low-maintenance plants: bougainvillea, tulsi, curry leaf, lemongrass, aloe, portulaca, succulents. Drip irrigation on a timer.

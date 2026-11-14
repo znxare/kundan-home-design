@@ -140,12 +140,12 @@ const petals=(k,r0,r1,w,col,off)=>{for(let i=0;i<k;i++){const a=(i+(off||0))/k*M
 petals(16,c*0.42,c*0.82,c*0.13,'#b5603a',0.5);petals(16,c*0.4,c*0.74,c*0.09,'#f4ecdc');petals(8,c*0.2,c*0.5,c*0.12,'#c9a24a',0.5);petals(8,c*0.18,c*0.44,c*0.07,'#3c3a37');
 g.fillStyle='#e9e2d2';g.beginPath();g.arc(c,c,c*0.2,0,7);g.fill();ring(c*0.2,'#3c3a37',5);},1024);rt.wrapS=rt.wrapT=T.ClampToEdgeWrapping;
 const rg=new T.Mesh(new T.CircleGeometry(2.9,72),new T.MeshStandardMaterial({map:rt,roughness:0.55,envMapIntensity:0.6}));rg.rotation.x=-Math.PI/2;rg.position.set(21.25,10.53,14.25);rg.receiveShadow=true;G[1].add(rg);
-box(G[1],20.3,22.2,10.5,10.75,13.3,15.2,C.stair);box(G[1],20.35,22.15,13.1,13.4,13.35,15.15,C.stair);
-const lit=new T.MeshStandardMaterial({color:0xffd9a0,emissive:0xff9a3c,emissiveIntensity:0.9});const dn=new T.Mesh(new T.BoxGeometry(0.06,0.5,0.45),lit);dn.position.set(22.07,11.4,14.25);G[1].add(dn);
-[[0,0,0,0.42],[0.25,0.25,0.1,0.32],[-0.25,0.2,-0.12,0.3],[0.1,0.45,-0.2,0.28],[-0.15,0.5,0.22,0.26],[0,0.75,0,0.22]].forEach(q=>{const s=new T.Mesh(new T.SphereGeometry(q[3],12,10),M(C.leaf));s.position.set(21.25+q[0],13.5+q[1],14.25+q[2]);s.castShadow=true;G[1].add(s);});
+box(G[1],23.5,24.9,10.5,10.7,15.2,16.6,C.stair);box(G[1],23.55,24.85,12.9,13.1,15.25,16.55,C.stair);
+const lit=new T.MeshStandardMaterial({color:0xffd9a0,emissive:0xff9a3c,emissiveIntensity:0.9});const dn=new T.Mesh(new T.BoxGeometry(0.06,0.5,0.45),lit);dn.position.set(24.2,11.4,15.27);dn.rotation.y=Math.PI/2;G[1].add(dn);
+[[0,0,0,0.26],[0.16,0.14,0.08,0.18],[-0.15,0.12,-0.08,0.17],[0,0.3,0,0.14]].forEach(q=>{const s=new T.Mesh(new T.SphereGeometry(q[3],12,10),M(C.leaf));s.position.set(24.2+q[0],13.25+q[1],15.9+q[2]);s.castShadow=true;G[1].add(s);});
 for(let x=18.6;x<24.4;x+=0.9){const s=new T.Mesh(new T.SphereGeometry(0.42+0.12*Math.sin(x*3),10,8),M(C.leaf));s.position.set(x,12.0,17.35);s.scale.y=1.3;s.castShadow=true;G[1].add(s);}
 label(LB[1],'Rangoli stone inlay',21.25,12.2,11.6,0.6);}
-tree(G[1],1.25,14,10.5,5,1.1);
+[4,9,19].forEach(z=>{box(G[1],0.6,1.9,10.5,11.6,z-0.65,z+0.65,0x9a958c);const s=new T.Mesh(new T.SphereGeometry(0.6,12,10),M(C.leaf));s.position.set(1.25,12.0,z);s.castShadow=true;G[1].add(s);});
 box(G[1],59.8,60.2,10.5,14,21.2,24.5,C.wall);
 box(G[2],1.95,2.25,21.5,30,1,11,C.jaali,0.7);
 box(G[2],44,60,21,28,24.3,24.7,C.wall);
