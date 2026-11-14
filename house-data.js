@@ -106,7 +106,7 @@ F_(1,'Floor drain 1 (100 mm)',16.8,17.5,10.8,11.5,0,0.03,'steel',1);F_(1,'Floor 
 // ---------- 2nd floor ----------
 // Master bedroom: 14 x 11.5 ft (the unnamed room x13.5-16.5 is its bay, open to it; grew into the old Bedroom 3 corner). King bed, bedside tables, wardrobe + easy chair in the bay
 bedAt(2,6.5,12.5,0.6,7.2,'Master bed (king)');F_(2,'Bedside table',5,6.3,0.5,2,0,1.8,'wood');F_(2,'Bedside table',12.7,13.4,0.5,2,0,1.8,'wood');
-F_(2,'Wardrobe',14.4,16.4,0.3,6.5,0,7,'wood',1);F_(2,'Easy chair',14.4,16.2,7.4,9.4,0,2.6,'fabric');F_(2,'Rug',5.5,13.4,7.4,9.4,0,0.03,'fabric');
+F_(2,'Sliding wardrobe',14.4,16.4,0.3,6.5,0,7,'wood',1);F_(2,'Easy chair',14.4,16.2,7.4,9.4,0,2.6,'fabric');F_(2,'Rug',5.5,13.4,7.4,9.4,0,0.03,'fabric');
 F_(2,'Wardrobe',9.7,13.3,15.3,16.9,0,7,'wood',1);
 F_(2,'WC',2.8,4.3,11.8,13.2,0,1.3,'white');F_(2,'Basin',4.1,5.4,15.7,16.9,2.6,0.5,'white');
 F_(2,'Desk',2.9,6.9,17.3,19.3,0,2.5,'wood',1);F_(2,'Office chair',4.1,5.5,19.6,20.9,0,2.8,'fabric');
@@ -124,7 +124,8 @@ F_(2,'Sofa',26.6,31.4,15.4,17.8,0,1.5,'fabric',1);F_(2,'Sofa back',26.6,31.4,17.
 F_(2,'Coffee table',27.7,30.3,13,14.5,0,1.3,'wood');F_(2,'TV unit',26.8,30.6,10.6,11.9,0,1.5,'wood');F_(2,'TV',27.2,30.2,10.6,10.75,2.6,3.2,'black',1);
 F_(2,'WC',35.3,36.8,0.5,2,0,1.3,'white');F_(2,'Basin',39.8,41.4,0.3,1.5,2.6,0.5,'white');F_(2,'Shower glass',38,38.05,3.8,6.8,0,6.5,'glass');
 F_(2,'Linen shelves',41.2,43.8,15,19.3,0,7,'wood');
-bedAt(2,47,53,0.6,7.2,'Bed');F_(2,'Wardrobe',44.2,46.1,0.5,7,0,7,'wood');
+// Bedroom 4: queen bed centred so there is 2.2 ft beside the sliding wardrobe and 2.1 ft on the window side
+bedAt(2,48.4,53.9,0.6,7.2,'Bed');F_(2,'Sliding wardrobe',44.2,46.2,0.5,7,0,7,'wood',1);F_(2,'Bedside table',47.4,48.2,0.5,1.8,0,1.8,'wood');F_(2,'Bedside table',54.1,55.2,0.5,1.8,0,1.8,'wood');F_(2,'Rug',48.4,53.9,7.6,10.2,0,0.03,'fabric');
 F_(2,'Planter',46,58,23,24.2,0,1.5,'concrete');F_(2,'Pulley drying rack',53,59,17,21,7,0.1,'steel',1);
 F_(2,'Chair',47.2,48.8,14.2,15.8,0,1.6,'wood');F_(2,'Chair',51.2,52.8,14.2,15.8,0,1.6,'wood');F_(2,'Side table',49.3,50.7,14.3,15.7,0,2,'wood');
 
